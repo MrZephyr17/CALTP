@@ -1,4 +1,9 @@
+// Graph.h
 #pragma once
+
+#ifndef GRAPH_H_
+#define GRAPH_H_
+
 #include <vector>
 
 template <class T>
@@ -168,3 +173,5 @@ inline bool Graph<T>::isDAG() const
 {
 	return false;
 }
+
+#endif /* GRAPH_H_ */
