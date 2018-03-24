@@ -1,0 +1,1 @@
+{"results": [{"latitude": 41.148806, "elevation": 86, "longitude": -8.609462}, {"latitude": 20.0, "elevation": 545, "longitude": 20.0}, {"latitude": 41.161758, "elevation": 117, "longitude": -8.583933}]}
