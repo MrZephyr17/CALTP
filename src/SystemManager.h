@@ -12,6 +12,7 @@
 #endif
 
 #include "Graph.h"
+#include "Location.h"
 
 typedef struct
 {
@@ -21,7 +22,6 @@ typedef struct
 
 }FileNames;
 
-template<class T>
 class SystemManager
 {
 public:
@@ -38,10 +38,10 @@ public:
 
 private:
 	//GraphViewer * gv;
-	Graph<Vertex<T>> graph;
+	Graph<Vertex<Location>> graph;
 	FileNames fileNames;
-	std::vector<Vertex<T>> nodes;
-	
+	std::vector<Vertex<Location>> nodes;
+
 };
 
 #endif /* SYSTEMMANAGER_H */

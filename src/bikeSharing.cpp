@@ -8,9 +8,11 @@ using namespace std;
 int main(void)
 {
 
-	SystemManager<Location> managerBKSH;
+	cout << "ASDAS\n";
+	
+	SystemManager m;
 
-	while (managerBKSH.Menu());
+	while(m.Menu());
 
 	return 0;
 }
