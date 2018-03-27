@@ -1,10 +1,16 @@
 #include <iostream>
+#include <fstream>
+#include "SystemManager.h"
+#include "Location.h"
 
 using namespace std;
 
-int main()
+int main(void)
 {
-	cout << "Exatamente" << endl;
+
+	SystemManager<Location> managerBKSH;
+
+	while (managerBKSH.Menu());
 
 	return 0;
 }

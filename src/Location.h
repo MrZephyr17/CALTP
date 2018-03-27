@@ -31,9 +31,9 @@ public:
 
 	std::string getName() const;
 
-	int getXcoord() const;
+	double getLatitudecoord() const;
 
-	int getYcoord() const;
+	double getLongitudecoord() const;
 
 	Coordinate getCoords() const;
 

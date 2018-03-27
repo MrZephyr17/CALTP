@@ -27,14 +27,14 @@ string Location::getName() const
 	return this->name;
 }
 
-int Location::getXcoord() const
+double Location::getLatitudecoord() const
 {
-	return this->coords.x;
+	return this->coords.latitude;
 }
 
-int Location::getYcoord() const
+double Location::getLongitudecoord() const
 {
-	return this->coords.y;
+	return this->coords.longitude;
 }
 
 Coordinate Location::getCoords() const
@@ -45,9 +45,9 @@ Coordinate Location::getCoords() const
 bool Location::operator==(const Location &n2) const
 {
 	return
-		this->coords.x == n2.coords.x
+		this->coords.latitude == n2.coords.latitude
 		&&
-		this->coords.y == n2.coords.y;
+		this->coords.longitude == n2.coords.longitude;
 }
 
 void Location::setID(int newID)

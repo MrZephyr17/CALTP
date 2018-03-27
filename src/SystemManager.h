@@ -13,16 +13,15 @@
 
 #include "Graph.h"
 
-class Node;
-
 typedef struct
 {
-	string nodes;
-	string edges;
-	string lines;
+	std::string nodes;
+	std::string edges;
+	std::string lines;
 
 }FileNames;
 
+template<class T>
 class SystemManager
 {
 public:
@@ -32,12 +31,16 @@ public:
 
 	void loadFiles();
 	void selectGraph();
+	bool Menu();
+	bool mainMenu();
+	bool menuRent();
+	bool menuHasBike();
 
 private:
 	//GraphViewer * gv;
-	Graph<Node> graph;
+	Graph<Vertex<T>> graph;
 	FileNames fileNames;
-	std::vector<Node> nodes;
+	std::vector<Vertex<T>> nodes;
 	
 };
 
