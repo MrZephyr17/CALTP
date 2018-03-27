@@ -12,6 +12,11 @@ public:
 	LocationNotFound(std::string location) {
 		this->location = location;
 	}
+	std::string message()
+	{
+		return "Location Not Found: The location " + location + " doesn't exist.\n";
+	}
+
 };
 
 #endif /* EXCEPTIONS_H */

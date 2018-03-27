@@ -10,9 +10,12 @@ using namespace std;
 #define EDGE_COLOR_DEFAULT NONE
 #define VERTEX_COLOR_DEFAULT NONE
 
+#define WINDOW_HEIGHT 1
+#define WINDOW_WIDTH 2
+
 SystemManager::SystemManager()
 {
-	graph = new Graph<Location>;
+	gv = new GraphViewer(WINDOW_WIDTH, WINDOW_HEIGHT, false);
 }
 
 SystemManager::~SystemManager()
@@ -201,11 +204,11 @@ bool SystemManager::menuRent()
 
 	try
 	{
-		//nearestRentLocation(location);
+		findLocation(location);
 	}
 	catch (LocationNotFound &e)
 	{
-		cout << "Location Not Found: The location: " << e.location << " already exists." << endl;
+		cerr << e.message();
 		system("pause");
 	}
 	catch (...)
@@ -235,11 +238,11 @@ bool SystemManager::menuHasBike()
 
 	try
 	{
-		//nearestDeliveryLocation(location);
+		findLocation(location);
 	}
 	catch (LocationNotFound &e)
 	{
-		cout << "Location Not Found: The location: " << e.location << " already exists." << endl;
+		cerr << e.message(); 
 		system("pause");
 	}
 	catch (...)

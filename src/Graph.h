@@ -9,6 +9,7 @@
 #include <list>
 #include <limits>
 #include <cmath>
+#include "MutablePriorityQueue.h"
 
 using namespace std;
 
@@ -39,6 +40,7 @@ public:
 	double getDist() const;
 	Vertex *getPath() const;
 	friend class Graph<T>;
+	friend class MutablePriorityQueue<Vertex<T>>;
 };
 
 
@@ -84,6 +86,7 @@ public:
 	Edge(Vertex<T> *d, double w);
 	friend class Graph<T>;
 	friend class Vertex<T>;
+
 };
 
 template <class T>

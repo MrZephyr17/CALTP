@@ -13,6 +13,7 @@
 
 #include "Graph.h"
 #include "Location.h"
+#include "GraphViewer.h"
 
 typedef struct
 {
@@ -41,11 +42,9 @@ public:
 	Vertex<Location> * findLocation(string name) const;
 
 private:
-	//GraphViewer * gv;
-	Graph<Location>* graph;
+	GraphViewer * gv;
+	Graph<Location> graph;
 	FileNames fileNames;
-	std::vector<Vertex<Location>> nodes;
-
 };
 
 #endif /* SYSTEMMANAGER_H */
