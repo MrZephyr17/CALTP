@@ -12,6 +12,7 @@ using namespace std;
 
 SystemManager::SystemManager()
 {
+	graph = new Graph<Location>;
 }
 
 SystemManager::~SystemManager()
@@ -64,7 +65,46 @@ void SystemManager::selectGraph()
 
 void SystemManager::loadFiles()
 {
-	// load files
+	/*try 
+	{
+		loadEdges();
+	}
+	catch ()
+	{ 
+	}
+	 
+	try 
+	{
+		loadVertexes();
+	} 
+	catch ()
+	{
+
+	}
+
+	try
+	{
+		loadNames();
+	}
+	catch ()
+	{
+
+	}*/
+}
+
+void SystemManager::loadEdges()
+{
+
+}
+
+void SystemManager::loadVertexes()
+{
+
+}
+
+void SystemManager::loadNames()
+{
+
 }
 
 
@@ -73,6 +113,8 @@ bool SystemManager::Menu()
 	Limpar_ecra();
 
 	selectGraph();
+
+	loadFiles();
 
 	mainMenu();
 
@@ -208,4 +250,15 @@ bool SystemManager::menuHasBike()
 	repeat = false;
 
 	return false;
+}
+
+
+/*
+* Auxiliary function to find a vertex with a given stringName.
+*/
+Vertex<Location> * SystemManager::findLocation(const string name) const {
+	for (auto v : graph.getVertexSet())
+		if (v->getInfo().getName() == name)
+			return v;
+	throw LocationNotFound(name);	
 }

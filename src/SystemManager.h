@@ -35,10 +35,14 @@ public:
 	bool mainMenu();
 	bool menuRent();
 	bool menuHasBike();
+	void loadEdges();
+	void loadVertexes();
+	void loadNames();
+	Vertex<Location> * findLocation(string name) const;
 
 private:
 	//GraphViewer * gv;
-	Graph<Vertex<Location>> graph;
+	Graph<Location>* graph;
 	FileNames fileNames;
 	std::vector<Vertex<Location>> nodes;
 

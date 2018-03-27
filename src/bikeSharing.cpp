@@ -6,10 +6,7 @@
 using namespace std;
 
 int main(void)
-{
-
-	cout << "ASDAS\n";
-	
+{	
 	SystemManager m;
 
 	while(m.Menu());

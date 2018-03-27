@@ -94,7 +94,7 @@ Edge<T>::Edge(Vertex<T> *d, double w) : dest(d), weight(w) {}
 
 template <class T>
 class Graph {
-	vector<Vertex<T> *> vertexSet;    // vertex set
+	vector<Vertex<T>*> vertexSet;    // vertex set
 
 public:
 	Vertex<T> *findVertex(const T &in) const;
