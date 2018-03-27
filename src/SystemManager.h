@@ -14,14 +14,28 @@
 #include "Graph.h"
 #include "Location.h"
 #include "GraphViewer.h"
+#include <map>
 
 typedef struct
 {
 	std::string nodes;
 	std::string edges;
-	std::string lines;
+	std::string names;
 
 }FileNames;
+
+struct EdgeInfo
+{
+	Location origin;
+	Location dest;
+	int id;
+	EdgeInfo(int i, Location o, Location d)
+	{
+		id = i;
+		origin = o;
+		dest = d;
+	};
+};
 
 class SystemManager
 {
@@ -36,9 +50,9 @@ public:
 	bool mainMenu();
 	bool menuRent();
 	bool menuHasBike();
-	void loadEdges();
+	vector<EdgeInfo> loadEdges();
 	void loadVertexes();
-	void loadNames();
+	void loadNames(vector<EdgeInfo> edges);
 	Vertex<Location> * findLocation(string name) const;
 
 private:

@@ -1,8 +1,11 @@
 #include "SystemManager.h"
 #include "Location.h"
 #include "Exceptions.h"
+#include "Utils.h"
 #include <iostream>
+#include <fstream>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -53,7 +56,7 @@ void SystemManager::selectGraph()
 			{
 				this->fileNames.nodes = "nodesBaixa.txt";
 				this->fileNames.edges = "edgesBaixa.txt";
-				this->fileNames.lines = "linesBaixa.txt";
+				this->fileNames.names = "namesBaixa.txt";
 
 				repeat = false;
 			}
@@ -68,46 +71,97 @@ void SystemManager::selectGraph()
 
 void SystemManager::loadFiles()
 {
-	/*try 
-	{
-		loadEdges();
-	}
-	catch ()
-	{ 
-	}
-	 
-	try 
-	{
-		loadVertexes();
-	} 
-	catch ()
-	{
+	loadVertexes();
 
-	}
+	vector<EdgeInfo> edges = loadEdges();
 
-	try
-	{
-		loadNames();
-	}
-	catch ()
-	{
-
-	}*/
+	loadNames(edges);
 }
 
-void SystemManager::loadEdges()
+vector<EdgeInfo> SystemManager::loadEdges()
 {
+	ifstream read(fileNames.edges);
+	vector<EdgeInfo> edges;
 
+	if (!read.is_open())
+	{
+		cerr << "File not found!" << endl;
+	}
+
+	while (!read.eof())
+	{
+		int id, ori, dest;
+		char ign;
+
+		read >> id >> ign >> ori >> ign >> dest;
+
+		Vertex<Location>* origin = graph.findVertex(Location(ori));
+		Vertex<Location>* destiny = graph.findVertex(Location(dest));
+
+		double weight;
+
+		weight = calcWeight(origin->getInfo(), destiny->getInfo());
+
+
+		edges.push_back(EdgeInfo(id, origin->getInfo(), destiny->getInfo()));
+	}
+
+	return edges;
 }
 
 void SystemManager::loadVertexes()
 {
+	ifstream read(fileNames.nodes);
 
+	if (!read.is_open())
+	{
+		cerr << "File not found!" << endl;
+	}
+
+	while (!read.eof())
+	{
+		int id;
+		double lat, lon, projx, projy, alt;
+		char ign;
+
+		read >> id >> ign >> lat >> ign >> lon >> projx >> ign >> projy >> ign >> alt;
+		graph.addVertex(Location(id, lat, lon, alt));
+	}
+
+	read.close();
 }
 
-void SystemManager::loadNames()
+void SystemManager::loadNames(vector<EdgeInfo> edges)
 {
+	ifstream read(fileNames.names);
 
+	if (!read.is_open())
+	{
+		cerr << "File not found!" << endl;
+	}
+
+	while (!read.eof())
+	{
+		int id;
+		string name, isBidirectional;
+		bool bidirectional;
+		char ign;
+
+		read >> id >> ign;
+
+		getline(read, name, ';');
+		getline(read, isBidirectional, ';');
+
+		bidirectional = isBidirectional == "False" ? false : true;
+
+		auto it = find_if(edges.begin(), edges.end(), [id](const EdgeInfo& e) {return e.id == id; });
+		graph.addEdge(it->origin, it->dest, calcWeight(it->origin, it->dest), id, name);
+
+		if (bidirectional)
+			graph.addEdge(it->dest, it->origin, calcWeight(it->dest, it->origin), id, name);
+	}
+
+	read.close();
 }
 
 
@@ -242,7 +296,7 @@ bool SystemManager::menuHasBike()
 	}
 	catch (LocationNotFound &e)
 	{
-		cerr << e.message(); 
+		cerr << e.message();
 		system("pause");
 	}
 	catch (...)
@@ -263,5 +317,5 @@ Vertex<Location> * SystemManager::findLocation(const string name) const {
 	for (auto v : graph.getVertexSet())
 		if (v->getInfo().getName() == name)
 			return v;
-	throw LocationNotFound(name);	
+	throw LocationNotFound(name);
 }

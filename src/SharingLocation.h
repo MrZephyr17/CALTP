@@ -7,7 +7,7 @@ private:
 	int maxCapacity;
 	int slots;
 public:
-	SharingLocation(double latitude, double longitude, double altitude, 
+	SharingLocation(int id, double latitude, double longitude, double altitude, 
 		std::string name, int maxCapacity, int slots);
 	~SharingLocation();
 	bool depositBike(int number = 1);

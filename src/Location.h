@@ -8,7 +8,8 @@ typedef struct
 {
 	double latitude;
 	double longitude;
-}Coordinate;
+	double altitude;
+} Coordinate;
 
 
 /*
@@ -20,11 +21,13 @@ MENOS O QUE O GRAPH TEMPLATE Vertex JÁ POSSUI
 class Location
 {
 	int id;
-	Coordinate coords;	///< Location's coordinates (x,y)
-	double altitude;
+	Coordinate coords;	///< Location's coordinates (x,y,z)
 	std::string name;
 public:
-	Location(double latitude, double longitude, double altitude, std::string name);
+	Location(int id, double latitude, double longitude, double altitude, std::string name);
+	Location(int id);
+	Location(int id, double latitude, double longitude, double altitude);
+	Location();
 	~Location(); 
 
 	int getID() const;
@@ -34,6 +37,8 @@ public:
 	double getLatitudecoord() const;
 
 	double getLongitudecoord() const;
+
+	double getAltitudecoord() const;
 
 	Coordinate getCoords() const;
 

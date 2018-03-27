@@ -3,8 +3,8 @@
 
 using namespace std;
 
-SharingLocation::SharingLocation(double latitude, double longitude, double altitude,
-	std::string name, int maxCapacity, int slots) : Location(latitude, longitude, altitude, name)
+SharingLocation::SharingLocation(int id, double latitude, double longitude, double altitude,
+	std::string name, int maxCapacity, int slots) : Location(id, latitude, longitude, altitude, name)
 {
 	if (maxCapacity <= 0 || slots < 0 || slots > maxCapacity)
 		throw invalid_argument("One of the arguments is invalid, check again!");

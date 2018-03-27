@@ -31,7 +31,7 @@ class Vertex {
 	int queueIndex = 0; 		// required by MutablePriorityQueue
 
 	bool processing = false;
-	void addEdge(Vertex<T> *dest, double w);
+	void addEdge(Vertex<T> *dest, double w, int id, string name);
 
 public:
 	Vertex(T in);
@@ -52,8 +52,8 @@ Vertex<T>::Vertex(T in) : info(in) {}
 * with a given destination vertex (d) and edge weight (w).
 */
 template <class T>
-void Vertex<T>::addEdge(Vertex<T> *d, double w) {
-	adj.push_back(Edge<T>(d, w));
+void Vertex<T>::addEdge(Vertex<T> *d, double w, int id, string name) {
+	adj.push_back(Edge<T>(d, w, id, name));
 }
 
 template <class T>
@@ -80,17 +80,35 @@ Vertex<T> *Vertex<T>::getPath() const {
 
 template <class T>
 class Edge {
+	int id;
 	Vertex<T> * dest;      // destination vertex
 	double weight;         // edge weight
+	string name;           // edge name
 public:
-	Edge(Vertex<T> *d, double w);
+	Edge(int id, Vertex<T> *d, double w);
+	Edge(Vertex<T> *d, double w, int id, string name);
+	Edge(int id, Vertex<T> *d);
 	friend class Graph<T>;
 	friend class Vertex<T>;
-
 };
 
 template <class T>
-Edge<T>::Edge(Vertex<T> *d, double w) : dest(d), weight(w) {}
+Edge<T>::Edge(int id, Vertex<T> *d, double w) : id(id), dest(d), weight(w) {}
+
+template<class T>
+inline Edge<T>::Edge(Vertex<T>* d, double w, int id, string name) : id(id), dest(d), weight(w), name(name)
+{
+
+}
+
+template<class T>
+inline Edge<T>::Edge(int id, Vertex<T>* d) : id(id), dest(d) {}
+
+template <class T>
+bool operator<(const Edge<T> &lhs, const Edge<T> &rhs) 
+{
+	return lhs.id < rhs.id;
+}
 
 
 /*************************** Graph  **************************/
@@ -102,7 +120,7 @@ class Graph {
 public:
 	Vertex<T> *findVertex(const T &in) const;
 	bool addVertex(const T &in);
-	bool addEdge(const T &sourc, const T &dest, double w);
+	bool addEdge(const T &sourc, const T &dest, double w, int id, string name);
 	int getNumVertex() const;
 	vector<Vertex<T> *> getVertexSet() const;
 
@@ -140,6 +158,7 @@ Vertex<T> * Graph<T>::findVertex(const T &in) const {
 	return NULL;
 }
 
+
 /*
 *  Adds a vertex with a given content or info (in) to a graph (this).
 *  Returns true if successful, and false if a vertex with that content already exists.
@@ -158,12 +177,12 @@ bool Graph<T>::addVertex(const T &in) {
 * Returns true if successful, and false if the source or destination vertex does not exist.
 */
 template <class T>
-bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
+bool Graph<T>::addEdge(const T &sourc, const T &dest, double w, int id, string name) {
 	auto v1 = findVertex(sourc);
 	auto v2 = findVertex(dest);
 	if (v1 == NULL || v2 == NULL)
 		return false;
-	v1->addEdge(v2, w);
+	v1->addEdge(v2, w, id, name);
 	return true;
 }
 
