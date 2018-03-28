@@ -9,8 +9,8 @@ private:
 public:
 	SharingLocation(int id, double latitude, double longitude, double altitude, 
 		std::string name, int maxCapacity, int slots);
-	~SharingLocation();
 	bool depositBike(int number = 1);
 	bool liftBike(int number = 1);
+	bool isAvailable() const;
 };
 

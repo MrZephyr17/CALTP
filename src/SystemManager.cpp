@@ -16,6 +16,8 @@ using namespace std;
 #define WINDOW_HEIGHT 1
 #define WINDOW_WIDTH 2
 
+long highest_id;
+
 SystemManager::SystemManager()
 {
 	gv = new GraphViewer(WINDOW_WIDTH, WINDOW_HEIGHT, false);
@@ -24,7 +26,6 @@ SystemManager::SystemManager()
 SystemManager::~SystemManager()
 {
 }
-
 
 void SystemManager::selectGraph()
 {
@@ -68,7 +69,6 @@ void SystemManager::selectGraph()
 	}
 }
 
-
 void SystemManager::loadFiles()
 {
 	loadVertexes();
@@ -88,15 +88,15 @@ vector<EdgeInfo> SystemManager::loadEdges()
 		cerr << "File not found!" << endl;
 	}
 
+	int id, ori, dest;
+	char ign;
+
 	while (!read.eof())
 	{
-		int id, ori, dest;
-		char ign;
-
 		read >> id >> ign >> ori >> ign >> dest;
 
-		Vertex<Location>* origin = graph.findVertex(Location(ori));
-		Vertex<Location>* destiny = graph.findVertex(Location(dest));
+		Vertex* origin = graph.findVertex(Location(ori));
+		Vertex* destiny = graph.findVertex(Location(dest));
 
 		double weight;
 
@@ -105,6 +105,8 @@ vector<EdgeInfo> SystemManager::loadEdges()
 
 		edges.push_back(EdgeInfo(id, origin->getInfo(), destiny->getInfo()));
 	}
+
+	highest_id = id;
 
 	return edges;
 }
@@ -126,6 +128,7 @@ void SystemManager::loadVertexes()
 
 		read >> id >> ign >> lat >> ign >> lon >> projx >> ign >> projy >> ign >> alt;
 		graph.addVertex(Location(id, lat, lon, alt));
+		//gv->addNode(id, projx, projy);
 	}
 
 	read.close();
@@ -144,7 +147,6 @@ void SystemManager::loadNames(vector<EdgeInfo> edges)
 	{
 		int id;
 		string name, isBidirectional;
-		bool bidirectional;
 		char ign;
 
 		read >> id >> ign;
@@ -152,18 +154,20 @@ void SystemManager::loadNames(vector<EdgeInfo> edges)
 		getline(read, name, ';');
 		getline(read, isBidirectional, ';');
 
-		bidirectional = isBidirectional == "False" ? false : true;
-
 		auto it = find_if(edges.begin(), edges.end(), [id](const EdgeInfo& e) {return e.id == id; });
 		graph.addEdge(it->origin, it->dest, calcWeight(it->origin, it->dest), id, name);
+		gv->addEdge(id, it->origin.getID(),it->dest.getID(), EdgeType::DIRECTED);
 
-		if (bidirectional)
-			graph.addEdge(it->dest, it->origin, calcWeight(it->dest, it->origin), id, name);
+
+		if (isBidirectional == "True")
+		{
+			graph.addEdge(it->dest, it->origin, calcWeight(it->dest, it->origin), ++highest_id, name);
+			gv->addEdge(highest_id, it->dest.getID(), it->origin.getID(), EdgeType::DIRECTED);
+		}
 	}
 
 	read.close();
 }
-
 
 bool SystemManager::Menu()
 {
@@ -177,7 +181,6 @@ bool SystemManager::Menu()
 
 	return true;
 }
-
 
 bool SystemManager::mainMenu()
 {
@@ -213,13 +216,11 @@ bool SystemManager::mainMenu()
 			case 1:
 			{
 				menuRent();
-				//repeat = false;
 				break;
 			}
 			case 2:
 			{
 				menuHasBike();
-				//repeat = false;
 				break;
 			}
 			case 3:
@@ -258,7 +259,10 @@ bool SystemManager::menuRent()
 
 	try
 	{
-		findLocation(location);
+		Vertex* loc = findLocation(location);
+		Location  dest = graph.dijkstraShortestPath(loc->getInfo());
+		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
+
 	}
 	catch (LocationNotFound &e)
 	{
@@ -292,7 +296,10 @@ bool SystemManager::menuHasBike()
 
 	try
 	{
-		findLocation(location);
+		 Vertex* loc = findLocation(location);
+		 Location  dest = graph.dijkstraShortestPath(loc->getInfo());
+		 vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
+		 
 	}
 	catch (LocationNotFound &e)
 	{
@@ -313,7 +320,7 @@ bool SystemManager::menuHasBike()
 /*
 * Auxiliary function to find a vertex with a given stringName.
 */
-Vertex<Location> * SystemManager::findLocation(const string name) const {
+Vertex* SystemManager::findLocation(const string name) const {
 	for (auto v : graph.getVertexSet())
 		if (v->getInfo().getName() == name)
 			return v;

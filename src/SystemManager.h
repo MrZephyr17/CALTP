@@ -53,11 +53,11 @@ public:
 	vector<EdgeInfo> loadEdges();
 	void loadVertexes();
 	void loadNames(vector<EdgeInfo> edges);
-	Vertex<Location> * findLocation(string name) const;
+	Vertex* findLocation(string name) const;
 
 private:
 	GraphViewer * gv;
-	Graph<Location> graph;
+	Graph graph;
 	FileNames fileNames;
 };
 

@@ -1,6 +1,6 @@
 #include "GraphViewer.h"
 #include <string>
-#include<sstream>
+#include <sstream>
 
 #ifdef linux
 pid_t GraphViewer::procId = NULL;

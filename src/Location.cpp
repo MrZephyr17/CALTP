@@ -25,15 +25,7 @@ Location::Location(int id, double latitude, double longitude, double altitude)
 	this->coords.altitude = altitude;
 }
 
-Location::Location()
-{
-}
-
-
-Location::~Location()
-{
-}
-
+Location::Location() {}
 
 int Location::getID() const
 {
@@ -73,4 +65,9 @@ bool Location::operator==(const Location &n2) const
 void Location::setID(int newID)
 {
 	this->id = newID;
+}
+
+bool Location::isAvailable() const
+{
+	return false;
 }

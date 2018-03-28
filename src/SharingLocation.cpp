@@ -13,11 +13,6 @@ SharingLocation::SharingLocation(int id, double latitude, double longitude, doub
 	this->slots = slots;
 }
 
-
-SharingLocation::~SharingLocation()
-{
-}
-
 bool SharingLocation::depositBike(int number)
 {
 	if (number > slots)
@@ -35,4 +30,9 @@ bool SharingLocation::liftBike(int number)
 
 	slots += number;
 	return true;
+}
+
+bool SharingLocation::isAvailable() const
+{
+	return slots > 0;
 }

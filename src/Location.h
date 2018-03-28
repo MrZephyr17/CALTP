@@ -28,7 +28,6 @@ public:
 	Location(int id);
 	Location(int id, double latitude, double longitude, double altitude);
 	Location();
-	~Location(); 
 
 	int getID() const;
 
@@ -45,6 +44,8 @@ public:
 	bool operator==(const Location &n2) const;
 
 	void setID(int newID);
+
+	virtual bool isAvailable() const;
 };
 
 #endif 
