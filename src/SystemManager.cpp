@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <ctime>
 #include <map>
 
 using namespace std;
@@ -60,6 +61,7 @@ void SystemManager::selectGraph()
 				this->fileNames.names = "namesBaixa.txt";
 
 				repeat = false;
+				break;
 			}
 			default:
 				cout << "Insert a valid menu option." << endl;
@@ -71,11 +73,29 @@ void SystemManager::selectGraph()
 
 void SystemManager::loadFiles()
 {
-	loadVertexes();
+	clock_t begin, end;
+	double timeSpent;
 
-	vector<EdgeInfo> edges = loadEdges();
+	begin = clock();
+		loadVertexes();
+	end = clock();
+	
+	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	cout << "Time to read Nodes file: " << timeSpent << endl << endl;
 
-	loadNames(edges);
+	begin = clock();
+		vector<EdgeInfo> edges = loadEdges();
+	end = clock();
+	
+	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	cout << "Time to read Edges file: " << timeSpent << endl << endl;
+
+	begin = clock();
+		loadNames(edges);
+	end = clock();
+
+	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	cout << "Time to read Names file: " << timeSpent << endl << endl;
 }
 
 vector<EdgeInfo> SystemManager::loadEdges()
@@ -83,29 +103,47 @@ vector<EdgeInfo> SystemManager::loadEdges()
 	ifstream read(fileNames.edges);
 	vector<EdgeInfo> edges;
 
+	cout << fileNames.edges << endl;
+
+	int id = -1, ori, dest;
+	char ign;
+
 	if (!read.is_open())
 	{
 		cerr << "File not found!" << endl;
+		exit(1);
 	}
-
-	int id, ori, dest;
-	char ign;
-
-	while (!read.eof())
+	else
 	{
-		read >> id >> ign >> ori >> ign >> dest;
+		while (!read.eof())
+		{
+			read >> id >> ign >> ori >> ign >> dest >> ign;
 
-		Vertex* origin = graph.findVertex(Location(ori));
-		Vertex* destiny = graph.findVertex(Location(dest));
+			//cout << "\nid = " << id;
+			//cout << "\nori = " << ori;
+			//cout << "\ndest = " << dest;
 
-		double weight;
+			//system("pause");
 
-		weight = calcWeight(origin->getInfo(), destiny->getInfo());
+			Vertex* origin = graph.findVertex(Location(ori));
+			Vertex* destiny = graph.findVertex(Location(dest));
+
+			double weight;
+
+			weight = calcWeight(origin->getInfo(), destiny->getInfo());
 
 
-		edges.push_back(EdgeInfo(id, origin->getInfo(), destiny->getInfo()));
+			edges.push_back(EdgeInfo(id, origin->getInfo(), destiny->getInfo()));
+		}
+
+		read.close();
 	}
 
+	if (id == -1)
+	{
+		cerr << "Graph with 0 elements." << endl;
+		exit(2);
+	}
 	highest_id = id;
 
 	return edges;
@@ -115,58 +153,82 @@ void SystemManager::loadVertexes()
 {
 	ifstream read(fileNames.nodes);
 
+	cout << fileNames.nodes << endl;
+
 	if (!read.is_open())
 	{
 		cerr << "File not found!" << endl;
+		exit(1);
 	}
-
-	while (!read.eof())
+	else
 	{
-		int id;
-		double lat, lon, projx, projy, alt;
-		char ign;
+		while (!read.eof())
+		{
+			int id;
+			double lat, lon, projx, projy, alt = 1;
+			char ign;
 
-		read >> id >> ign >> lat >> ign >> lon >> projx >> ign >> projy >> ign >> alt;
-		graph.addVertex(Location(id, lat, lon, alt));
-		//gv->addNode(id, projx, projy);
+			read >> id >> ign >> lat >> ign >> lon;		// >> projx >> ign >> projy >> ign >> alt;
+			
+			//cout << "id = " << id << endl;
+			//cout << "lat = " << lat << endl;
+			//cout << "lon = " << lon << endl;
+			//cout << "projx = " << projx << endl;
+			//cout << "projy = " << projy << endl;
+			//cout << "alt = " << alt << endl;
+			//system("pause");
+
+			graph.addVertex(Location(id, lat, lon, alt));
+			//gv->addNode(id, projx, projy);
+		}
+		read.close();
 	}
-
-	read.close();
 }
 
 void SystemManager::loadNames(vector<EdgeInfo> edges)
 {
 	ifstream read(fileNames.names);
+	cout << fileNames.names << endl;
 
 	if (!read.is_open())
 	{
 		cerr << "File not found!" << endl;
+		exit(1);
 	}
-
-	while (!read.eof())
+	else
 	{
-		int id;
-		string name, isBidirectional;
-		char ign;
-
-		read >> id >> ign;
-
-		getline(read, name, ';');
-		getline(read, isBidirectional, ';');
-
-		auto it = find_if(edges.begin(), edges.end(), [id](const EdgeInfo& e) {return e.id == id; });
-		graph.addEdge(it->origin, it->dest, calcWeight(it->origin, it->dest), id, name);
-		gv->addEdge(id, it->origin.getID(),it->dest.getID(), EdgeType::DIRECTED);
-
-
-		if (isBidirectional == "True")
+		while (!read.eof())
 		{
-			graph.addEdge(it->dest, it->origin, calcWeight(it->dest, it->origin), ++highest_id, name);
-			gv->addEdge(highest_id, it->dest.getID(), it->origin.getID(), EdgeType::DIRECTED);
-		}
-	}
+			int id;
+			string name, isBidirectional, junk;
+			char ign;
 
-	read.close();
+			read >> id >> ign;
+
+			getline(read, name, ';');
+			getline(read, isBidirectional, ';');
+			getline(read, junk);
+
+			auto it = find_if(edges.begin(), edges.end(), [id](const EdgeInfo& e) {return e.id == id; });
+			graph.addEdge(it->origin, it->dest, calcWeight(it->origin, it->dest), id, name);
+			//gv->addEdge(id, it->origin.getID(), it->dest.getID(), EdgeType::DIRECTED);
+			
+			//cout << "\nid = " << id;
+			//cout << "\nign = " << ign;
+			//cout << "\nname = " << name;
+			//cout << "\nisBidirectional = " << isBidirectional;
+			//cout << "\njunk = " << junk;
+			//system("pause");
+
+			if (isBidirectional == "True")
+			{
+				graph.addEdge(it->dest, it->origin, calcWeight(it->dest, it->origin), ++highest_id, name);
+				//gv->addEdge(highest_id, it->dest.getID(), it->origin.getID(), EdgeType::DIRECTED);
+			}
+		}
+
+		read.close();
+	}
 }
 
 bool SystemManager::Menu()
@@ -177,6 +239,8 @@ bool SystemManager::Menu()
 
 	loadFiles();
 
+	system("pause");
+
 	mainMenu();
 
 	return true;
@@ -185,7 +249,6 @@ bool SystemManager::Menu()
 bool SystemManager::mainMenu()
 {
 	int option;
-	bool repeat = true;
 
 	while (true)
 	{
@@ -247,7 +310,6 @@ bool SystemManager::menuRent()
 	Limpar_ecra();
 
 	string location;
-	bool repeat = true;
 
 	cout << "------------------------------" << endl;
 	cout << "--------|RENT A BIKE|--------" << endl;
@@ -274,8 +336,7 @@ bool SystemManager::menuRent()
 		cout << "Unknown exception." << endl;
 		system("pause");
 	}
-	repeat = false;
-
+	
 	return true;
 }
 
@@ -283,9 +344,8 @@ bool SystemManager::menuRent()
 bool SystemManager::menuHasBike()
 {
 	Limpar_ecra();
-
+	
 	string location;
-	bool repeat = true;
 
 	cout << "------------------------------" << endl;
 	cout << "--------|DELIVER A BIKE|--------" << endl;
@@ -311,8 +371,7 @@ bool SystemManager::menuHasBike()
 		cout << "Unknown exception." << endl;
 		system("pause");
 	}
-	repeat = false;
-
+	
 	return false;
 }
 
@@ -325,4 +384,5 @@ Vertex* SystemManager::findLocation(const string name) const {
 		if (v->getInfo().getName() == name)
 			return v;
 	throw LocationNotFound(name);
+
 }

@@ -9,6 +9,7 @@ int main(void)
 {	
 	SystemManager m;
 	cout << typeid(Location(1)).name() << endl;
+		
 	while(m.Menu());
 
 	return 0;
