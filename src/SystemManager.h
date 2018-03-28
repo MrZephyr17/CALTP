@@ -12,16 +12,30 @@
 #endif
 
 #include "Graph.h"
-
-class Node;
+#include "Location.h"
+#include "GraphViewer.h"
+#include <map>
 
 typedef struct
 {
-	string nodes;
-	string edges;
-	string lines;
+	std::string nodes;
+	std::string edges;
+	std::string names;
 
 }FileNames;
+
+struct EdgeInfo
+{
+	Location origin;
+	Location dest;
+	int id;
+	EdgeInfo(int i, Location o, Location d)
+	{
+		id = i;
+		origin = o;
+		dest = d;
+	};
+};
 
 class SystemManager
 {
@@ -32,13 +46,19 @@ public:
 
 	void loadFiles();
 	void selectGraph();
+	bool Menu();
+	bool mainMenu();
+	bool menuRent();
+	bool menuHasBike();
+	vector<EdgeInfo> loadEdges();
+	void loadVertexes();
+	void loadNames(vector<EdgeInfo> edges);
+	Vertex<Location> * findLocation(string name) const;
 
 private:
-	//GraphViewer * gv;
-	Graph<Node> graph;
+	GraphViewer * gv;
+	Graph<Location> graph;
 	FileNames fileNames;
-	std::vector<Node> nodes;
-	
 };
 
 #endif /* SYSTEMMANAGER_H */
