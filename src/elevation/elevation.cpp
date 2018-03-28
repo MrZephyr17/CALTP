@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iostream>
 #include <limits>
+#include <algorithm>
 #include <vector>
 
 using namespace std;
@@ -13,19 +14,20 @@ using namespace std;
 string parseLine(string line)
 {
     std::string parsed = "{\"latitude\":";
-    double lat, lon;
+    double lat, lon, x, y;
+    long id;
+    char ign;
     istringstream str(line);
-    str >> lat >> lon;
+    str >> id >> ign >> lat >> ign >> lon >> ign >> x >> ign >> y;
 
     parsed += to_string(lat) + ",\"longitude\":" + to_string(lon) + "}";
 
     return parsed;
 }
 
-string parseLocations(string file)
+string parseLocations(string file, vector<string> &lines)
 {
     std::string parsed = "{\"locations\":[";
-    vector<string> lines;
     string line;
     ifstream read;
     read.open(file);
@@ -56,19 +58,14 @@ string parseLocations(string file)
     return parsed;
 }
 
-string parseSingleResult(vector<string> result)
-{
-    return result.at(0) + " " + result.at(1) + " " + result.at(2);
-}
-
-void saveResults(const vector<vector<string>> &results, string file)
+void saveResults(const vector<string> originalLines, vector<double> elevations,  string file)
 {
     ofstream save;
 
     save.open(file);
 
-    for (int i = 0; i < results.size(); i++)
-        save << parseSingleResult(results.at(i)) << endl;
+    for (int i = 0; i < originalLines.size()-1; i++)
+        save << originalLines.at(i) << ";" << elevations.at(i) << "\r\n";
 
     save.close();
 }
@@ -89,10 +86,9 @@ vector<string> split(string str)
     return splited;
 }
 
-vector<vector<string>> getCoords(const vector<string> &splited)
+vector<double> getElevations(const vector<string> &splited)
 {
-    vector<string> single;
-    vector<vector<string>> results;
+    vector<double> results;
     double max = std::numeric_limits<double>::max();
     double lat = max, lon = max, ele = max;
 
@@ -108,8 +104,7 @@ vector<vector<string>> getCoords(const vector<string> &splited)
 
         if (lat != max && ele != max && lon != max)
         {
-            single = {to_string(lat), to_string(lon), to_string(ele)};
-            results.push_back(single);
+            results.push_back(ele);
             lat = max;
             ele = max;
             lon = max;
@@ -119,7 +114,7 @@ vector<vector<string>> getCoords(const vector<string> &splited)
     return results;
 }
 
-vector<vector<string>> parseResult(string file)
+vector<double> parseResult(string file)
 {
     string res;
     ifstream read;
@@ -128,9 +123,22 @@ vector<vector<string>> parseResult(string file)
     read.close();
 
     vector<string> splited = split(res);
-    vector<vector<string>> coords = getCoords(splited);
+    vector<double> elevations = getElevations(splited);
 
-    return coords;
+    return elevations;
+}
+
+string getCommand(string locations)
+{
+    string cmd = "curl -X POST \\
+  https://api.open-elevation.com/api/v1/lookup \\
+  -H \'Accept: application/json\' \\
+  -H \'Content-Type: application/json\' \\
+  -d \'";
+
+    cmd += locations + "\'";
+
+    return cmd;
 }
 
 int main()
@@ -138,18 +146,12 @@ int main()
     int fd = open("curl_result.txt", O_WRONLY | O_CREAT | O_TRUNC);
     dup2(fd, STDOUT_FILENO);
 
-    string cmd = "curl -X POST \\
-  https://api.open-elevation.com/api/v1/lookup \\
-  -H \'Accept: application/json\' \\
-  -H \'Content-Type: application/json\' \\
-  -d \'";
+    vector<string> lines;
+    string locations = parseLocations("locations.txt", lines);
 
-    cmd += parseLocations("locations.txt");
-    cmd += "\'";
+    system(getCommand(locations).c_str());
 
-    system(cmd.c_str());
-
-    vector<vector<string>> result = parseResult("curl_result.txt");
-    saveResults(result, "results.txt");
+    vector<double> result = parseResult("curl_result.txt");
+    saveResults(lines, result, "results.txt");
     return 0;
 }
