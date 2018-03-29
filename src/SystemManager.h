@@ -26,10 +26,10 @@ typedef struct
 
 struct EdgeInfo
 {
-	Location origin;
-	Location dest;
-	int id;
-	EdgeInfo(int i, Location o, Location d)
+	Location* origin;
+	Location* dest;
+	unsigned long long id;
+	EdgeInfo(unsigned long long  i, Location* o, Location* d)
 	{
 		id = i;
 		origin = o;

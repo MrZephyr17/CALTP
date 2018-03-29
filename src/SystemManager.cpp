@@ -65,9 +65,9 @@ void SystemManager::selectGraph()
 			}
 			case 2:
 			{
-				this->fileNames.nodes = "nodes.txt";
-				this->fileNames.edges = "edges.txt";
-				this->fileNames.names = "names.txt";
+				this->fileNames.nodes = "s.txt";
+				this->fileNames.edges = "s.txt";
+				this->fileNames.names = "s.txt";
 
 				repeat = false;
 				break;
@@ -112,9 +112,9 @@ vector<EdgeInfo> SystemManager::loadEdges()
 	ifstream read(fileNames.edges);
 	vector<EdgeInfo> edges;
 
-	cout << fileNames.edges << endl;
+	cout << "File: " << fileNames.edges << endl;
 
-	int id = -1, ori, dest;
+	unsigned long long id = -1, ori, dest;
 	char ign;
 
 	if (!read.is_open())
@@ -131,12 +131,9 @@ vector<EdgeInfo> SystemManager::loadEdges()
 			Vertex* origin = graph.findVertex(Location(ori));
 			Vertex* destiny = graph.findVertex(Location(dest));
 
-			double weight;
+			double weight = calcWeight(origin->getInfo(), destiny->getInfo());
 
-			weight = calcWeight(origin->getInfo(), destiny->getInfo());
-
-
-			edges.push_back(EdgeInfo(id, origin->getInfo(), destiny->getInfo()));
+			edges.push_back(EdgeInfo(id, &origin->getInfo(), &destiny->getInfo()));
 		}
 
 		read.close();
@@ -156,7 +153,7 @@ void SystemManager::loadNodes()
 {
 	ifstream read(fileNames.nodes);
 
-	cout << fileNames.nodes << endl;
+	cout << "File: " << fileNames.nodes << endl;
 
 	if (!read.is_open())
 	{
@@ -167,7 +164,7 @@ void SystemManager::loadNodes()
 	{
 		while (!read.eof())
 		{
-			int id;
+			unsigned long long id;
 			double lat, lon, projx, projy, alt = 1;
 			char ign;
 			string junk;
@@ -176,7 +173,9 @@ void SystemManager::loadNodes()
 			getline(read, junk);
 
 			graph.addVertex(Location(id, lat, lon, alt));
-			//gv->addNode(id, projx, projy);
+			
+			gv->addNode(id, projx, projy);
+
 		}
 		read.close();
 	}
@@ -185,7 +184,7 @@ void SystemManager::loadNodes()
 void SystemManager::loadNames(vector<EdgeInfo> edges)
 {
 	ifstream read(fileNames.names);
-	cout << fileNames.names << endl;
+	cout << "File: " << fileNames.names << endl;
 
 	if (!read.is_open())
 	{
@@ -208,12 +207,12 @@ void SystemManager::loadNames(vector<EdgeInfo> edges)
 
 			auto it = find_if(edges.begin(), edges.end(), [id](const EdgeInfo& e) {return e.id == id; });
 
-			graph.addEdge(it->origin, it->dest, calcWeight(it->origin, it->dest), id, name);
+			graph.addEdge(*it->origin, *it->dest, calcWeight(*it->origin, *it->dest), id, name);
 			//gv->addEdge(id, it->origin.getID(), it->dest.getID(), EdgeType::DIRECTED);
 
 			if (isBidirectional == "True")
 			{
-				graph.addEdge(it->dest, it->origin, calcWeight(it->dest, it->origin), ++highest_id, name);
+				graph.addEdge(*it->dest, *it->origin, calcWeight(*it->dest, *it->origin), ++highest_id, name);
 				//gv->addEdge(highest_id, it->dest.getID(), it->origin.getID(), EdgeType::DIRECTED);
 			}
 		}
