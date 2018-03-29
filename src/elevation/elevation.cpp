@@ -41,7 +41,8 @@ string parseLocations(string file, vector<string> &lines)
     while (!read.eof())
     {
         getline(read, line);
-        lines.push_back(line);
+        if (!read.eof())
+            lines.push_back(line.substr(0, line.size() - 1));
     }
 
     read.close();
@@ -58,14 +59,14 @@ string parseLocations(string file, vector<string> &lines)
     return parsed;
 }
 
-void saveResults(const vector<string> originalLines, vector<double> elevations,  string file)
+void saveResults(const vector<string> originalLines, vector<double> elevations, string file)
 {
     ofstream save;
 
     save.open(file);
 
-    for (int i = 0; i < originalLines.size()-1; i++)
-        save << originalLines.at(i) << ";" << elevations.at(i) << "\r\n";
+    for (int i = 0; i < originalLines.size(); i++)
+        save << originalLines.at(i) << ";" << elevations.at(i) << "\n";
 
     save.close();
 }
