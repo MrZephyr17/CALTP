@@ -51,7 +51,7 @@ public:
 	bool menuRent();
 	bool menuHasBike();
 	vector<EdgeInfo> loadEdges();
-	void loadVertexes();
+	void loadNodes();
 	void loadNames(vector<EdgeInfo> edges);
 	Vertex* findLocation(string name) const;
 

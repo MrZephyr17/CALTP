@@ -63,6 +63,15 @@ void SystemManager::selectGraph()
 				repeat = false;
 				break;
 			}
+			case 2:
+			{
+				this->fileNames.nodes = "nodes.txt";
+				this->fileNames.edges = "edges.txt";
+				this->fileNames.names = "names.txt";
+
+				repeat = false;
+				break;
+			}
 			default:
 				cout << "Insert a valid menu option." << endl;
 				break;
@@ -77,7 +86,7 @@ void SystemManager::loadFiles()
 	double timeSpent;
 
 	begin = clock();
-		loadVertexes();
+		loadNodes();
 	end = clock();
 	
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
@@ -117,13 +126,7 @@ vector<EdgeInfo> SystemManager::loadEdges()
 	{
 		while (!read.eof())
 		{
-			read >> id >> ign >> ori >> ign >> dest >> ign;
-
-			//cout << "\nid = " << id;
-			//cout << "\nori = " << ori;
-			//cout << "\ndest = " << dest;
-
-			//system("pause");
+			read >> id >> ign >> ori >> ign >> dest >> ign ;
 
 			Vertex* origin = graph.findVertex(Location(ori));
 			Vertex* destiny = graph.findVertex(Location(dest));
@@ -149,7 +152,7 @@ vector<EdgeInfo> SystemManager::loadEdges()
 	return edges;
 }
 
-void SystemManager::loadVertexes()
+void SystemManager::loadNodes()
 {
 	ifstream read(fileNames.nodes);
 
@@ -167,16 +170,10 @@ void SystemManager::loadVertexes()
 			int id;
 			double lat, lon, projx, projy, alt = 1;
 			char ign;
-
-			read >> id >> ign >> lat >> ign >> lon;		// >> projx >> ign >> projy >> ign >> alt;
+			string junk;
 			
-			//cout << "id = " << id << endl;
-			//cout << "lat = " << lat << endl;
-			//cout << "lon = " << lon << endl;
-			//cout << "projx = " << projx << endl;
-			//cout << "projy = " << projy << endl;
-			//cout << "alt = " << alt << endl;
-			//system("pause");
+			read >> id >> ign >> lat >> ign >> lon >> ign >> projx >> ign >> projy >> ign >> alt;
+			getline(read, junk);
 
 			graph.addVertex(Location(id, lat, lon, alt));
 			//gv->addNode(id, projx, projy);
@@ -210,15 +207,9 @@ void SystemManager::loadNames(vector<EdgeInfo> edges)
 			getline(read, junk);
 
 			auto it = find_if(edges.begin(), edges.end(), [id](const EdgeInfo& e) {return e.id == id; });
+
 			graph.addEdge(it->origin, it->dest, calcWeight(it->origin, it->dest), id, name);
 			//gv->addEdge(id, it->origin.getID(), it->dest.getID(), EdgeType::DIRECTED);
-			
-			//cout << "\nid = " << id;
-			//cout << "\nign = " << ign;
-			//cout << "\nname = " << name;
-			//cout << "\nisBidirectional = " << isBidirectional;
-			//cout << "\njunk = " << junk;
-			//system("pause");
 
 			if (isBidirectional == "True")
 			{
