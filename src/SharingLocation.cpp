@@ -3,7 +3,7 @@
 
 using namespace std;
 
-SharingLocation::SharingLocation(int id, double latitude, double longitude, double altitude,
+SharingLocation::SharingLocation(unsigned long long id, double latitude, double longitude, double altitude,
 	std::string name, int maxCapacity, int slots) : Location(id, latitude, longitude, altitude, name)
 {
 	if (maxCapacity <= 0 || slots < 0 || slots > maxCapacity)

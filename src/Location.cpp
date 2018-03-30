@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Location::Location(int id, double latitude, double longitude, double altitude,
+Location::Location(unsigned long long id, double latitude, double longitude, double altitude,
 	std::string name)
 {
 	this->id = id;
@@ -12,12 +12,12 @@ Location::Location(int id, double latitude, double longitude, double altitude,
 	this->name = name;
 }
 
-Location::Location(int id)
+Location::Location(unsigned long long id)
 {
 	this->id = id;
 }
 
-Location::Location(int id, double latitude, double longitude, double altitude)
+Location::Location(unsigned long long id, double latitude, double longitude, double altitude)
 {
 	this->id = id;
 	this->coords.latitude = latitude;
@@ -27,7 +27,7 @@ Location::Location(int id, double latitude, double longitude, double altitude)
 
 Location::Location() {}
 
-int Location::getID() const
+unsigned long long Location::getID() const
 {
 	return this->id;
 }
@@ -62,7 +62,7 @@ bool Location::operator==(const Location &n2) const
 	return id == n2.id;
 }
 
-void Location::setID(int newID)
+void Location::setID(unsigned long long newID)
 {
 	this->id = newID;
 }

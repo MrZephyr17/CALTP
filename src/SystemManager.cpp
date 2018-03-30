@@ -14,14 +14,20 @@ using namespace std;
 #define EDGE_COLOR_DEFAULT NONE
 #define VERTEX_COLOR_DEFAULT NONE
 
-#define WINDOW_HEIGHT 1
-#define WINDOW_WIDTH 2
+#define WINDOW_HEIGHT 2160
+#define WINDOW_WIDTH 3840
 
 long highest_id;
 
 SystemManager::SystemManager()
 {
-	gv = new GraphViewer(WINDOW_WIDTH, WINDOW_HEIGHT, false);
+	gv = new GraphViewer(WINDOW_WIDTH, WINDOW_HEIGHT, true);
+	gv->setBackground("back.jpg");
+	gv->createWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	gv->defineEdgeColor("black");
+	gv->defineVertexColor("blue");
+
 }
 
 SystemManager::~SystemManager()
@@ -128,12 +134,16 @@ vector<EdgeInfo> SystemManager::loadEdges()
 		{
 			read >> id >> ign >> ori >> ign >> dest >> ign ;
 
-			Vertex* origin = graph.findVertex(Location(ori));
-			Vertex* destiny = graph.findVertex(Location(dest));
 
-			double weight = calcWeight(origin->getInfo(), destiny->getInfo());
+			Vertex* origin = graph.findVertex(Location(ori));
+
+			Vertex* destiny = graph.findVertex(Location(dest));
+			
+
+			//double weight = calcWeight(&(origin->getInfo()), &(destiny->getInfo()));
 
 			edges.push_back(EdgeInfo(id, &origin->getInfo(), &destiny->getInfo()));
+
 		}
 
 		read.close();
@@ -174,7 +184,8 @@ void SystemManager::loadNodes()
 
 			graph.addVertex(Location(id, lat, lon, alt));
 			
-			gv->addNode(id, projx, projy);
+			gv->addNode(id);
+			//gv->addNode(id,projx, projy);
 
 		}
 		read.close();
@@ -195,26 +206,31 @@ void SystemManager::loadNames(vector<EdgeInfo> edges)
 	{
 		while (!read.eof())
 		{
-			int id;
-			string name, isBidirectional, junk;
+			unsigned long long id;
+			string name, isBidirectional;
 			char ign;
 
 			read >> id >> ign;
 
 			getline(read, name, ';');
-			getline(read, isBidirectional, ';');
-			getline(read, junk);
+			getline(read, isBidirectional);
 
-			auto it = find_if(edges.begin(), edges.end(), [id](const EdgeInfo& e) {return e.id == id; });
-
-			graph.addEdge(*it->origin, *it->dest, calcWeight(*it->origin, *it->dest), id, name);
-			//gv->addEdge(id, it->origin.getID(), it->dest.getID(), EdgeType::DIRECTED);
-
-			if (isBidirectional == "True")
+			
+			for (auto it : edges)
 			{
-				graph.addEdge(*it->dest, *it->origin, calcWeight(*it->dest, *it->origin), ++highest_id, name);
-				//gv->addEdge(highest_id, it->dest.getID(), it->origin.getID(), EdgeType::DIRECTED);
+				if (it.id == id)
+				{
+					graph.addEdge(it.origin, it.dest, calcWeight(it.origin, it.dest), id, name);
+					gv->addEdge(id, it.origin->getID(), it.dest->getID(), EdgeType::DIRECTED);
+				}
 			}
+
+			
+		/*	if (isBidirectional == "True")
+			{
+				graph.addEdge(it->dest, it->origin, calcWeight(it->dest, it->origin), ++highest_id, name);
+				gv->addEdge(highest_id, it->dest->getID(), it->origin->getID(), EdgeType::DIRECTED);
+			}*/
 		}
 
 		read.close();
