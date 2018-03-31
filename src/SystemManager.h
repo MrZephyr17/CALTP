@@ -50,9 +50,9 @@ public:
 	bool mainMenu();
 	bool menuRent();
 	bool menuHasBike();
-	vector<EdgeInfo> loadEdges();
-	void loadNodes();
-	void loadNames(vector<EdgeInfo> edges);
+	void loadEdges(vector<EdgeInfo> &edges, string edge);
+	void loadNodes(string node);
+	void loadNames(vector<EdgeInfo> edges, string name);
 	Vertex* findLocation(string name) const;
 
 private:
