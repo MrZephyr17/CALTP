@@ -158,7 +158,7 @@ void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes)
 
 			graph.addVertex(Location(idInt, lat, lon, alt));
 			idsNodes.push_back(make_pair(idInt, id));
-			gv->addNode(idInt);
+			gv->addNode(idInt, convertLongitudeToX(lon), convertLatitudeToY(lat));
 			gv->setVertexLabel(idInt, to_string(idInt));
 
 			//gv->addNode(id,projx, projy);
