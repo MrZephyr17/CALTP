@@ -36,7 +36,7 @@ class Vertex {
 	* Auxiliary function to add an outgoing edge to a vertex (this),
 	* with a given destination vertex (d) and edge weight (w).
 	*/
-	void addEdge(Vertex *dest, double w, unsigned long long id, string name);
+	void addEdge(Vertex *dest, double w, int id, string name);
 
 public:
 	Vertex(Location in);
@@ -59,14 +59,14 @@ public:
 
 
 class Edge {
-	unsigned long long id;
+	int id;
 	Vertex * dest;      // destination vertex
 	double weight;         // edge weight
 	string name;           // edge name
 public:
-	Edge(unsigned long long id, Vertex *d, double w);
-	Edge(Vertex *d, double w, unsigned long long id, string name);
-	Edge(unsigned long long id, Vertex *d);
+	Edge(int id, Vertex *d, double w);
+	Edge(Vertex *d, double w, int id, string name);
+	Edge(int id, Vertex *d);
 	friend class Graph;
 	friend class Vertex;
 };
@@ -95,7 +95,7 @@ public:
 	* destination vertices and the edge weight (w).
 	* Returns true if successful, and false if the source or destination vertex does not exist.
 	*/
-	bool addEdge(const Location * sourc, const Location * dest, double w, unsigned long long id, string name);
+	bool addEdge(const Location * sourc, const Location * dest, double w, int id, string name);
 	int getNumVertex() const;
 	vector<Vertex *> getVertexSet() const;
 

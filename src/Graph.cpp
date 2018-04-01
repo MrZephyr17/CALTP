@@ -2,7 +2,7 @@
 
 Vertex::Vertex(Location in) : info(in) {}
 
-void Vertex::addEdge(Vertex *d, double w, unsigned long long id, string name) {
+void Vertex::addEdge(Vertex *d, double w, int id, string name) {
 	adj.push_back(Edge(d, w, id, name));
 }
 
@@ -26,11 +26,11 @@ Vertex *Vertex::getPath() const {
 }
 
 
-Edge::Edge(unsigned long long id, Vertex *d, double w) : id(id), dest(d), weight(w) {}
+Edge::Edge(int id, Vertex *d, double w) : id(id), dest(d), weight(w) {}
 
-inline Edge::Edge(Vertex* d, double w, unsigned long long id, string name) : id(id), dest(d), weight(w), name(name) {}
+inline Edge::Edge(Vertex* d, double w, int id, string name) : id(id), dest(d), weight(w), name(name) {}
 
-inline Edge::Edge(unsigned long long id, Vertex* d) : id(id), dest(d) {}
+inline Edge::Edge(int id, Vertex* d) : id(id), dest(d) {}
 
 int Graph::getNumVertex() const {
 	return vertexSet.size();
@@ -55,7 +55,7 @@ bool Graph::addVertex(const Location &in) {
 	return true;
 }
 
-bool Graph::addEdge(const Location* sourc, const Location* dest, double w, unsigned long long id, string name) {
+bool Graph::addEdge(const Location* sourc, const Location* dest, double w, int id, string name) {
 	auto v1 = findVertex(*sourc);
 	auto v2 = findVertex(*dest);
 	if (v1 == NULL || v2 == NULL)

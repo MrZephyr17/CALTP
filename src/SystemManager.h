@@ -24,16 +24,16 @@ typedef struct
 
 }FileNames;
 
-struct EdgeInfo
-{
-	Location* origin;
-	Location* dest;
+struct EdgeName {
+	
+	bool isBidirectional;
+	string name;
 	unsigned long long id;
-	EdgeInfo(unsigned long long  i, Location* o, Location* d)
+	EdgeName(unsigned long long i, string n, bool a)
 	{
 		id = i;
-		origin = o;
-		dest = d;
+		name = n;
+		isBidirectional = a;
 	};
 };
 
@@ -50,9 +50,9 @@ public:
 	bool mainMenu();
 	bool menuRent();
 	bool menuHasBike();
-	vector<EdgeInfo> loadEdges(vector<pair<int, unsigned long long>> &idsEdge, vector<pair<int, unsigned long long>> &val);
+	void loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned long long>> &val);
 	void loadNodes(vector<pair<int, unsigned long long>> &idsNodes);
-	void loadNames(vector<EdgeInfo> edges, vector<pair<int, unsigned long long>> &idsNodes);
+	vector<EdgeName> loadNames();
 	Vertex* findLocation(string name) const;
 
 private:
