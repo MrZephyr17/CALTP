@@ -25,12 +25,44 @@ Vertex *Vertex::getPath() const {
 	return this->path;
 }
 
+vector<Edge> Vertex::getAdj() const
+{
+	return adj;
+}
+
+void Vertex::setVisited(bool visited)
+{
+	this->visited = visited;
+}
+
+void Vertex::setDist(double dist)
+{
+	this->dist = dist;
+}
+
+void Vertex::setPath(Vertex* path)
+{
+	this->path = path;
+}
+
+void Vertex::setQueueIndex(int index)
+{
+	queueIndex = index;
+}
+
 
 Edge::Edge(int id, Vertex *d, double w) : id(id), dest(d), weight(w) {}
 
 inline Edge::Edge(Vertex* d, double w, int id, string name) : id(id), dest(d), weight(w), name(name) {}
 
 inline Edge::Edge(int id, Vertex* d) : id(id), dest(d) {}
+
+inline Edge::Edge(int id) : id(id) {}
+
+int Edge::getID()
+{
+	return id;
+}
 
 int Graph::getNumVertex() const {
 	return vertexSet.size();
@@ -46,6 +78,19 @@ Vertex * Graph::findVertex(const Location &in) const {
 		if (v->info == in)
 			return v;
 	return NULL;
+}
+
+Edge Graph::findEdge(const Location &org, const Location &dest) const {
+
+	Vertex* origin = findVertex(org);
+	
+	for (auto e : origin->getAdj())
+	{
+		if (e.dest->getInfo() == dest)
+			return e;
+	}
+
+	return Edge(-1);
 }
 
 bool Graph::addVertex(const Location &in) {

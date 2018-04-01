@@ -44,16 +44,15 @@ public:
 	Location getInfo() const;
 	double getDist() const;
 	Vertex *getPath() const;
+	vector<Edge> getAdj() const;
+	void setVisited(bool visited);
+	void setDist(double dist);
+	void setPath(Vertex* path);
+	void setQueueIndex(int index);
+
 	friend class Graph;
 	friend class MutablePriorityQueue<Vertex>;
 };
-
-
-
-
-
-
-
 
 /********************** Edge  ****************************/
 
@@ -67,12 +66,11 @@ public:
 	Edge(int id, Vertex *d, double w);
 	Edge(Vertex *d, double w, int id, string name);
 	Edge(int id, Vertex *d);
+	Edge(int id);
+	int getID();
 	friend class Graph;
 	friend class Vertex;
 };
-
-
-
 
 /*************************** Graph  **************************/
 
@@ -85,6 +83,7 @@ public:
 	* Auxiliary function to find a vertex with a given content.
 	*/
 	Vertex *findVertex(const Location &in) const;
+	Edge findEdge(const Location & org, const Location & dest) const;
 	/*
 	*  Adds a vertex with a given content or info (in) to a graph (this).
 	*  Returns true if successful, and false if a vertex with that content already exists.

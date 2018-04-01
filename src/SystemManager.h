@@ -54,6 +54,11 @@ public:
 	void loadNodes(vector<pair<int, unsigned long long>> &idsNodes);
 	vector<EdgeName> loadNames();
 	Vertex* findLocation(string name) const;
+	int convertLongitudeToX(float longitude);
+	int convertLatitudeToY(float latitude);
+	void showPath(vector<Vertex> path);
+	void resetGraph();
+
 
 private:
 	GraphViewer * gv;

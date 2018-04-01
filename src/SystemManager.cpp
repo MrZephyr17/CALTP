@@ -14,6 +14,15 @@ using namespace std;
 #define EDGE_COLOR_DEFAULT NONE
 #define VERTEX_COLOR_DEFAULT NONE
 
+const string START_NODE_COLOR = "YELLOW";
+const string END_NODE_COLOR = "GREEN";
+
+const string PATH_COLOR = "MAGENTA";
+const float MAX_LAT = 41.186;
+const float MIN_LAT = 41.13921;
+const float MAX_LON = -8.57601;
+const float MIN_LON = -8.65271;
+
 #define WINDOW_HEIGHT 2160
 #define WINDOW_WIDTH 3840
 
@@ -184,7 +193,7 @@ vector<EdgeName> SystemManager::loadNames()
 			getline(read, name, ';');
 			getline(read, isBidirectional);
 
-			edges.push_back(EdgeName(id, name, isBidirectional._Equal("True") ? true : false));
+			edges.push_back(EdgeName(id, name, isBidirectional == "True" ? true : false));
 		}
 		read.close();
 	}
@@ -292,6 +301,8 @@ bool SystemManager::mainMenu()
 {
 	int option;
 
+	resetGraph();
+
 	while (true)
 	{
 		Limpar_ecra();
@@ -366,7 +377,7 @@ bool SystemManager::menuRent()
 		Vertex* loc = findLocation(location);
 		Location  dest = graph.dijkstraShortestPath(loc->getInfo());
 		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
-
+		showPath(path);
 	}
 	catch (LocationNotFound &e)
 	{
@@ -401,7 +412,7 @@ bool SystemManager::menuHasBike()
 		Vertex* loc = findLocation(location);
 		Location  dest = graph.dijkstraShortestPath(loc->getInfo());
 		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
-
+		showPath(path);
 	}
 	catch (LocationNotFound &e)
 	{
@@ -427,4 +438,48 @@ Vertex* SystemManager::findLocation(const string name) const {
 			return v;
 	throw LocationNotFound(name);
 
+}
+
+int SystemManager::convertLongitudeToX(float longitude) {
+	return floor(((longitude - MIN_LON) * (WINDOW_HEIGHT)) / (MAX_LON - MIN_LON));
+}
+
+int SystemManager::convertLatitudeToY(float latitude) {
+	return floor(((latitude - MIN_LAT) * (WINDOW_WIDTH)) / (MAX_LAT - MIN_LAT));
+}
+
+void SystemManager::showPath(vector<Vertex> path)
+{
+	if (path.size() < 1) {
+		cout << "Path not found.\nAre you sure there is a connection?\n";
+		return;
+	}
+
+	for (int i = 0; i < path.size() - 1; i++)
+	{
+		Edge edge = graph.findEdge(path[i].getInfo(), path[i + 1].getInfo());
+
+		if (edge.getID() == -1)
+		{
+			cout << "Deu merda no Djikstra / Path nao e possivel!!" << endl;
+			return;
+		}
+
+		gv->setEdgeColor(edge.getID(), PATH_COLOR);
+		gv->setEdgeThickness(edge.getID(), 5);
+	}
+
+	gv->setVertexColor(path.begin()->getInfo().getID(), START_NODE_COLOR);
+	gv->setVertexColor(path.end()->getInfo().getID(), END_NODE_COLOR);
+}
+
+void SystemManager::resetGraph()
+{
+	for (auto v : graph.getVertexSet())
+	{
+		v->setDist(0);
+		v->setQueueIndex(0);
+		v->setVisited(false);
+		v->setPath(NULL);
+	}
 }
