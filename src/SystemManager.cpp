@@ -11,17 +11,17 @@
 using namespace std;
 
 // CONSTANTS
-#define EDGE_COLOR_DEFAULT NONE
-#define VERTEX_COLOR_DEFAULT NONE
+#define EDGE_COLOR_DEFAULT BLACK
+#define VERTEX_COLOR_DEFAULT BLUE
 
 const string START_NODE_COLOR = "YELLOW";
 const string END_NODE_COLOR = "GREEN";
 
 const string PATH_COLOR = "MAGENTA";
-const float MAX_LAT = 41.186;
-const float MIN_LAT = 41.13921;
-const float MAX_LON = -8.57601;
-const float MIN_LON = -8.65271;
+const float MAX_LAT = 41.16246;
+const float MIN_LAT = 41.14566;
+const float MAX_LON = -8.598584;
+const float MIN_LON = -8.618032;
 
 #define WINDOW_HEIGHT 2160
 #define WINDOW_WIDTH 3840
@@ -29,13 +29,12 @@ const float MIN_LON = -8.65271;
 
 SystemManager::SystemManager()
 {
-	gv = new GraphViewer(WINDOW_WIDTH, WINDOW_HEIGHT, true);
+	gv = new GraphViewer(WINDOW_WIDTH, WINDOW_HEIGHT, false);
 	gv->setBackground("back.jpg");
 	gv->createWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	gv->defineEdgeColor("black");
-	gv->defineVertexColor("blue");
-
+	gv->defineEdgeColor(EDGE_COLOR_DEFAULT);
+	gv->defineVertexColor(VERTEX_COLOR_DEFAULT);
 }
 
 SystemManager::~SystemManager()
@@ -158,10 +157,9 @@ void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes)
 
 			graph.addVertex(Location(idInt, lat, lon, alt));
 			idsNodes.push_back(make_pair(idInt, id));
-			gv->addNode(idInt, convertLongitudeToX(lon), convertLatitudeToY(lat));
+			gv->addNode(idInt, 3 * convertLatitudeToY(lat), 3 * convertLongitudeToX(lon));
+			
 			gv->setVertexLabel(idInt, to_string(idInt));
-
-			//gv->addNode(id,projx, projy);
 
 		}
 		read.close();
@@ -258,14 +256,17 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned
 					{
 						gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::DIRECTED);
 						graph.addEdge(&origin->getInfo(), &destiny->getInfo(), weight, idIntEdge, x.name);
+						gv->setEdgeLabel(idIntEdge, x.name);
 						idIntEdge++;
 						gv->addEdge(idIntEdge, destinoID, origemID, EdgeType::DIRECTED);
 						graph.addEdge(&destiny->getInfo(), &origin->getInfo(), weight, idIntEdge, x.name);
+						gv->setEdgeLabel(idIntEdge, x.name);
 					}
 					else
 					{
 						gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::DIRECTED);
 						graph.addEdge(&origin->getInfo(), &destiny->getInfo(), weight, idIntEdge, x.name);
+						gv->setEdgeLabel(idIntEdge, x.name);
 					}
 					break;
 				}
