@@ -3,7 +3,6 @@
 #include "Exceptions.h"
 #include "Utils.h"
 #include <iostream>
-#include <sstream>
 #include <fstream>
 #include <string>
 #include <ctime>
@@ -18,7 +17,7 @@ using namespace std;
 #define WINDOW_HEIGHT 2160
 #define WINDOW_WIDTH 3840
 
-unsigned long long highest_id;
+long highest_id;
 
 SystemManager::SystemManager()
 {
@@ -37,9 +36,9 @@ SystemManager::~SystemManager()
 
 void SystemManager::selectGraph()
 {
-	cout << "Welcome !!\n\n";
-	cout << "Choose the Map you want:\n\n";
-	cout << "Baixa Porto - 666 Nodes, 1920 Edges. Choose 1!\n\n";
+	cout << "		Welcome !!\n\n";
+	cout << " Choose the Map you want:\n\n";
+	cout << "    Baixa Porto	- 666 Nodes, 1920 Edges. Choose 1!\n\n";
 
 	bool repeat = true;
 	int option;
@@ -89,164 +88,194 @@ void SystemManager::selectGraph()
 
 void SystemManager::loadFiles()
 {
+
 	clock_t begin, end;
 	double timeSpent;
 
-	ifstream readNodes, readEdges, readNames;
+	vector<pair<int, unsigned long long>> idsNodes;
+	vector<pair<int, unsigned long long>> idsEdges;
 
 	begin = clock();
-
-	readNodes.open(fileNames.nodes);
-
-	cout << "File: " << fileNames.nodes << endl;
-
-	if (!readNodes.is_open())
-	{
-		cerr << "File not found!" << endl;
-		exit(1);
-	}
-	else
-	{
-		string node, junk;
-
-		while (!readNodes.eof())
-		{
-			node = "";
-			getline(readNodes, node);
-			loadNodes(node);
-			getline(readNodes, junk);
-		}
-
-		readNodes.close();
-	}
-
+		loadNodes(idsNodes);
 	end = clock();
-
+	
+	
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
 	cout << "Time to read Nodes file: " << timeSpent << endl << endl;
 
 	begin = clock();
-
-	vector<EdgeInfo> edges;
-
-	readEdges.open(fileNames.edges);
-
-	cout << "File: " << fileNames.edges << endl;
-
-	if (!readEdges.is_open())
-	{
-		cerr << "File not found!" << endl;
-		exit(1);
-	}
-	else
-	{
-		string edge;
-
-		while (!readEdges.eof())
-		{
-			edge = "";
-			getline(readNodes, edge);
-			loadEdges(edges, edge);
-		}
-
-		readEdges.close();
-	}
-
+		vector<EdgeInfo> edges = loadEdges(idsEdges, idsNodes);
 	end = clock();
-
+	
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
 	cout << "Time to read Edges file: " << timeSpent << endl << endl;
 
 	begin = clock();
-	
-	readNames.open(fileNames.names);
+	//	loadNames(edges, idsEdges);
+	end = clock();
 
-	cout << "File: " << fileNames.names << endl;
+	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	cout << "Time to read Names file: " << timeSpent << endl << endl;
 
-	if (!readNames.is_open())
+	//gv->rearrange();
+}
+
+vector<EdgeInfo> SystemManager::loadEdges(vector<pair<int, unsigned long long>> &idsEdge, vector<pair<int, unsigned long long>> &idsNode)
+{
+	ifstream read(fileNames.edges);
+	vector<EdgeInfo> edges;
+
+	cout << "File: " << fileNames.edges << endl;
+	int idIntEdge = 0;
+	unsigned long long id = -1, ori, dest;
+	char ign;
+
+	if (!read.is_open())
 	{
 		cerr << "File not found!" << endl;
 		exit(1);
 	}
 	else
 	{
-		string name;
-
-		while (!readNames.eof())
+		while (!read.eof())
 		{
-			name = "";
-			getline(readNames, name);
-			loadEdges(edges, name);
+			idIntEdge++;
+			read >> id >> ign >> ori >> ign >> dest >> ign ;
+
+
+			Vertex* origin;
+			Vertex* destiny;
+			bool orig = false, des = false;
+			int origemID = 0, destinoID = 0;
+			for (auto x : idsNode)
+			{
+				if (x.second == ori)
+				{
+					origin = graph.findVertex(Location(x.first));
+					origemID = x.first;
+					orig = true;
+					if (des)
+						break;
+				}
+				else if (x.second == dest)
+				{
+					destiny = graph.findVertex(Location(x.first));
+					destinoID = x.first;
+					des = true;
+					if (orig)
+						break;
+				}
+			}
+			
+			//double weight = calcWeight(&(origin->getInfo()), &(destiny->getInfo()));
+			
+			idsEdge.push_back(make_pair(idIntEdge, id));
+			edges.push_back(EdgeInfo(idIntEdge, &origin->getInfo(), &destiny->getInfo()));
+			gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::DIRECTED);
 		}
 
-		readNames.close();
+		read.close();
 	}
-	end = clock();
 
-	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
-	cout << "Time to read Names file: " << timeSpent << endl << endl;
-}
-
-void SystemManager::loadEdges(vector<EdgeInfo> &edges, string edge)
-{
-	stringstream edge_stream(edge);
-	unsigned long long id = -1, ori, dest;
-	char ign;
-
-	edge_stream >> id >> ign >> ori >> ign >> dest >> ign;
-
-	Vertex* origin = graph.findVertex(Location(ori));
-	Vertex* destiny = graph.findVertex(Location(dest));
-
-	//double weight = calcWeight(&(origin->getInfo()), &(destiny->getInfo()));
-
-	edges.push_back(EdgeInfo(id, &origin->getInfo(), &destiny->getInfo()));
-
-	highest_id = id;
-}
-
-void SystemManager::loadNodes(string node)
-{
-	stringstream node_stream(node);
-	unsigned long long id;
-	double lat, lon, projx, projy, alt = 1;
-	char ign;
-	string junk;
-
-	node_stream >> id >> ign >> lat >> ign >> lon >> ign >> projx >> ign >> projy >> ign >> alt;
-
-	graph.addVertex(Location(id, lat, lon, alt));
-	gv->addNode(id);
-	//gv->addNode(id,projx, projy);
-}
-
-void SystemManager::loadNames(vector<EdgeInfo> edges, string name)
-{
-	stringstream names_stream(name);
-
-	unsigned long long id;
-	string nome, isBidirectional;
-	char ign;
-
-	 names_stream>> id >> ign;
-
-	getline(names_stream, nome, ';');
-	getline(names_stream, isBidirectional);
-
-	for (auto it : edges)
+	if (id == -1)
 	{
-		if (it.id == id)
-		{
-			graph.addEdge(it.origin, it.dest, calcWeight(it.origin, it.dest), id, nome);
-			gv->addEdge(id, it.origin->getID(), it.dest->getID(), EdgeType::DIRECTED);
-		}
+		cerr << "Graph with 0 elements." << endl;
+		exit(2);
 	}
+	highest_id = id;
 
-	/*	if (isBidirectional == "True")
+	return edges;
+}
+
+void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes)
+{
+	ifstream read(fileNames.nodes);
+	
+	int idInt = 0;
+
+	cout << "File: " << fileNames.nodes << endl;
+
+	if (!read.is_open())
+	{
+		cerr << "File not found!" << endl;
+		exit(1);
+	}
+	else
+	{
+		while (!read.eof())
 		{
-			graph.addEdge(it->dest, it->origin, calcWeight(it->dest, it->origin), ++highest_id, name);
-			gv->addEdge(highest_id, it->dest->getID(), it->origin->getID(), EdgeType::DIRECTED);
-		}*/
+			idInt++;
+			unsigned long long id;
+
+
+			double lat, lon, projx, projy, alt = 1;
+			char ign;
+			string junk;
+			
+			read >> id >> ign >> lat >> ign >> lon >> ign >> projx >> ign >> projy >> ign >> alt;
+			getline(read, junk);
+
+			graph.addVertex(Location(idInt, lat, lon, alt));
+
+			idsNodes.push_back(make_pair(idInt, id));
+
+			gv->addNode(idInt);
+			
+			//gv->addNode(id,projx, projy);
+
+		}
+		read.close();
+	}
+}
+
+void SystemManager::loadNames(vector<EdgeInfo> edges, vector<pair<int, unsigned long long>> &idsEdges)
+{
+	ifstream read(fileNames.names);
+	cout << "File: " << fileNames.names << endl;
+
+	if (!read.is_open())
+	{
+		cerr << "File not found!" << endl;
+		exit(1);
+	}
+	else
+	{
+		while (!read.eof())
+		{
+			unsigned long long id;
+			string name, isBidirectional;
+			char ign;
+
+			read >> id >> ign;
+
+			getline(read, name, ';');
+			getline(read, isBidirectional);
+
+			
+			for (auto edg : idsEdges)
+			{
+				if (edg.second == id)
+				{
+					for (auto it : edges)
+					{
+						if (it.id == edg.first)
+						{
+							graph.addEdge(it.origin, it.dest, calcWeight(it.origin, it.dest), edg.first, name);
+							gv->addEdge(edg.first, it.origin->getID(), it.dest->getID(), EdgeType::DIRECTED);
+							break;
+							/*if (isBidirectional == "True")
+							{
+							graph.addEdge(it.dest, it.origin, calcWeight(it.dest, it.origin), ++highest_id, name);
+							gv->addEdge(highest_id, it.dest->getID(), it.origin->getID(), EdgeType::DIRECTED);
+							}*/
+						}
+					}
+				}
+			}
+		}
+		//gv->rearrange();
+		read.close();
+	}
 }
 
 bool SystemManager::Menu()
@@ -354,7 +383,7 @@ bool SystemManager::menuRent()
 		cout << "Unknown exception." << endl;
 		system("pause");
 	}
-
+	
 	return true;
 }
 
@@ -362,7 +391,7 @@ bool SystemManager::menuRent()
 bool SystemManager::menuHasBike()
 {
 	Limpar_ecra();
-
+	
 	string location;
 
 	cout << "------------------------------" << endl;
@@ -374,10 +403,10 @@ bool SystemManager::menuHasBike()
 
 	try
 	{
-		Vertex* loc = findLocation(location);
-		Location  dest = graph.dijkstraShortestPath(loc->getInfo());
-		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
-
+		 Vertex* loc = findLocation(location);
+		 Location  dest = graph.dijkstraShortestPath(loc->getInfo());
+		 vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
+		 
 	}
 	catch (LocationNotFound &e)
 	{
@@ -389,7 +418,7 @@ bool SystemManager::menuHasBike()
 		cout << "Unknown exception." << endl;
 		system("pause");
 	}
-
+	
 	return false;
 }
 
