@@ -53,11 +53,10 @@ public:
 	void loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned long long>> &val);
 	void loadNodes(vector<pair<int, unsigned long long>> &idsNodes);
 	vector<EdgeName> loadNames();
-	Vertex* findLocation(string name) const;
+	Vertex* findLocation(int name) const;
 	int convertLongitudeToX(float longitude);
 	int convertLatitudeToY(float latitude);
-	void showPath(vector<Vertex> path);
-	void resetGraph();
+	void paintPath(vector<Vertex> path, string startNodeColor, string endNodeColor, string edgeColor, int edgeThickness);
 
 
 private:

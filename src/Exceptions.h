@@ -8,13 +8,13 @@
 class LocationNotFound
 {
 public:
-	std::string location;
-	LocationNotFound(std::string location) {
+	int location;
+	LocationNotFound(int location) {
 		this->location = location;
 	}
 	std::string message()
 	{
-		return "Location Not Found: The location " + location + " doesn't exist.\n";
+		return "Location Not Found: The location " + to_string(location) + " doesn't exist.\n";
 	}
 
 };

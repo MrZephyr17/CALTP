@@ -302,7 +302,6 @@ bool SystemManager::mainMenu()
 {
 	int option;
 
-	resetGraph();
 
 	while (true)
 	{
@@ -363,7 +362,7 @@ bool SystemManager::menuRent()
 {
 	Limpar_ecra();
 
-	string location;
+	int location;
 
 	cout << "------------------------------" << endl;
 	cout << "--------|RENT A BIKE|--------" << endl;
@@ -371,14 +370,17 @@ bool SystemManager::menuRent()
 	cout << endl << "Tell me your location: ";
 
 
-	getline(cin, location);
+	cin >> location;
 
 	try
 	{
 		Vertex* loc = findLocation(location);
 		Location  dest = graph.dijkstraShortestPath(loc->getInfo());
 		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
-		showPath(path);
+		gv->setVertexColor(location, YELLOW);
+		paintPath(path, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR, 5);
+		system("pause");
+		paintPath(path, VERTEX_COLOR_DEFAULT, VERTEX_COLOR_DEFAULT, EDGE_COLOR_DEFAULT, 1);
 	}
 	catch (LocationNotFound &e)
 	{
@@ -399,21 +401,24 @@ bool SystemManager::menuHasBike()
 {
 	Limpar_ecra();
 
-	string location;
+	int location;
 
 	cout << "------------------------------" << endl;
 	cout << "--------|DELIVER A BIKE|--------" << endl;
 	cout << "------------------------------" << endl;
 	cout << endl << "Tell me your location: ";
 
-	getline(cin, location);
+	cin >> location;
 
 	try
 	{
 		Vertex* loc = findLocation(location);
 		Location  dest = graph.dijkstraShortestPath(loc->getInfo());
 		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
-		showPath(path);
+		paintPath(path, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR, 5);
+		system("pause");
+		paintPath(path, VERTEX_COLOR_DEFAULT, VERTEX_COLOR_DEFAULT, EDGE_COLOR_DEFAULT, 1);
+
 	}
 	catch (LocationNotFound &e)
 	{
@@ -433,11 +438,12 @@ bool SystemManager::menuHasBike()
 /*
 * Auxiliary function to find a vertex with a given stringName.
 */
-Vertex* SystemManager::findLocation(const string name) const {
+Vertex* SystemManager::findLocation(const int ID) const {
 	for (auto v : graph.getVertexSet())
-		if (v->getInfo().getName() == name)
+		if (v->getInfo().getID() == ID)
 			return v;
-	throw LocationNotFound(name);
+
+	throw LocationNotFound(ID);
 
 }
 
@@ -449,13 +455,12 @@ int SystemManager::convertLatitudeToY(float latitude) {
 	return floor(((latitude - MIN_LAT) * (WINDOW_WIDTH)) / (MAX_LAT - MIN_LAT));
 }
 
-void SystemManager::showPath(vector<Vertex> path)
+void SystemManager::paintPath(vector<Vertex> path, string startNodeColor, string endNodeColor, string edgeColor, int edgeThickness)
 {
 	if (path.size() < 1) {
 		cout << "Path not found.\nAre you sure there is a connection?\n";
 		return;
 	}
-
 	for (int i = 0; i < path.size() - 1; i++)
 	{
 		Edge edge = graph.findEdge(path[i].getInfo(), path[i + 1].getInfo());
@@ -466,21 +471,10 @@ void SystemManager::showPath(vector<Vertex> path)
 			return;
 		}
 
-		gv->setEdgeColor(edge.getID(), PATH_COLOR);
-		gv->setEdgeThickness(edge.getID(), 5);
+		gv->setEdgeColor(edge.getID(), edgeColor);
+		gv->setEdgeThickness(edge.getID(), edgeThickness);
 	}
 
-	gv->setVertexColor(path.begin()->getInfo().getID(), START_NODE_COLOR);
-	gv->setVertexColor(path.end()->getInfo().getID(), END_NODE_COLOR);
-}
-
-void SystemManager::resetGraph()
-{
-	for (auto v : graph.getVertexSet())
-	{
-		v->setDist(0);
-		v->setQueueIndex(0);
-		v->setVisited(false);
-		v->setPath(NULL);
-	}
+	gv->setVertexColor(path.begin()->getInfo().getID(), startNodeColor);
+	gv->setVertexColor(path.back().getInfo().getID(), endNodeColor);
 }

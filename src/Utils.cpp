@@ -29,16 +29,39 @@ double distance(Location *origin, Location* dest)
 
 	double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
-	return earthRadiusKm * c;
+	double alt = dest->getAltitudecoord() - origin->getAltitudecoord();
 
+	return sqrt(pow(earthRadiusKm * c*1000, 2) + alt * alt);	
 }
 
 double velocity(Location* origin, Location* dest)
 {
-	double originEl = origin->getAltitudecoord();
-	double destEl = dest->getAltitudecoord();
-	double medEl = (originEl + destEl) / 2;
+	double alt = dest->getAltitudecoord() - origin->getAltitudecoord();
 
-	//tabela para calcular velocidade media
-	return 0;
+	if (alt >= 0)
+	{
+		double angle = asin(alt / distance(origin, dest));
+		
+		if (angle > PI / 4)
+		{
+			return 5.0/6;
+		}
+		else
+		{
+			return (10/3.0 * cos(2 * angle) + 5/6.0);
+		}
+	}
+	else
+	{
+		double angle = asin(-alt / distance(origin, dest));
+
+		if (angle > PI / 4)
+		{
+			return 55 * 1000 / 3600.0;
+		}
+		else
+		{
+			return 100/9.0 * sin(2 * angle) + 25/6.0;
+		}
+	}
 }
