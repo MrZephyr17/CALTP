@@ -1,6 +1,9 @@
 #include "Graph.h"
+#include <typeinfo>
+#include <iostream>
+#include <string>
 
-Vertex::Vertex(Location in) : info(in) {}
+Vertex::Vertex(Location* in) : info(in) {}
 
 void Vertex::addEdge(Vertex *d, double w, int id, string name) {
 	adj.push_back(Edge(d, w, id, name));
@@ -11,7 +14,7 @@ bool Vertex::operator<(Vertex & vertex) const {
 }
 
 
-Location Vertex::getInfo() const {
+Location* Vertex::getInfo() const {
 	return this->info;
 }
 
@@ -73,14 +76,14 @@ vector<Vertex *> Graph::getVertexSet() const {
 	return vertexSet;
 }
 
-Vertex * Graph::findVertex(const Location &in) const {
+Vertex * Graph::findVertex(Location* in) const {
 	for (auto v : vertexSet)
-		if (v->info == in)
+		if (*v->info == *in)
 			return v;
 	return NULL;
 }
 
-Edge Graph::findEdge(const Location &org, const Location &dest) const {
+Edge Graph::findEdge(Location* org, const Location* dest) const {
 
 	Vertex* origin = findVertex(org);
 	
@@ -93,16 +96,16 @@ Edge Graph::findEdge(const Location &org, const Location &dest) const {
 	return Edge(-1);
 }
 
-bool Graph::addVertex(const Location &in) {
+bool Graph::addVertex(Location* in) {
 	if (findVertex(in) != NULL)
 		return false;
 	vertexSet.push_back(new Vertex(in));
 	return true;
 }
 
-bool Graph::addEdge(const Location* sourc, const Location* dest, double w, int id, string name) {
-	auto v1 = findVertex(*sourc);
-	auto v2 = findVertex(*dest);
+bool Graph::addEdge(Location* sourc, Location* dest, double w, int id, string name) {
+	auto v1 = findVertex(sourc);
+	auto v2 = findVertex(dest);
 	if (v1 == NULL || v2 == NULL)
 		return false;
 	v1->addEdge(v2, w, id, name);
@@ -111,8 +114,7 @@ bool Graph::addEdge(const Location* sourc, const Location* dest, double w, int i
 
 /**************** Single Source Shortest Path algorithms ************/
 
-
-Location Graph::dijkstraShortestPath(const Location &origin) {
+Location* Graph::dijkstraShortestPath(Location* origin) {
 	// TODO
 	for (Vertex* v : vertexSet)
 	{
@@ -126,11 +128,15 @@ Location Graph::dijkstraShortestPath(const Location &origin) {
 	MutablePriorityQueue<Vertex > queue;
 	queue.insert(vertex);
 
-	Vertex *min=nullptr;
+	Vertex *min= nullptr;
+	string color = "BLUE";
 
-	while (!queue.empty() && (min == nullptr || !min->info.isAvailable()))
+	while (!queue.empty() && (min == nullptr || !min->info->isAvailable()) &&  (color == "BLUE" ||min->getInfo() == origin))
 	{
 		min = queue.extractMin();
+		color = min->getInfo()->getColor();
+
+
 		for (Edge w : min->adj)
 		{
 			Vertex *v2 = w.dest;
@@ -150,7 +156,7 @@ Location Graph::dijkstraShortestPath(const Location &origin) {
 	return min->getInfo();
 }
 
-vector<Vertex> Graph::getPath(const Location &origin, const Location &dest) const {
+vector<Vertex> Graph::getPath(Location* origin, Location* dest) const {
 	vector<Vertex> res, res_aux;
 
 	Vertex* o = findVertex(origin);
@@ -170,4 +176,31 @@ vector<Vertex> Graph::getPath(const Location &origin, const Location &dest) cons
 	}
 
 	return res;
+}
+
+vector<Vertex*> Graph:: highestLocations()
+{
+	vector<Vertex*> sharingLocations;
+	
+	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex* vertex) {
+		return strcmp(typeid(*vertex->getInfo()).name(), "class SharingLocation") == 0; });
+
+	/*for (auto vertex : vertexSet)
+	{
+		cout << "|" << typeid(*vertex->getInfo()).name() << "|\n";
+		if (strcmp(typeid(*vertex->getInfo()).name(),"class SharingLocation") == 0)
+		{
+			sharingLocations.push_back(vertex);
+			cout << "Oi\n";
+		}
+	}*/
+
+	cout << sharingLocations.size() << endl;
+
+	sort(sharingLocations.begin(), sharingLocations.end(), [](const Vertex* lhs, const Vertex* rhs) {
+		return lhs->getInfo()->getAltitudecoord() > rhs->getInfo()->getAltitudecoord();
+	});
+
+	sharingLocations.resize(5);
+	return sharingLocations;
 }

@@ -2,15 +2,6 @@
 
 using namespace std;
 
-Location::Location(int id, double latitude, double longitude, double altitude,
-	std::string name)
-{
-	this->id = id;
-	this->coords.latitude = latitude;
-	this->coords.longitude = longitude;
-	this->coords.altitude = altitude;
-	this->name = name;
-}
 
 Location::Location(int id)
 {
@@ -23,6 +14,7 @@ Location::Location(int id, double latitude, double longitude, double altitude)
 	this->coords.latitude = latitude;
 	this->coords.longitude = longitude;
 	this->coords.altitude = altitude;
+	this->color = "BLUE";
 }
 
 Location::Location() {}
@@ -30,11 +22,6 @@ Location::Location() {}
 int Location::getID() const
 {
 	return this->id;
-}
-
-string Location::getName() const
-{
-	return this->name;
 }
 
 double Location::getLatitudecoord() const
@@ -70,4 +57,9 @@ void Location::setID(int newID)
 bool Location::isAvailable() const
 {
 	return false;
+}
+
+string Location::getColor() const
+{
+	return color;
 }

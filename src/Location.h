@@ -20,18 +20,17 @@ MENOS O QUE O GRAPH TEMPLATE Vertex JÁ POSSUI
 
 class Location
 {
+protected:
 	int id;
 	Coordinate coords;	///< Location's coordinates (x,y,z)
-	std::string name;
+	std::string color;
+
 public:
-	Location(int id, double latitude, double longitude, double altitude, std::string name);
 	Location(int id);
 	Location(int id, double latitude, double longitude, double altitude);
 	Location();
 
 	int getID() const;
-
-	std::string getName() const;
 
 	double getLatitudecoord() const;
 
@@ -46,6 +45,8 @@ public:
 	void setID(int newID);
 
 	virtual bool isAvailable() const;
+
+	virtual std::string getColor() const;
 };
 
 #endif 

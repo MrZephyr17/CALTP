@@ -21,8 +21,21 @@ typedef struct
 	std::string nodes;
 	std::string edges;
 	std::string names;
+	std::string sharingLocations;
 
 }FileNames;
+
+struct SharingLoc {
+	unsigned long long id;
+	int lotation;
+	int slots;
+	SharingLoc(unsigned long long i, int lot, int slot)
+	{
+		id = i;
+		lotation = lot;
+		slots = slot;
+	};
+};
 
 struct EdgeName {
 	
@@ -50,13 +63,15 @@ public:
 	bool mainMenu();
 	bool menuRent();
 	bool menuHasBike();
+	void loadSharingLocations(vector<SharingLoc> &sharingLocations);
 	void loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned long long>> &val);
-	void loadNodes(vector<pair<int, unsigned long long>> &idsNodes);
+	void loadNodes(vector<pair<int, unsigned long long>> &idsNodes, const vector<SharingLoc> &sharingLocations);
 	vector<EdgeName> loadNames();
 	Vertex* findLocation(int name) const;
 	int convertLongitudeToX(float longitude);
 	int convertLatitudeToY(float latitude);
-	void paintPath(vector<Vertex> path, string startNodeColor, string endNodeColor, string edgeColor, int edgeThickness);
+	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string edgeColor = "BLACK");
+	void showHighest(const vector<Vertex*> &v) const;
 
 
 private:

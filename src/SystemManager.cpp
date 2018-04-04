@@ -1,5 +1,6 @@
 #include "SystemManager.h"
 #include "Location.h"
+#include "SharingLocation.h"
 #include "Exceptions.h"
 #include "Utils.h"
 #include <iostream>
@@ -15,13 +16,13 @@ using namespace std;
 #define VERTEX_COLOR_DEFAULT BLUE
 
 const string START_NODE_COLOR = "YELLOW";
-const string END_NODE_COLOR = "GREEN";
+const string END_NODE_COLOR = "";
 
 const string PATH_COLOR = "MAGENTA";
-const float MAX_LAT = 41.16246;
-const float MIN_LAT = 41.14566;
-const float MAX_LON = -8.598584;
-const float MIN_LON = -8.618032;
+const float MAX_LAT = 41.20324;
+const float MIN_LAT = 41.17303;
+const float MAX_LON = -8.555458;
+const float MIN_LON = -8.622682;
 
 #define WINDOW_HEIGHT 2160
 #define WINDOW_WIDTH 3840
@@ -30,7 +31,7 @@ const float MIN_LON = -8.618032;
 SystemManager::SystemManager()
 {
 	gv = new GraphViewer(WINDOW_WIDTH, WINDOW_HEIGHT, false);
-	gv->setBackground("back.jpg");
+	gv->setBackground("backFEUP.png");
 	gv->createWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	gv->defineEdgeColor(EDGE_COLOR_DEFAULT);
@@ -72,16 +73,16 @@ void SystemManager::selectGraph()
 				this->fileNames.nodes = "nodes.txt";
 				this->fileNames.edges = "edges.txt";
 				this->fileNames.names = "names.txt";
-
+				this->fileNames.sharingLocations = "sharingLocations.txt";
 				repeat = false;
 				break;
 			}
 			case 2:
 			{
-				this->fileNames.nodes = "s.txt";
-				this->fileNames.edges = "s.txt";
-				this->fileNames.names = "s.txt";
-
+				this->fileNames.nodes = "nodesFEUP.txt";
+				this->fileNames.edges = "edgesFEUP.txt";
+				this->fileNames.names = "namesFEUP.txt";
+				this->fileNames.sharingLocations = "sharingFEUP.txt";
 				repeat = false;
 				break;
 			}
@@ -98,11 +99,16 @@ void SystemManager::loadFiles()
 
 	clock_t begin, end;
 	double timeSpent;
+	vector<SharingLoc> sharingLocations;
+
+	begin = clock();
+		loadSharingLocations(sharingLocations);
+	end = clock();
 
 	vector<pair<int, unsigned long long>> idsNodes;
 
 	begin = clock();
-		loadNodes(idsNodes);
+		loadNodes(idsNodes, sharingLocations);
 	end = clock();
 
 
@@ -127,7 +133,32 @@ void SystemManager::loadFiles()
 	gv->rearrange();
 }
 
-void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes)
+void SystemManager::loadSharingLocations(vector<SharingLoc>& sharingLocations)
+{
+	ifstream file(fileNames.sharingLocations);
+
+	cout << "File: " << fileNames.sharingLocations << endl;
+
+	if (!file.is_open())
+	{
+		cerr << "File not found!" << endl;
+		exit(1);
+	}
+	
+	unsigned long long id;
+	char ign;
+	int lotation, slots;
+
+	while (!file.eof())
+	{
+		file >> id >> ign >> lotation >> ign >> slots;
+
+		sharingLocations.push_back(SharingLoc(id, lotation, slots));
+	}
+	file.close();
+}
+
+void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes, const vector<SharingLoc> &sharingLocations)
 {
 	ifstream read(fileNames.nodes);
 
@@ -150,17 +181,31 @@ void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes)
 
 			double lat, lon, projx, projy, alt = 1;
 			char ign;
-			string junk;
+			string isShrLoc;
 
-			read >> id >> ign >> lat >> ign >> lon >> ign >> projx >> ign >> projy >> ign >> alt;
-			getline(read, junk);
+			read >> id >> ign >> lat >> ign >> lon >> ign >> projx >> ign >> projy >> ign >> alt >> ign;
+			getline(read, isShrLoc);
 
-			graph.addVertex(Location(idInt, lat, lon, alt));
-			idsNodes.push_back(make_pair(idInt, id));
-			gv->addNode(idInt, 3 * convertLatitudeToY(lat), 3 * convertLongitudeToX(lon));
-			
+			gv->addNode(idInt, 2.5 * convertLongitudeToX(lon), -1 * convertLatitudeToY(lat) - 100);
 			gv->setVertexLabel(idInt, to_string(idInt));
-
+			idsNodes.push_back(make_pair(idInt, id));
+			if (isShrLoc == "true")
+			{
+				gv->setVertexColor(idInt, RED);
+				for (auto sl : sharingLocations)
+				{
+					if (sl.id == id)
+					{
+						graph.addVertex(new SharingLocation(idInt, lat, lon, alt, sl.lotation, sl.slots));
+						break;
+					}
+				}
+			}
+			else
+			{
+				graph.addVertex(new Location(idInt, lat, lon, alt));
+			}
+			
 		}
 		read.close();
 	}
@@ -230,7 +275,7 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned
 			{
 				if (x.second == ori)
 				{
-					origin = graph.findVertex(Location(x.first));
+					origin = graph.findVertex(new Location(x.first));
 					origemID = x.first;
 					orig = true;
 					if (des)
@@ -238,7 +283,7 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned
 				}
 				else if (x.second == dest)
 				{
-					destiny = graph.findVertex(Location(x.first));
+					destiny = graph.findVertex(new Location(x.first));
 					destinoID = x.first;
 					des = true;
 					if (orig)
@@ -246,7 +291,7 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned
 				}
 			}
 
-			double weight = calcWeight(&(origin->getInfo()), &(destiny->getInfo()));
+			double weight = calcWeight((origin->getInfo()), (destiny->getInfo()));
 
 			for (auto x : edges)
 			{
@@ -255,17 +300,17 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned
 					if (x.isBidirectional)
 					{
 						gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::DIRECTED);
-						graph.addEdge(&origin->getInfo(), &destiny->getInfo(), weight, idIntEdge, x.name);
+						graph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
 						gv->setEdgeLabel(idIntEdge, x.name);
 						idIntEdge++;
 						gv->addEdge(idIntEdge, destinoID, origemID, EdgeType::DIRECTED);
-						graph.addEdge(&destiny->getInfo(), &origin->getInfo(), weight, idIntEdge, x.name);
+						graph.addEdge(destiny->getInfo(), origin->getInfo(), weight, idIntEdge, x.name);
 						gv->setEdgeLabel(idIntEdge, x.name);
 					}
 					else
 					{
 						gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::DIRECTED);
-						graph.addEdge(&origin->getInfo(), &destiny->getInfo(), weight, idIntEdge, x.name);
+						graph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
 						gv->setEdgeLabel(idIntEdge, x.name);
 					}
 					break;
@@ -375,12 +420,16 @@ bool SystemManager::menuRent()
 	try
 	{
 		Vertex* loc = findLocation(location);
-		Location  dest = graph.dijkstraShortestPath(loc->getInfo());
+		Location* dest = graph.dijkstraShortestPath(loc->getInfo());
 		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
 		gv->setVertexColor(location, YELLOW);
-		paintPath(path, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR, 5);
+		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
 		system("pause");
-		paintPath(path, VERTEX_COLOR_DEFAULT, VERTEX_COLOR_DEFAULT, EDGE_COLOR_DEFAULT, 1);
+		paintPath(path, false, 1);
+		vector<Vertex*> v = graph.highestLocations();
+		cout << v.size() << endl;
+		showHighest(v);
+		system("pause");
 	}
 	catch (LocationNotFound &e)
 	{
@@ -413,11 +462,11 @@ bool SystemManager::menuHasBike()
 	try
 	{
 		Vertex* loc = findLocation(location);
-		Location  dest = graph.dijkstraShortestPath(loc->getInfo());
+		Location*  dest = graph.dijkstraShortestPath(loc->getInfo());
 		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
-		paintPath(path, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR, 5);
+		paintPath(path, true, 5,START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
 		system("pause");
-		paintPath(path, VERTEX_COLOR_DEFAULT, VERTEX_COLOR_DEFAULT, EDGE_COLOR_DEFAULT, 1);
+		paintPath(path, false, 1); 
 
 	}
 	catch (LocationNotFound &e)
@@ -435,12 +484,14 @@ bool SystemManager::menuHasBike()
 }
 
 
+
+
 /*
 * Auxiliary function to find a vertex with a given stringName.
 */
 Vertex* SystemManager::findLocation(const int ID) const {
 	for (auto v : graph.getVertexSet())
-		if (v->getInfo().getID() == ID)
+		if (v->getInfo()->getID() == ID)
 			return v;
 
 	throw LocationNotFound(ID);
@@ -455,7 +506,7 @@ int SystemManager::convertLatitudeToY(float latitude) {
 	return floor(((latitude - MIN_LAT) * (WINDOW_WIDTH)) / (MAX_LAT - MIN_LAT));
 }
 
-void SystemManager::paintPath(vector<Vertex> path, string startNodeColor, string endNodeColor, string edgeColor, int edgeThickness)
+void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor, string endNodeColor, string edgeColor)
 {
 	if (path.size() < 1) {
 		cout << "Path not found.\nAre you sure there is a connection?\n";
@@ -470,11 +521,30 @@ void SystemManager::paintPath(vector<Vertex> path, string startNodeColor, string
 			cout << "Deu merda no Djikstra / Path nao e possivel!!" << endl;
 			return;
 		}
-
+		
 		gv->setEdgeColor(edge.getID(), edgeColor);
 		gv->setEdgeThickness(edge.getID(), edgeThickness);
 	}
 
-	gv->setVertexColor(path.begin()->getInfo().getID(), startNodeColor);
-	gv->setVertexColor(path.back().getInfo().getID(), endNodeColor);
+	if (def)
+	{
+		gv->setVertexColor(path.begin()->getInfo()->getID(), startNodeColor);
+		gv->setVertexColor(path.back().getInfo()->getID(), endNodeColor);
+	}
+	else
+	{
+		gv->setVertexColor(path.begin()->getInfo()->getID(), path.begin()->getInfo()->getColor());
+		gv->setVertexColor(path.back().getInfo()->getID(), path.back().getInfo()->getColor());
+	}
+}
+
+void SystemManager::showHighest(const vector<Vertex*> &v) const
+{
+	cout << "If you choose one of the following locations, you can get 50 euros in discount!" << endl;
+	cout << "Here are they're IDs: " << endl;
+
+	for (int i = 0; i < v.size(); i++)
+	{
+		cout << (i+1) << ": " << v[i]->getInfo()->getID() << endl;
+	}
 }
