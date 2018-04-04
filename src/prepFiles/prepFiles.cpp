@@ -19,7 +19,7 @@ vector<string> readNodes(string file, vector<string> &ids)
 
     if (!read.is_open())
     {
-        cerr << "File not found! Exiting..." << endl;
+        cerr << "File " << file << " not found! Exiting..." << endl;
         exit(1);
     }
 
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
     srand(time(NULL));
 
-    int fd = open(CURL_RESULT, O_WRONLY | O_CREAT | O_TRUNC);
+    int fd = open(CURL_RESULT, O_RDWR | O_CREAT | O_TRUNC, 0644);
     int save_stdout = dup(STDOUT_FILENO);
     dup2(fd, STDOUT_FILENO);
 
