@@ -6,6 +6,7 @@ using namespace std;
 Location::Location(int id)
 {
 	this->id = id;
+	this->visited = false;
 }
 
 Location::Location(int id, double latitude, double longitude, double altitude)
@@ -15,6 +16,7 @@ Location::Location(int id, double latitude, double longitude, double altitude)
 	this->coords.longitude = longitude;
 	this->coords.altitude = altitude;
 	this->color = "BLUE";
+	this->visited = false;
 }
 
 Location::Location() {}
@@ -62,4 +64,14 @@ bool Location::isAvailable() const
 string Location::getColor() const
 {
 	return color;
+}
+
+bool Location::getVisited() const
+{
+	return visited;
+}
+
+void Location::setVisited(bool vis)
+{
+	this->visited = vis;
 }

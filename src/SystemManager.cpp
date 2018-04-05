@@ -40,13 +40,15 @@ SystemManager::SystemManager()
 
 SystemManager::~SystemManager()
 {
+	delete gv;
 }
 
 void SystemManager::selectGraph()
 {
-	cout << "		Welcome !!\n\n";
-	cout << " Choose the Map you want:\n\n";
-	cout << "    Baixa Porto	- 666 Nodes, 1920 Edges. Choose 1!\n\n";
+	cout << "Welcome !!\n\n";
+	cout << "Choose the Map you want:\n\n";
+	cout << "1 - Baixa Porto - 666 Nodes, 1920 Edges.\n\n";
+	cout << "2 - Zona Hospital Sao Joao / FEUP - X Nodes, Y Edges.\n\n";
 
 	bool repeat = true;
 	int option;
@@ -197,6 +199,7 @@ void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes, c
 					if (sl.id == id)
 					{
 						graph.addVertex(new SharingLocation(idInt, lat, lon, alt, sl.lotation, sl.slots));
+						invertedGraph.addVertex(new SharingLocation(idInt, lat, lon, alt, sl.lotation, sl.slots));
 						break;
 					}
 				}
@@ -204,6 +207,7 @@ void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes, c
 			else
 			{
 				graph.addVertex(new Location(idInt, lat, lon, alt));
+				invertedGraph.addVertex(new Location(idInt, lat, lon, alt));
 			}
 			
 		}
@@ -301,16 +305,19 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned
 					{
 						gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::DIRECTED);
 						graph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
+						invertedGraph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
 						gv->setEdgeLabel(idIntEdge, x.name);
 						idIntEdge++;
 						gv->addEdge(idIntEdge, destinoID, origemID, EdgeType::DIRECTED);
 						graph.addEdge(destiny->getInfo(), origin->getInfo(), weight, idIntEdge, x.name);
+						invertedGraph.addEdge(destiny->getInfo(), origin->getInfo(), weight, idIntEdge, x.name);
 						gv->setEdgeLabel(idIntEdge, x.name);
 					}
 					else
 					{
 						gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::DIRECTED);
 						graph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
+						invertedGraph.addEdge(destiny->getInfo(), origin->getInfo(), weight, idIntEdge, x.name);
 						gv->setEdgeLabel(idIntEdge, x.name);
 					}
 					break;
@@ -407,7 +414,7 @@ bool SystemManager::menuRent()
 {
 	Limpar_ecra();
 
-	int location;
+	int location, userChoice;
 
 	cout << "------------------------------" << endl;
 	cout << "--------|RENT A BIKE|--------" << endl;
@@ -417,40 +424,75 @@ bool SystemManager::menuRent()
 
 	cin >> location;
 
-	try
+
+	while (userChoice != 1 || userChoice != 2)
 	{
-		Vertex* loc = findLocation(location);
-		Location* dest = graph.dijkstraShortestPath(loc->getInfo());
-		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
-		gv->setVertexColor(location, YELLOW);
-		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
-		system("pause");
-		paintPath(path, false, 1);
-		vector<Vertex*> v = graph.highestLocations();
-		cout << v.size() << endl;
-		showHighest(v);
-		system("pause");
+		cout << "Enter your preference" << endl;
+		cout << "(1) Closest sharing location (no discount)" << endl;
+		cout << "(2) Other sharing locations (discount)" << endl;
+
+		cin >> userChoice;
+	}
+
+	Vertex* loc;
+
+	try {
+		 loc = findLocation(location);
 	}
 	catch (LocationNotFound &e)
 	{
 		cerr << e.message();
-		system("pause");
+		return;
 	}
 	catch (...)
 	{
 		cout << "Unknown exception." << endl;
-		system("pause");
+		return;
 	}
+
+	switch (userChoice)
+	{
+	case 1:
+		showClosestLocation(loc, location);
+		break;
+	case 2: 
+		showDiscountLocations(loc, location, true);
+		break;
+	default:
+		break;
+	}
+
 
 	return true;
 }
 
+void SystemManager::showClosestLocation(Vertex* origin, int id)
+{
+		Location* dest = graph.dijkstraShortestPath(origin->getInfo());
+		vector<Vertex> path = graph.getPath(origin->getInfo(), dest);
+		gv->setVertexColor(id, YELLOW);
+		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
+		cout << "Check the map to see the generated path!" << endl;
+		system("pause");
+		paintPath(path, false, 1);
+}
+
+void SystemManager::showDiscountLocations(Vertex* origin, int id, bool rent)
+{
+	vector<Vertex*> v = graph.discountLocations(rent, DISCOUNT_LOCATIONS);
+	Vertex* dest = getDiscountChoice(v);
+	graph.bidirectionalSearch(origin->getInfo(), dest->getInfo(), invertedGraph);
+	vector<Vertex> path = graph.getPath(origin->getInfo(), dest->getInfo());
+	paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
+	system("pause");
+	paintPath(path, false, 1);
+}
 
 bool SystemManager::menuHasBike()
 {
 	Limpar_ecra();
 
-	int location;
+	int location, userChoice;
 
 	cout << "------------------------------" << endl;
 	cout << "--------|DELIVER A BIKE|--------" << endl;
@@ -459,26 +501,43 @@ bool SystemManager::menuHasBike()
 
 	cin >> location;
 
-	try
+	while (userChoice != 1 || userChoice != 2)
 	{
-		Vertex* loc = findLocation(location);
-		Location*  dest = graph.dijkstraShortestPath(loc->getInfo());
-		vector<Vertex> path = graph.getPath(loc->getInfo(), dest);
-		paintPath(path, true, 5,START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
-		system("pause");
-		paintPath(path, false, 1); 
+		cout << "Enter your preference" << endl;
+		cout << "(1) Closest sharing location (no discount)" << endl;
+		cout << "(2) Other sharing locations (discount)" << endl;
 
+		cin >> userChoice;
+	}
+
+	Vertex* loc;
+
+	try {
+		loc = findLocation(location);
 	}
 	catch (LocationNotFound &e)
 	{
 		cerr << e.message();
-		system("pause");
+		return;
 	}
 	catch (...)
 	{
 		cout << "Unknown exception." << endl;
-		system("pause");
+		return;
 	}
+
+	switch (userChoice)
+	{
+	case 1:
+		showClosestLocation(loc, location);
+		break;
+	case 2:
+		showDiscountLocations(loc, location, false);
+		break;
+	default:
+		break;
+	}
+
 
 	return false;
 }
@@ -538,13 +597,32 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 	}
 }
 
-void SystemManager::showHighest(const vector<Vertex*> &v) const
+Vertex* SystemManager::getDiscountChoice(const vector<Vertex*> &v) const
 {
 	cout << "If you choose one of the following locations, you can get 50 euros in discount!" << endl;
 	cout << "Here are they're IDs: " << endl;
 
+	int userChoice;
+
 	for (int i = 0; i < v.size(); i++)
+		gv->setVertexColor(v[i]->getInfo()->getID(), "PINK");
+	
+	auto exists = find_if(v.begin(), v.end(), [userChoice](Vertex* vertex) {
+		vertex->getInfo()->getID() == userChoice; 
+	});
+
+	while (exists==v.end())
 	{
-		cout << (i+1) << ": " << v[i]->getInfo()->getID() << endl;
+		for (int i = 0; i < v.size(); i++)
+			cout << "Sharing Location: " << v[i]->getInfo()->getID() << endl;
+
+		cout << "Enter your preference: ";
+		cin >> userChoice;
+		
+		exists = find_if(v.begin(), v.end(), [userChoice](Vertex* vertex) {
+			vertex->getInfo()->getID() == userChoice;
+		});
 	}
+
+	return findLocation(userChoice);
 }

@@ -40,15 +40,12 @@ class Vertex {
 
 public:
 	Vertex(Location* in);
+	~Vertex();
 	bool operator<(Vertex & vertex) const; // // required by MutablePriorityQueue
 	Location* getInfo() const;
 	double getDist() const;
 	Vertex *getPath() const;
 	vector<Edge> getAdj() const;
-	void setVisited(bool visited);
-	void setDist(double dist);
-	void setPath(Vertex* path);
-	void setQueueIndex(int index);
 
 	friend class Graph;
 	friend class MutablePriorityQueue<Vertex>;
@@ -64,6 +61,7 @@ class Edge {
 	string name;           // edge name
 public:
 	Edge(int id, Vertex *d, double w);
+	~Edge();
 	Edge(Vertex *d, double w, int id, string name);
 	Edge(int id, Vertex *d);
 	Edge(int id);
@@ -79,6 +77,7 @@ class Graph {
 	vector<Vertex*> vertexSet;    // vertex set
 
 public:
+	~Graph();
 	/*
 	* Auxiliary function to find a vertex with a given content.
 	*/
@@ -100,9 +99,9 @@ public:
 
 	// Fp05 - single source
 	Location* dijkstraShortestPath(Location* s);
-	Location dijkstraShortestPathOld(const Location &s);
+	void bidirectionalSearch(Location* origin, Location* destiny, Graph &invGraph);
 	vector<Vertex> getPath(Location* origin, Location* dest) const;
-	vector<Vertex*> highestLocations();
+	vector<Vertex*> discountLocations(bool rent, const int numberOfLocations);
 };
 
 #endif /* GRAPH_H_ */

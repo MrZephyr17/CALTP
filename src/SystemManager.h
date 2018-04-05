@@ -16,6 +16,8 @@
 #include "GraphViewer.h"
 #include <map>
 
+#define DISCOUNT_LOCATIONS 5
+
 typedef struct
 {
 	std::string nodes;
@@ -71,12 +73,15 @@ public:
 	int convertLongitudeToX(float longitude);
 	int convertLatitudeToY(float latitude);
 	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string edgeColor = "BLACK");
-	void showHighest(const vector<Vertex*> &v) const;
+	Vertex* getDiscountChoice(const vector<Vertex*> &v) const;
+	void showClosestLocation(Vertex* origin, int id);
+	void showDiscountLocations(Vertex* origin, int id, bool rent);
 
 
 private:
 	GraphViewer * gv;
 	Graph graph;
+	Graph invertedGraph;
 	FileNames fileNames;
 };
 

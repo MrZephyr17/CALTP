@@ -2,8 +2,14 @@
 #include <typeinfo>
 #include <iostream>
 #include <string>
+#include <iterator>
 
 Vertex::Vertex(Location* in) : info(in) {}
+
+Vertex::~Vertex()
+{
+	delete info;
+}
 
 void Vertex::addEdge(Vertex *d, double w, int id, string name) {
 	adj.push_back(Edge(d, w, id, name));
@@ -33,28 +39,12 @@ vector<Edge> Vertex::getAdj() const
 	return adj;
 }
 
-void Vertex::setVisited(bool visited)
-{
-	this->visited = visited;
-}
-
-void Vertex::setDist(double dist)
-{
-	this->dist = dist;
-}
-
-void Vertex::setPath(Vertex* path)
-{
-	this->path = path;
-}
-
-void Vertex::setQueueIndex(int index)
-{
-	queueIndex = index;
-}
-
-
 Edge::Edge(int id, Vertex *d, double w) : id(id), dest(d), weight(w) {}
+
+Edge::~Edge()
+{
+	delete dest;
+}
 
 inline Edge::Edge(Vertex* d, double w, int id, string name) : id(id), dest(d), weight(w), name(name) {}
 
@@ -74,6 +64,15 @@ int Graph::getNumVertex() const {
 
 vector<Vertex *> Graph::getVertexSet() const {
 	return vertexSet;
+}
+
+
+Graph::~Graph()
+{
+	for (auto it = vertexSet.begin(); it!= vertexSet.end(); it++)
+		delete *it;
+
+	vertexSet.clear();
 }
 
 Vertex * Graph::findVertex(Location* in) const {
@@ -114,8 +113,8 @@ bool Graph::addEdge(Location* sourc, Location* dest, double w, int id, string na
 
 /**************** Single Source Shortest Path algorithms ************/
 
-Location* Graph::dijkstraShortestPath(Location* origin) {
-	// TODO
+Location* Graph::dijkstraShortestPath(Location* origin) 
+{
 	for (Vertex* v : vertexSet)
 	{
 		v->dist = DBL_MAX;
@@ -156,6 +155,81 @@ Location* Graph::dijkstraShortestPath(Location* origin) {
 	return min->getInfo();
 }
 
+void Graph::bidirectionalSearch(Location * origin, Location * destiny, Graph &invGraph)
+{
+	for (Vertex* v : vertexSet)
+	{
+		v->dist = DBL_MAX;
+		v->path = NULL;
+	}
+
+	Vertex* src = findVertex(origin);
+	Vertex* dest = invGraph.findVertex(destiny);
+	src->dist = 0;
+	dest->dist = 0;
+
+	MutablePriorityQueue<Vertex> queueSrc;
+	MutablePriorityQueue<Vertex> queueDest;
+	src->getInfo()->setVisited(true);
+	queueSrc.insert(src);
+	dest->getInfo()->setVisited(true);
+	queueSrc.insert(dest);
+
+	Vertex *x1 = nullptr;
+	Vertex *x2 = nullptr;
+
+	while (!queueSrc.empty() && !queueDest.empty())
+	{
+		if (!queueSrc.empty())
+		{
+			x1 = queueSrc.extractMin();
+
+			if (x1->getInfo()->getVisited())
+				return;
+
+			for (Edge w : x1->adj)
+			{
+				Vertex *v2 = w.dest;
+				if (v2->dist > x1->dist + w.weight)
+				{
+					double oldDist = v2->dist;
+					v2->dist = x1->dist + w.weight;
+					v2->path = x1;
+					if (oldDist == DBL_MAX)
+						queueSrc.insert(v2);
+					else
+						queueSrc.decreaseKey(v2);
+				}
+			}
+		}
+
+		if (!queueDest.empty())
+		{
+			x2 = queueDest.extractMin();
+
+			if (x2->getInfo()->getVisited())
+				return;
+
+			for (Edge w : x2->adj)
+			{
+				Vertex *v2 = w.dest;
+				if (v2->dist > x2->dist + w.weight)
+				{
+					double oldDist = v2->dist;
+					v2->dist = x2->dist + w.weight;
+					v2->path = x2;
+					if (oldDist == DBL_MAX)
+						queueDest.insert(v2);
+					else
+						queueDest.decreaseKey(v2);
+				}
+			}
+		}
+
+
+	}
+}
+
 vector<Vertex> Graph::getPath(Location* origin, Location* dest) const {
 	vector<Vertex> res, res_aux;
 
@@ -178,29 +252,18 @@ vector<Vertex> Graph::getPath(Location* origin, Location* dest) const {
 	return res;
 }
 
-vector<Vertex*> Graph:: highestLocations()
+vector<Vertex*> Graph:: discountLocations(bool rent, const int numberOfLocations)
 {
 	vector<Vertex*> sharingLocations;
 	
 	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex* vertex) {
 		return strcmp(typeid(*vertex->getInfo()).name(), "class SharingLocation") == 0; });
 
-	/*for (auto vertex : vertexSet)
-	{
-		cout << "|" << typeid(*vertex->getInfo()).name() << "|\n";
-		if (strcmp(typeid(*vertex->getInfo()).name(),"class SharingLocation") == 0)
-		{
-			sharingLocations.push_back(vertex);
-			cout << "Oi\n";
-		}
-	}*/
+		sort(sharingLocations.begin(), sharingLocations.end(), [rent](const Vertex* lhs, const Vertex* rhs) {
+			return rent ? ((SharingLocation*)lhs->getInfo())->getSlots() > ((SharingLocation*)lhs->getInfo())->getSlots() :
+				((SharingLocation*)lhs->getInfo())->getSlots() < ((SharingLocation*)lhs->getInfo())->getSlots();
+		});
 
-	cout << sharingLocations.size() << endl;
-
-	sort(sharingLocations.begin(), sharingLocations.end(), [](const Vertex* lhs, const Vertex* rhs) {
-		return lhs->getInfo()->getAltitudecoord() > rhs->getInfo()->getAltitudecoord();
-	});
-
-	sharingLocations.resize(5);
+	sharingLocations.resize(numberOfLocations);
 	return sharingLocations;
 }

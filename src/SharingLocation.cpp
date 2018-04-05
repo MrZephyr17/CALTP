@@ -12,6 +12,7 @@ SharingLocation::SharingLocation(int id, double latitude, double longitude, doub
 	this->maxCapacity = maxCapacity;
 	this->slots = slots;
 	this->color = "RED";
+	this->visited = false;
 }
 
 bool SharingLocation::depositBike(int number)
@@ -41,4 +42,9 @@ bool SharingLocation::isAvailable() const
 string SharingLocation::getColor() const
 {
 	return color;
+}
+
+int SharingLocation::getSlots() const
+{
+	return slots;
 }
