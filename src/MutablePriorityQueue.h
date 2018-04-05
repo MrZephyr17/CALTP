@@ -30,6 +30,7 @@ public:
 	T * extractMin();
 	void decreaseKey(T * x);
 	bool empty();
+	bool exists(T* x);
 };
 
 // Index calculations
@@ -46,6 +47,12 @@ MutablePriorityQueue<T>::MutablePriorityQueue() {
 template <class T>
 bool MutablePriorityQueue<T>::empty() {
 	return H.size() == 1;
+}
+
+template<class T>
+inline bool MutablePriorityQueue<T>::exists(T * x)
+{
+	return find(H.begin(), H.end(), x) != H.end();
 }
 
 template <class T>

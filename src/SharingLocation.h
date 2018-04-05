@@ -13,5 +13,6 @@ public:
 	bool liftBike(int number = 1);
 	bool isAvailable() const;
 	std::string getColor() const;
+	int getSlots() const;
 };
 

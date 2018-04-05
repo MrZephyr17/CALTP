@@ -24,6 +24,7 @@ protected:
 	int id;
 	Coordinate coords;	///< Location's coordinates (x,y,z)
 	std::string color;
+	bool visited;
 
 public:
 	Location(int id);
@@ -47,6 +48,10 @@ public:
 	virtual bool isAvailable() const;
 
 	virtual std::string getColor() const;
+
+	bool getVisited() const;
+
+	void setVisited(bool vis);
 };
 
 #endif 
