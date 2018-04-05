@@ -8,7 +8,6 @@ Vertex::Vertex(Location* in) : info(in) {}
 
 Vertex::~Vertex()
 {
-	delete info;
 }
 
 void Vertex::addEdge(Vertex *d, double w, int id, string name) {
@@ -43,7 +42,6 @@ Edge::Edge(int id, Vertex *d, double w) : id(id), dest(d), weight(w) {}
 
 Edge::~Edge()
 {
-	delete dest;
 }
 
 inline Edge::Edge(Vertex* d, double w, int id, string name) : id(id), dest(d), weight(w), name(name) {}
@@ -113,7 +111,7 @@ bool Graph::addEdge(Location* sourc, Location* dest, double w, int id, string na
 
 /**************** Single Source Shortest Path algorithms ************/
 
-Location* Graph::dijkstraShortestPath(Location* origin) 
+bool Graph::dijkstraShortestPath(Location* origin, Location* &dest) 
 {
 	for (Vertex* v : vertexSet)
 	{
@@ -124,17 +122,16 @@ Location* Graph::dijkstraShortestPath(Location* origin)
 	Vertex* vertex = findVertex(origin);
 	vertex->dist = 0;
 
-	MutablePriorityQueue<Vertex > queue;
+	MutablePriorityQueue<Vertex> queue;
 	queue.insert(vertex);
 
 	Vertex *min= nullptr;
 	string color = "BLUE";
 
-	while (!queue.empty() && (min == nullptr || !min->info->isAvailable()) &&  (color == "BLUE" ||min->getInfo() == origin))
+	while (!queue.empty() && (min == nullptr || !min->info->isAvailable()) && (color == "BLUE" || min->getInfo() == origin))
 	{
 		min = queue.extractMin();
 		color = min->getInfo()->getColor();
-
 
 		for (Edge w : min->adj)
 		{
@@ -152,8 +149,52 @@ Location* Graph::dijkstraShortestPath(Location* origin)
 		}
 	}
 
-	return min->getInfo();
+	dest = min->getInfo();
+
+	return min->getInfo()->isAvailable();
 }
+
+bool Graph::dijkstraShortestPath(Location* origin, Vertex* destiny)
+{
+	for (Vertex* v : vertexSet)
+	{
+		v->dist = DBL_MAX;
+		v->path = NULL;
+	}
+
+	Vertex* vertex = findVertex(origin);
+	vertex->dist = 0;
+
+	MutablePriorityQueue<Vertex> queue;
+	queue.insert(vertex);
+
+	Vertex *min = nullptr;
+	string color = "BLUE";
+
+	while (!queue.empty() && (min == nullptr || min->info != destiny->info))
+	{
+		min = queue.extractMin();
+		color = min->getInfo()->getColor();
+
+		for (Edge w : min->adj)
+		{
+			Vertex *v2 = w.dest;
+			if (v2->dist > min->dist + w.weight)
+			{
+				double oldDist = v2->dist;
+				v2->dist = min->dist + w.weight;
+				v2->path = min;
+				if (oldDist == DBL_MAX)
+					queue.insert(v2);
+				else
+					queue.decreaseKey(v2);
+			}
+		}
+	}
+
+	return min->info == destiny->info;
+}
+
 
 void Graph::bidirectionalSearch(Location * origin, Location * destiny, Graph &invGraph)
 {
@@ -251,6 +292,7 @@ vector<Vertex> Graph::getPath(Location* origin, Location* dest) const {
 
 	return res;
 }
+
 
 vector<Vertex*> Graph:: discountLocations(bool rent, const int numberOfLocations)
 {

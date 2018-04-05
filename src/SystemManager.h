@@ -81,7 +81,6 @@ public:
 private:
 	GraphViewer * gv;
 	Graph graph;
-	Graph invertedGraph;
 	FileNames fileNames;
 };
 

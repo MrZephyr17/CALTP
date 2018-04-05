@@ -98,7 +98,8 @@ public:
 	vector<Vertex *> getVertexSet() const;
 
 	// Fp05 - single source
-	Location* dijkstraShortestPath(Location* s);
+	bool dijkstraShortestPath(Location* s, Vertex* destiny);
+	bool dijkstraShortestPath(Location* s, Location* &destiny);
 	void bidirectionalSearch(Location* origin, Location* destiny, Graph &invGraph);
 	vector<Vertex> getPath(Location* origin, Location* dest) const;
 	vector<Vertex*> discountLocations(bool rent, const int numberOfLocations);
