@@ -49,9 +49,12 @@ void saveResults(const vector<string> &originalLines, const vector<double> &elev
         save << originalLines.at(i) << ";" << elevations.at(i);
 
         if (sharingLines.find(i) != sharingLines.end())
-            save << ";true" << endl;
+            save << ";true";
         else
-            save << ";false" << endl;
+            save << ";false";
+
+        if (i < size - 1)
+            save << endl;
     }
 
     save.close();
@@ -78,26 +81,42 @@ int main(int argc, char *argv[])
     vector<string> lines;
     string locations;
     vector<double> elevations;
+    vector<double> temp_elevations;
     vector<string> sharingInfo;
     set<int> lineNumbers;
     int linesSize;
 
     lines = readNodes(argv[1], ids);
     linesSize = lines.size();
-    locations = parseLocations(lines);
 
-    system(getCommand(locations).c_str());
-    dup2(save_stdout,STDOUT_FILENO);
+    int step = 2000;
+    int begin = 0;
+    int end = 0;
+    int i = 1;
+    while (end < linesSize)
+    {
+        end += step;
+        locations = parseLocations(lines, begin, end);
+        system(getCommand(locations).c_str());
+        cout << endl;
+        temp_elevations = parseResult(CURL_RESULT, i);
+        elevations.insert(std::end(elevations), std::begin(temp_elevations), std::end(temp_elevations));
+        begin = end;
+        i++;
+    }
+
+    dup2(save_stdout, STDOUT_FILENO);
     close(save_stdout);
     close(fd);
 
-    elevations = parseResult(CURL_RESULT);
     lineNumbers = generateRandomLineIDs(atoi(argv[4]), linesSize);
     sharingInfo = createSharingInfo(ids, lineNumbers);
     createSharingFile(argv[3], sharingInfo);
     saveResults(lines, elevations, argv[2], lineNumbers);
 
-    cout << endl << endl << "Successfully added elevation and sharing location information to the specified files!" << endl;
+    cout << endl
+         << endl
+         << "Successfully added elevation and sharing location information to the specified files!" << endl;
 
     return 0;
 }

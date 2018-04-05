@@ -11,18 +11,20 @@ string getCommand(string locations)
   https://api.open-elevation.com/api/v1/lookup \\
   -H \'Accept: application/json\' \\
   -H \'Content-Type: application/json\' \\
-  -d \'" + locations + "\'";
+  -d \'" + locations +
+           "\'";
 }
 
-vector<double> parseResult(string file)
+vector<double> parseResult(string file, int what)
 {
     string res;
     ifstream read(file);
 
-    if(!read.is_open())
+    if (!read.is_open())
         exit(1);
 
-    getline(read, res);
+    for (int i = 0; i < what; i++)
+        getline(read, res);
 
     read.close();
 
@@ -89,14 +91,14 @@ string parseLine(string line)
     return parsed;
 }
 
-string parseLocations(const vector<string> &lines)
+string parseLocations(const vector<string> &lines, int begin, int end)
 {
     string parsed = "{\"locations\":[";
     int size = lines.size();
 
-    for (int i = 0; i < size; i++)
+    for (int i = begin; i < end && i < size; i++)
     {
-        if (i > 0)
+        if (i > begin)
             parsed += ",";
         parsed += parseLine(lines.at(i));
     }
