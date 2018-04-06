@@ -1,0 +1,11 @@
+1;Edge 1;false
+2;Edge 2;false
+3;Edge 3;false
+4;Edge 4;false
+5;Edge 5;false
+6;Edge 6;false
+7;Edge 7;false
+8;Edge 8;false
+9;Edge 9;false
+10;Edge 10;false
+11;Edge 11;false
