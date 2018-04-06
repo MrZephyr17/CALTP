@@ -367,7 +367,7 @@ bool SystemManager::isConnected()
 			v->getInfo()->setVisited(false);
 		}
 
-		isConnectedAux(vertexes.at(id),counter);
+		isConnectedAux(vertexes.at(134),counter);
 		gv->setVertexColor(id + 1, MAGENTA);
 		
 		if (counter != vertexes.size())
@@ -379,14 +379,16 @@ bool SystemManager::isConnected()
 			cout << "\nGraph is not connected\n";			
 			system("pause");
 
-			for(unsigned int i = 0; i <= id; i++)
-				gv->setVertexColor(i + 1, vertexes.at(i)->getInfo()->getColor());
+			for (Vertex * v : vertexes)
+			{
+				gv->setVertexColor(v->getInfo()->getID(), v->getInfo()->getColor());
+			}
 			return false;
 		}
 	}
 	for (Vertex * v : vertexes)
 	{
-		gv->setVertexColor(v->getInfo()->getID(), YELLOW);
+		gv->setVertexColor(v->getInfo()->getID(), GREEN);
 	}
 	
 	end = clock();
@@ -394,7 +396,6 @@ bool SystemManager::isConnected()
 	cout << "\nTime taken to check connectivity file: " << timeSpent << endl << endl;
 	cout << "This Graph is connected.See in GraphViewer. ";
 	
-
 	system("pause");
 
 	for (Vertex * v : vertexes)
@@ -408,7 +409,10 @@ void SystemManager::isConnectedAux(Vertex * v, int &counter)
 {
 	counter++;
 	v->getInfo()->setVisited(true);
-	//gv->setVertexColor(v->getInfo()->getID(), YELLOW);
+	if(v->getInfo()->isAvailable())
+		gv->setVertexColor(v->getInfo()->getID(), BLACK);
+	else
+		gv->setVertexColor(v->getInfo()->getID(), YELLOW);
 
 	for (Edge e : v->getAdj())
 	{
@@ -416,7 +420,6 @@ void SystemManager::isConnectedAux(Vertex * v, int &counter)
 			isConnectedAux(e.getDest(),counter);
 	}
 }
-
 
 void SystemManager::showClosestLocation(Vertex* origin, int id, bool rent)
 {
@@ -445,7 +448,6 @@ void SystemManager::showClosestLocation(Vertex* origin, int id, bool rent)
 		waitConfirm();
 	}
 }
-
 
 void SystemManager::showDiscountLocations(Vertex* origin, int id, bool rent)
 {
@@ -541,7 +543,6 @@ bool SystemManager::mainMenu(const vector<pair<int, unsigned long long>> &idsNod
 	return true;
 }
 
-
 bool SystemManager::menuRent()
 {
 	Limpar_ecra();
@@ -594,7 +595,6 @@ bool SystemManager::menuRent()
 
 	return true;
 }
-
 
 bool SystemManager::menuHasBike()
 {
@@ -676,10 +676,6 @@ bool SystemManager::menuSave(const vector<pair<int, unsigned long long>> &idsNod
 
 	return true;
 }
-
-
-
-
 
 /*
 * Auxiliary function to find a vertex with a given stringName.
