@@ -119,3 +119,10 @@ bool isNumber(string input)
 	return isNumber;
 
 }
+
+void waitConfirm()
+{
+	string input;
+	cout << "Press any key to continue..." << endl;
+	getline(cin, input);
+}

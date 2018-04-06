@@ -48,7 +48,7 @@ void SystemManager::selectGraph()
 	cout << TAB << "3 - Porto Paranhos - 8670 Nodes, 9278 Edges, 50 Sharing Locations.\n\n";
 	cout << "Test files:\n\n";
 	cout << TAB << "4 - Non Connective Graph.\n\n";
-	cout << TAB << "4 - Connective Graph.\n\n";
+	cout << TAB << "5 - Connective Graph.\n\n";
 	cout << TAB << "6 - Biconnective Graph.\n\n";
 
 	int userChoice = verifyInput(1, 6);
@@ -68,23 +68,23 @@ void SystemManager::selectGraph()
 	switch (userChoice)
 	{
 	case 1:
-		this->fileNames.nodes = "nodes.txt";
-		this->fileNames.edges = "edges.txt";
-		this->fileNames.names = "names.txt";
-		this->fileNames.sharingLocations = "sharingLocations.txt";
+		this->fileNames.nodes = "AHnodes.txt";
+		this->fileNames.edges = "AHedges.txt";
+		this->fileNames.names = "AHnames.txt";
+		this->fileNames.sharingLocations = "AHsharingLocations.txt";
 		break;
 	case 2:
-		this->fileNames.nodes = "nodesFEUP.txt";
-		this->fileNames.edges = "edgesFEUP.txt";
-		this->fileNames.names = "namesFEUP.txt";
-		this->fileNames.sharingLocations = "sharingFEUP.txt";
+		this->fileNames.nodes = "FeupNodes.txt";
+		this->fileNames.edges = "FeupEdges.txt";
+		this->fileNames.names = "FeupNames.txt";
+		this->fileNames.sharingLocations = "FeupSharing.txt";
 		break;
 	case 3:
-		this->fileNames.nodes = "nodesPorto.txt";
-		this->fileNames.edges = "edgesPorto.txt";
-		this->fileNames.names = "nomesPorto.txt";
-		this->fileNames.sharingLocations = "sharingPorto.txt";
-		break;
+		this->fileNames.nodes = "PortoNodes.txt";
+		this->fileNames.edges = "PortoEdges.txt";
+		this->fileNames.names = "PortoNomes.txt";
+		this->fileNames.sharingLocations = "PortoSharing.txt";
+		break; // ADD OTHERS CASES
 	case 4:
 		this->fileNames.nodes = "//Conetividade//nodesNaoConexo.txt";
 		this->fileNames.edges = "//Conetividade//edgesNaoConexo.txt";
@@ -92,10 +92,10 @@ void SystemManager::selectGraph()
 		this->fileNames.sharingLocations = "//Conetividade//sharingLocationsEmpty.txt";
 		break;
 	case 5:
-		this->fileNames.nodes = "//Conetividade//nodesConectividade.txt";
-		this->fileNames.edges = "//Conetividade//edgesConectividade.txt";
-		this->fileNames.names = "//Conetividade//nomesConectividade.txt";
-		this->fileNames.sharingLocations = "//Conetividade//sharingLocationsEmpty.txt";
+		this->fileNames.nodes = "nodesConectividade.txt";
+		this->fileNames.edges = "edgesConectividade.txt";
+		this->fileNames.names = "nomesConectividade.txt";
+		this->fileNames.sharingLocations = "sharingLocationsEmpty.txt";
 		break;
 	case 6:
 		this->fileNames.nodes = "//Conetividade//nodesBiconectividade.txt";
@@ -148,7 +148,7 @@ vector<pair<int, unsigned long long>> SystemManager::loadFiles()
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
 	cout << "Time to read Edges file: " << timeSpent << endl << endl;
 
-	//gv->rearrange();
+	gv->rearrange();
 
 	return idsNodes;
 }
@@ -347,32 +347,76 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned
 	}
 }
 
-void SystemManager::f()
+bool SystemManager::isConnected()
 {
+	Limpar_ecra();
+	double timeSpent;
+	clock_t begin, end;
+	begin = clock();
+
+	cout << "Checking graph connectivity...\n";
+
 	vector<Vertex *> vertexes = graph.getVertexSet();
+
+	for (unsigned int id = 0; id < vertexes.size(); id++)
+	{
+		int counter = 0;
+
+		for (Vertex * v : vertexes)
+		{
+			v->getInfo()->setVisited(false);
+		}
+
+		isConnectedAux(vertexes.at(id),counter);
+		gv->setVertexColor(id + 1, MAGENTA);
+		
+		if (counter != vertexes.size())
+		{
+			end = clock();
+			cout << "Failed on Node " << vertexes.at(id)->getInfo()->getID() << ". See on GraphViewer" << endl;
+			timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+			cout << "\nTime taken to check connectivity file: " << timeSpent << endl << endl;
+			cout << "\nGraph is not connected\n";			
+			system("pause");
+
+			for(unsigned int i = 0; i <= id; i++)
+				gv->setVertexColor(i + 1, vertexes.at(i)->getInfo()->getColor());
+			return false;
+		}
+	}
+	for (Vertex * v : vertexes)
+	{
+		gv->setVertexColor(v->getInfo()->getID(), YELLOW);
+	}
+	
+	end = clock();
+	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	cout << "\nTime taken to check connectivity file: " << timeSpent << endl << endl;
+	cout << "This Graph is connected.See in GraphViewer. ";
+	
+
+	system("pause");
 
 	for (Vertex * v : vertexes)
 	{
-		v->getInfo()->setVisited(false);
+		gv->setVertexColor(v->getInfo()->getID(),v->getInfo()->getColor());
 	}
-	cout << "ID escolhido (" << 0 << ", " << vertexes.size() << ") : ";
-	int id;
-	cin >> id;
-	Vertex * chosen = vertexes.at(id);
-	dfs(chosen);
+	return true;
 }
 
-void SystemManager::dfs(Vertex * v)
+void SystemManager::isConnectedAux(Vertex * v, int &counter)
 {
+	counter++;
 	v->getInfo()->setVisited(true);
-	gv->setVertexColor(v->getInfo()->getID(), YELLOW);
+	//gv->setVertexColor(v->getInfo()->getID(), YELLOW);
 
 	for (Edge e : v->getAdj())
 	{
 		if (!e.getDest()->getInfo()->getVisited())
-			dfs(e.getDest());
+			isConnectedAux(e.getDest(),counter);
 	}
 }
+
 
 void SystemManager::showClosestLocation(Vertex* origin, int id, bool rent)
 {
@@ -391,16 +435,14 @@ void SystemManager::showClosestLocation(Vertex* origin, int id, bool rent)
 		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
 		cout << "Found closest location in: " << to_string(timeSpent) << " seconds!" << endl;
 		cout << "Check the map to see the generated path!" << endl;
-		system("pause");
-		cin.ignore(1000, '\n');
+		waitConfirm();
 		paintPath(path, false, 1);
 		rent ? ((SharingLocation*)dest)->liftBike() : ((SharingLocation*)dest)->depositBike();
 	}
 	else
 	{
 		cout << "Can't reach any sharing location from your location!" << endl;
-		system("pause");
-		cin.ignore(1000, '\n');
+		waitConfirm();
 	}
 }
 
@@ -421,16 +463,14 @@ void SystemManager::showDiscountLocations(Vertex* origin, int id, bool rent)
 		vector<Vertex> path = graph.getPath(origin->getInfo(), dest->getInfo());
 		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
 		cout << "Found requested location in: " << to_string(timeSpent) << " seconds!" << endl;
-		system("pause");
-		cin.ignore(1000, '\n');
 		paintPath(path, false, 1);
 		rent ? ((SharingLocation*)dest->getInfo())->liftBike() : ((SharingLocation*)dest->getInfo())->depositBike();
+		waitConfirm();
 	}
 	else
 	{
 		cout << "Can't reach node " << to_string(dest->getInfo()->getID()) << " from your location!" << endl;
-		system("pause");
-		cin.ignore(1000, '\n');
+		waitConfirm();
 	}
 }
 
@@ -442,11 +482,21 @@ bool SystemManager::Menu()
 
 	vector<pair<int, unsigned long long>> idsNodes = loadFiles();
 
-	system("pause");
+	waitConfirm();
 
 	mainMenu(idsNodes);
 
 	return true;
+}
+
+void SystemManager::checkConnectivity()
+{
+	bool isCon = isConnected();
+
+	if (isCon)
+	{
+		//TODO biconectivity
+	}
 }
 
 bool SystemManager::mainMenu(const vector<pair<int, unsigned long long>> &idsNodes)
@@ -462,7 +512,8 @@ bool SystemManager::mainMenu(const vector<pair<int, unsigned long long>> &idsNod
 		cout << "1 - Rent a bike" << endl;
 		cout << "2 - I already have one" << endl;
 		cout << "3 - Select new graph" << endl;
-		cout << "4 - Exit" << endl;
+		cout << "4 - Check Graph Connectivity" << endl;
+		cout << "5 - Exit" << endl;
 
 		int userChoice = verifyInput(1, 5);
 
@@ -477,11 +528,11 @@ bool SystemManager::mainMenu(const vector<pair<int, unsigned long long>> &idsNod
 		case 3:
 			return true;
 		case 4:
+			checkConnectivity();
+			break;
+		case 5:
 			menuSave(idsNodes);
 			exit(0);
-		case 5:
-			f();
-			break;
 		default:
 			break;
 		}
@@ -737,5 +788,5 @@ void SystemManager::saveSharingLocations(const vector<pair<int, unsigned long lo
 			save << endl;
 	}
 	save.close();
-	system("pause");
+	waitConfirm();
 }

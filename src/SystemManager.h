@@ -78,8 +78,9 @@ public:
 	Vertex* getDiscountChoice(const vector<Vertex*> &v) const;
 	void showClosestLocation(Vertex* origin, int id, bool rent);
 	void showDiscountLocations(Vertex* origin, int id, bool rent);
-	void f();
-	void dfs(Vertex * v);
+	void checkConnectivity();
+	bool isConnected();
+	void isConnectedAux(Vertex * v, int &counter);
 
 private:
 	GraphViewer * gv;

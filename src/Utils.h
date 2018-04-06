@@ -15,3 +15,5 @@ double velocity(Location* origin, Location* dest);
 int verifyInput(int low, int high);
 
 bool isNumber(std::string input);
+
+void waitConfirm();
