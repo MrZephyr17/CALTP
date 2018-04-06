@@ -79,7 +79,6 @@ int verifyInput(int low, int high)
 	while (!validInput)
 	{
 		cout << "Choose an option (" << low << "-" << high << "): ";
-
 		getline(cin, input);
 
 		if (isdigit(input[0]))
