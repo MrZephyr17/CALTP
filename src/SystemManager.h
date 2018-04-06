@@ -59,24 +59,27 @@ public:
 	~SystemManager();
 
 
-	void loadFiles();
+	vector<pair<int, unsigned long long>> loadFiles();
 	void selectGraph();
 	bool Menu();
-	bool mainMenu();
+	bool mainMenu(const vector<pair<int, unsigned long long>> &idsNodes);
 	bool menuRent();
 	bool menuHasBike();
+	bool menuSave(const vector<pair<int, unsigned long long>> &idsNodes);
 	void loadSharingLocations(vector<SharingLoc> &sharingLocations);
 	void loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned long long>> &val);
 	void loadNodes(vector<pair<int, unsigned long long>> &idsNodes, const vector<SharingLoc> &sharingLocations);
 	vector<EdgeName> loadNames();
+	void saveSharingLocations(const vector<pair<int,unsigned long long>> &idsNodes);
 	Vertex* findLocation(int name) const;
 	int convertLongitudeToX(float longitude);
 	int convertLatitudeToY(float latitude);
 	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string edgeColor = "BLACK");
 	Vertex* getDiscountChoice(const vector<Vertex*> &v) const;
-	void showClosestLocation(Vertex* origin, int id);
+	void showClosestLocation(Vertex* origin, int id, bool rent);
 	void showDiscountLocations(Vertex* origin, int id, bool rent);
-
+	void f();
+	void dfs(Vertex * v);
 
 private:
 	GraphViewer * gv;

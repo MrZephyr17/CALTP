@@ -10,6 +10,6 @@ int main(void)
 	SystemManager m;
 		
 	while(m.Menu());
-
+	
 	return 0;
 }

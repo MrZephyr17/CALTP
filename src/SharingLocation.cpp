@@ -48,3 +48,8 @@ int SharingLocation::getSlots() const
 {
 	return slots;
 }
+
+int SharingLocation::getMaxCapacity() const
+{
+	return maxCapacity;
+}

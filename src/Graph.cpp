@@ -55,6 +55,11 @@ int Edge::getID()
 	return id;
 }
 
+Vertex * Edge::getDest()
+{
+	return dest;
+}
+
 int Graph::getNumVertex() const {
 	return vertexSet.size();
 }
@@ -299,13 +304,15 @@ vector<Vertex*> Graph:: discountLocations(bool rent, const int numberOfLocations
 	vector<Vertex*> sharingLocations;
 	
 	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex* vertex) {
-		return strcmp(typeid(*vertex->getInfo()).name(), "class SharingLocation") == 0; });
+		return strcmp(typeid(*vertex->getInfo()).name(), "class SharingLocation") == 0 && vertex->getInfo()->isAvailable(); });
 
 		sort(sharingLocations.begin(), sharingLocations.end(), [rent](const Vertex* lhs, const Vertex* rhs) {
 			return rent ? ((SharingLocation*)lhs->getInfo())->getSlots() > ((SharingLocation*)lhs->getInfo())->getSlots() :
 				((SharingLocation*)lhs->getInfo())->getSlots() < ((SharingLocation*)lhs->getInfo())->getSlots();
 		});
 
-	sharingLocations.resize(numberOfLocations);
+		if(sharingLocations.size() > numberOfLocations)
+			sharingLocations.resize(numberOfLocations);
+
 	return sharingLocations;
 }

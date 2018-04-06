@@ -14,5 +14,6 @@ public:
 	bool isAvailable() const;
 	std::string getColor() const;
 	int getSlots() const;
+	int getMaxCapacity() const;
 };
 

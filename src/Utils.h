@@ -11,3 +11,7 @@ double degreesToRadians(double degrees);
 double distance(Location* origin, Location* dest);
 
 double velocity(Location* origin, Location* dest);
+
+int verifyInput(int low, int high);
+
+bool isNumber(std::string input);

@@ -1,4 +1,8 @@
 #include "Utils.h"
+#include <string>
+#include <iostream>
+
+using namespace std;
 
 double calcWeight(Location* origin, Location* dest)
 {
@@ -64,4 +68,55 @@ double velocity(Location* origin, Location* dest)
 			return 100/9.0 * sin(2 * angle) + 25/6.0;
 		}
 	}
+}
+
+int verifyInput(int low, int high)
+{
+	int inputValue;
+	string input;
+	bool validInput = false;
+
+	while (!validInput)
+	{
+		cout << "Choose an option (" << low << "-" << high << "): ";
+
+		getline(cin, input);
+
+		if (isdigit(input[0]))
+		{
+			//Apenas aceita como input numeros entre o limite inferior e superior (inclusive)
+			if (stoi(input) >= low && stoi(input) <= high && input.size()<2)
+				validInput = true;
+			else
+				cout << "Invalid input! Try again..." << endl;
+		}
+		//Qualquer outro input e recusado, e e novamente pedido ao utilizador que introduza um número.
+		else
+			cout << "Invalid input! Try again..." << endl;
+	}
+
+	inputValue = stoi(input);
+
+	return inputValue;
+}
+
+bool isNumber(string input)
+{
+	bool isNumber;
+
+	if (input == "")
+		return false;
+	else
+	{
+		for (int i = 0; i < input.size(); i++)
+			if (isdigit(input[i]))
+				isNumber = true;
+			else
+			{
+				isNumber = false;
+				break;
+			}
+	}
+	return isNumber;
+
 }

@@ -66,6 +66,7 @@ public:
 	Edge(int id, Vertex *d);
 	Edge(int id);
 	int getID();
+	Vertex * getDest();
 	friend class Graph;
 	friend class Vertex;
 };

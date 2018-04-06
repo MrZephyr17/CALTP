@@ -14,11 +14,11 @@ using namespace std;
 // CONSTANTS
 #define EDGE_COLOR_DEFAULT BLACK
 #define VERTEX_COLOR_DEFAULT BLUE
+#define START_NODE_COLOR YELLOW
+#define END_NODE_COLOR WHITE
+#define PATH_COLOR MAGENTA
+#define TAB "      "
 
-const string START_NODE_COLOR = "YELLOW";
-const string END_NODE_COLOR = "";
-
-const string PATH_COLOR = "MAGENTA";
 const float MAX_LAT = 41.20324;
 const float MIN_LAT = 41.17303;
 const float MAX_LON = -8.555458;
@@ -26,7 +26,6 @@ const float MIN_LON = -8.622682;
 
 #define WINDOW_HEIGHT 2160
 #define WINDOW_WIDTH 3840
-
 
 SystemManager::SystemManager()
 {
@@ -47,8 +46,13 @@ void SystemManager::selectGraph()
 {
 	cout << "Welcome !!\n\n";
 	cout << "Choose the Map you want:\n\n";
-	cout << "1 - Baixa Porto - 666 Nodes, 1920 Edges.\n\n";
-	cout << "2 - Zona Hospital Sao Joao / FEUP - X Nodes, Y Edges.\n\n";
+	cout << TAB << "1 - Baixa Porto - 763 Nodes, 799 Edges, 20 Sharing Locations.\n\n";
+	cout << TAB << "2 - Zona Hospital Sao Joao / FEUP - 969 Nodes, 1051 Edges, 20 Sharing Locations.\n\n";
+	cout << TAB << "3 - Porto Paranhos - 8670 Nodes, 9278 Edges, 50 Sharing Locations.\n\n";
+	cout << "Test files:\n\n";
+	cout << TAB << "4 - Non Connective Graph.\n\n";
+	cout << TAB << "4 - Connective Graph.\n\n";
+	cout << TAB << "6 - Biconnective Graph.\n\n";
 
 	bool repeat = true;
 	int option;
@@ -97,6 +101,33 @@ void SystemManager::selectGraph()
 				repeat = false;
 				break;
 			}
+			case 4:
+			{
+				this->fileNames.nodes = "//Conetividade//nodesNaoConexo.txt";
+				this->fileNames.edges = "//Conetividade//edgesNaoConexo.txt";
+				this->fileNames.names = "//Conetividade//nomesNaoConexo.txt";
+				this->fileNames.sharingLocations = "//Conetividade//sharingLocationsEmpty.txt";
+				repeat = false;
+				break;
+			}
+			case 5:
+			{
+				this->fileNames.nodes = "//Conetividade//nodesConectividade.txt";
+				this->fileNames.edges = "//Conetividade//edgesConectividade.txt";
+				this->fileNames.names = "//Conetividade//nomesConectividade.txt";
+				this->fileNames.sharingLocations = "//Conetividade//sharingLocationsEmpty.txt";
+				repeat = false;
+				break;
+			}
+			case 6:
+			{
+				this->fileNames.nodes = "//Conetividade//nodesBiconectividade.txt";
+				this->fileNames.edges = "//Conetividade//edgesBiconectividade.txt";
+				this->fileNames.names = "//Conetividade//nomesBiconectividade.txt";
+				this->fileNames.sharingLocations = "//Conetividade//sharingLocationsEmpty.txt";
+				repeat = false;
+				break;
+			}
 			default:
 				cout << "Insert a valid menu option." << endl;
 				break;
@@ -105,7 +136,7 @@ void SystemManager::selectGraph()
 	}
 }
 
-void SystemManager::loadFiles()
+vector<pair<int, unsigned long long>> SystemManager::loadFiles()
 {
 
 	clock_t begin, end;
@@ -145,7 +176,9 @@ void SystemManager::loadFiles()
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
 	cout << "Time to read Edges file: " << timeSpent << endl << endl;
 
-	gv->rearrange();
+	//gv->rearrange();
+
+	return idsNodes;
 }
 
 void SystemManager::loadSharingLocations(vector<SharingLoc>& sharingLocations)
@@ -202,7 +235,10 @@ void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes, c
 			getline(read, isShrLoc);
 
 			gv->addNode(idInt, 2.5 * convertLongitudeToX(lon), -1 * convertLatitudeToY(lat) - 100);
+			gv->setVertexLabel(idInt, to_string(idInt));
+
 			idsNodes.push_back(make_pair(idInt, id));
+
 			if (isShrLoc == "true")
 			{
 				gv->setVertexColor(idInt, RED);
@@ -315,8 +351,8 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned
 						gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::UNDIRECTED);
 						graph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
 						gv->setEdgeLabel(idIntEdge, x.name);
-						idIntEdge++;					
-						graph.addEdge(destiny->getInfo(), origin->getInfo(), weight, idIntEdge, x.name);					
+						idIntEdge++;
+						graph.addEdge(destiny->getInfo(), origin->getInfo(), weight, idIntEdge, x.name);
 					}
 					else
 					{
@@ -345,16 +381,16 @@ bool SystemManager::Menu()
 
 	selectGraph();
 
-	loadFiles();
+	vector<pair<int, unsigned long long>> idsNodes = loadFiles();
 
 	system("pause");
 
-	mainMenu();
+	mainMenu(idsNodes);
 
 	return true;
 }
 
-bool SystemManager::mainMenu()
+bool SystemManager::mainMenu(const vector<pair<int, unsigned long long>> &idsNodes)
 {
 	int option;
 
@@ -401,7 +437,13 @@ bool SystemManager::mainMenu()
 			}
 			case 4:
 			{
+				menuSave(idsNodes);
 				exit(0);
+			}
+			case 5:
+			{
+				f();
+				break;
 			}
 			default:
 			{
@@ -413,37 +455,61 @@ bool SystemManager::mainMenu()
 	return true;
 }
 
+void SystemManager::f()
+{
+	vector<Vertex *> vertexes = graph.getVertexSet();
+
+	for (Vertex * v : vertexes)
+	{
+		v->getInfo()->setVisited(false);
+	}
+	cout << "ID escolhido (" << 0 << ", " << vertexes.size() << ") : ";
+	int id;
+	cin >> id;
+	Vertex * chosen = vertexes.at(id);
+	dfs(chosen);
+}
+
+void SystemManager::dfs(Vertex * v)
+{
+	v->getInfo()->setVisited(true);
+	gv->setVertexColor(v->getInfo()->getID(), YELLOW);
+
+	for (Edge e : v->getAdj())
+	{
+		if (!e.getDest()->getInfo()->getVisited())
+			dfs(e.getDest());
+	}
+}
+
+
 
 bool SystemManager::menuRent()
 {
 	Limpar_ecra();
 
-	int location, userChoice = 0;
+	string location = "";
 
 	cout << "------------------------------" << endl;
 	cout << "--------|RENT A BIKE|--------" << endl;
 	cout << "------------------------------" << endl;
-	cout << endl << "Tell me your location: ";
 
-
-	cin >> location;
-
-
-	while (userChoice != 1 && userChoice != 2)
+	while (!isNumber(location))
 	{
-		cout << "Enter your preference" << endl;
-		cout << "(1) Closest sharing location (no discount)" << endl;
-		cout << "(2) Other sharing locations (discount)" << endl;
-
-		cin >> userChoice;
-		cin.ignore(1000, '\n');
-		cin.clear();
+		cout << endl << "Tell me your location: ";
+		getline(cin, location);
 	}
 
+	cout << "Enter your preference" << endl;
+	cout << "(1) Closest sharing location (no discount)" << endl;
+	cout << "(2) Other sharing locations (discount)" << endl;
+
+	int userChoice = verifyInput(1, 2);
 	Vertex* loc;
+	int id = stoi(location);
 
 	try {
-		loc = findLocation(location);
+		loc = findLocation(id);
 	}
 	catch (LocationNotFound &e)
 	{
@@ -459,20 +525,47 @@ bool SystemManager::menuRent()
 	switch (userChoice)
 	{
 	case 1:
-		showClosestLocation(loc, location);
+		showClosestLocation(loc, id, true);
 		break;
 	case 2:
-		showDiscountLocations(loc, location, true);
+		showDiscountLocations(loc, id, true);
 		break;
 	default:
 		break;
 	}
 
+	return true;
+}
+
+bool SystemManager::menuSave(const vector<pair<int, unsigned long long>> &idsNodes)
+{
+
+	Limpar_ecra();
+
+	int userChoice = 0;
+
+
+	cout << "Enter your preference" << endl;
+	cout << "(1) Don't save" << endl;
+	cout << "(2) Save" << endl;
+	cout << "Choice: ";
+
+	switch (userChoice)
+	{
+	case 1:
+		exit(0);
+		break;
+	case 2:
+		saveSharingLocations(idsNodes);
+		break;
+	default:
+		break;
+	}
 
 	return true;
 }
 
-void SystemManager::showClosestLocation(Vertex* origin, int id)
+void SystemManager::showClosestLocation(Vertex* origin, int id, bool rent)
 {
 	clock_t begin, end;
 	begin = clock();
@@ -491,6 +584,7 @@ void SystemManager::showClosestLocation(Vertex* origin, int id)
 		cout << "Check the map to see the generated path!" << endl;
 		system("pause");
 		paintPath(path, false, 1);
+		rent ? ((SharingLocation*)dest)->liftBike() : ((SharingLocation*)dest)->depositBike();
 	}
 	else
 	{
@@ -498,6 +592,7 @@ void SystemManager::showClosestLocation(Vertex* origin, int id)
 		system("pause");
 	}
 }
+
 
 void SystemManager::showDiscountLocations(Vertex* origin, int id, bool rent)
 {
@@ -517,6 +612,7 @@ void SystemManager::showDiscountLocations(Vertex* origin, int id, bool rent)
 		cout << "Found requested location in: " << to_string(timeSpent) << " seconds!" << endl;
 		system("pause");
 		paintPath(path, false, 1);
+		rent ? ((SharingLocation*)dest->getInfo())->liftBike() : ((SharingLocation*)dest->getInfo())->depositBike();
 	}
 	else
 	{
@@ -568,7 +664,7 @@ bool SystemManager::menuHasBike()
 	switch (userChoice)
 	{
 	case 1:
-		showClosestLocation(loc, location);
+		showClosestLocation(loc, location, false);
 		break;
 	case 2:
 		showDiscountLocations(loc, location, false);
@@ -615,7 +711,7 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 
 		if (edge.getID() == -1)
 		{
-			cout << "Deu merda no Djikstra / Path nao e possivel!!" << endl;
+			cout << "Path nao e possivel!!" << endl;
 			return;
 		}
 
@@ -637,7 +733,7 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 
 Vertex* SystemManager::getDiscountChoice(const vector<Vertex*> &v) const
 {
-	cout << "If you choose one of the following locations, you can get 50 euros in discount!" << endl;
+	cout << "You can get 50 euros discount if you choose one of the following locations!" << endl;
 	cout << "Here are they're IDs: " << endl;
 
 	int userChoice;
@@ -663,4 +759,32 @@ Vertex* SystemManager::getDiscountChoice(const vector<Vertex*> &v) const
 	}
 
 	return findLocation(userChoice);
+}
+
+void SystemManager::saveSharingLocations(const vector<pair<int, unsigned long long>> &idsNodes)
+{
+	vector<Vertex*> sharingLocations;
+	vector<Vertex*> vertexSet = graph.getVertexSet();
+	ofstream save(fileNames.sharingLocations);
+
+	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex* vertex) {
+		return strcmp(typeid(*vertex->getInfo()).name(), "class SharingLocation") == 0; });
+
+	int size = sharingLocations.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		auto id = find_if(idsNodes.begin(), idsNodes.end(), [&sharingLocations, &i](pair<int, unsigned long long> p) {
+			return p.first == sharingLocations.at(i)->getInfo()->getID();
+		});
+
+		SharingLocation* loc = ((SharingLocation*)sharingLocations.at(i)->getInfo());
+
+		save << to_string(id->second) << ";" << loc->getMaxCapacity() << ";" << loc->getSlots();
+
+		if (i < size - 1)
+			save << endl;
+	}
+	save.close();
+	system("pause");
 }
