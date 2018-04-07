@@ -286,7 +286,8 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, unordered_map<int, unsign
 
 			if (destiny == nullptr || origin == nullptr)
 			{
-				cerr << "\nError on Edges file. Some Location(node) is not defined. File could have been corrupted." << endl << endl;
+				cerr << "\nError on Edges file. Some Location(node) is not defined. File could have been corrupted." << endl
+					 << endl;
 				exit(4);
 			}
 
@@ -413,7 +414,7 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 		gv->setVertexColor(id, YELLOW);
 		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
 		cout << "Found closest location in: " << to_string(timeSpent) << " seconds!" << endl;
-		cout << "Travel you take you approximately " << getTime(getPathLength(path)) << endl;
+		cout << "Travel will take you approximately " << getTime(getPathLength(path)) << endl;
 		cout << "Check the map to see the generated path!" << endl;
 		waitConfirm();
 		paintPath(path, false, 1);
@@ -429,28 +430,13 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 void SystemManager::showDiscountLocations(Vertex *origin, int id, bool rent)
 {
 	vector<Vertex *> v = graph.discountLocations(rent, DISCOUNT_LOCATIONS);
-	Vertex *dest = getDiscountChoice(v);
+	vector<Vertex> path = getDiscountChoice(v);
 
-	clock_t begin, end;
-	begin = clock();
-	bool success = graph.dijkstraShortestPath(origin->getInfo(), dest);
-	end = clock();
-	double timeSpent = timeDiff(begin, end);
-
-	if (success)
-	{
-		vector<Vertex> path = graph.getPath(origin->getInfo(), dest->getInfo());
-		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
-		cout << "Found requested location in: " << to_string(timeSpent) << " seconds!" << endl;
-		paintPath(path, false, 1);
-		rent ? ((SharingLocation *)dest->getInfo())->liftBike() : ((SharingLocation *)dest->getInfo())->depositBike();
-		waitConfirm();
-	}
-	else
-	{
-		cout << "Can't reach node " << to_string(dest->getInfo()->getID()) << " from your location!" << endl;
-		waitConfirm();
-	}
+	paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
+	cout << "Check the map to see your travel route!" << endl;
+	waitConfirm();
+	paintPath(path, false, 1);
+	rent ? ((SharingLocation *)dest->getInfo())->liftBike() : ((SharingLocation *)dest->getInfo())->depositBike();
 }
 
 bool SystemManager::Menu()
@@ -668,9 +654,9 @@ bool SystemManager::menuSave(const unordered_map<int, unsigned long long> &idsNo
 */
 Vertex *SystemManager::findLocation(const int ID) const
 {
-	vector<Vertex*> set = graph.getVertexSet();
+	vector<Vertex *> set = graph.getVertexSet();
 
-	auto it = find_if(set.begin(), set.end(), [ID](Vertex * v) {
+	auto it = find_if(set.begin(), set.end(), [ID](Vertex *v) {
 		return v->getInfo()->getID() == ID;
 	});
 
@@ -723,38 +709,55 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 	}
 }
 
-Vertex *SystemManager::getDiscountChoice(const vector<Vertex *> &v) const
+vector<Vertex> SystemManager::getDiscountChoice(const vector<Vertex *> &v) const
 {
-	cout << "You can get 50 euros discount if you choose one of the following locations!" << endl;
-	cout << "Here are they're IDs: " << endl;
+	cout << "You can get a discount if you choose one of the following locations!" << endl;
+	cout << "Here are their IDs: " << endl;
 
 	int userChoice;
 	string input;
+	auto exists = v.end();
+	map<int, vector<Vertex>> paths;
+	int size = v.size();
 
-	vector<Vertex *>::const_iterator exists = v.end();
+	//Fazer dijkstra e verificar se há path
+	for (auto it : v)
+	{
+		bool success = graph.dijkstraShortestPath(origin, *it);
+		if (success)
+		{
+			gv->setVertexColor(it->getInfo()->getID(), "PINK");
+			paths.insert(it->getInfo()->getID(), graph.getPath(origin, it->getInfo()));
+		}
+	}
 
-	for (int i = 0; i < v.size(); i++)
-		gv->setVertexColor(v[i]->getInfo()->getID(), "PINK");
+	//Mostrar sharingLocations com path
+	for (int i = 0; i < size; i++)
+	{
+		if (paths.find(v[i]->getInfo()->getID() != paths.end()))
+		{
+			cout << "Sharing Location: " << v[i]->getInfo()->getID()
+				 << "Discount: "
+				 << getIncentive(getPathLength(paths.at(i))) << "%%" << endl;
+		}
+	}
 
+	//Esperar por ID que exista
 	while (exists == v.end())
 	{
-		for (int i = 0; i < v.size(); i++)
-			cout << "Sharing Location: " << v[i]->getInfo()->getID() << endl;
-
 		cout << "Enter your preference: ";
 		getline(cin, input);
 
 		if (isNumber(input))
 		{
 			userChoice = stoi(input);
-
-			/*exists = find_if(v.begin(), v.end(), [userChoice](Vertex *vertex) {
-				return vertex->getInfo()->getID() == userChoice;
-			});*/
+			exists = find_if(paths.begin(), paths.end(), [userChoice](auto el) {
+				return el->first == userChoice;
+			});
 		}
 	}
 
-	return findLocation(userChoice);
+	return *paths.find(userChoice);
 }
 
 void SystemManager::saveSharingLocations(const unordered_map<int, unsigned long long> &idsNodes)
