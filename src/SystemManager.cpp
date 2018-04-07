@@ -11,23 +11,12 @@
 
 using namespace std;
 
-// CONSTANTS
-#define EDGE_COLOR_DEFAULT BLACK
-#define VERTEX_COLOR_DEFAULT BLUE
-#define START_NODE_COLOR YELLOW
-#define END_NODE_COLOR WHITE
-#define PATH_COLOR MAGENTA
-#define TAB "      "
-
-const float MAX_LAT = 41.20324;
-const float MIN_LAT = 41.17303;
-const float MAX_LON = -8.555458;
-const float MIN_LON = -8.622682;
-
-#define WINDOW_HEIGHT 2160
-#define WINDOW_WIDTH 3840
-
 SystemManager::SystemManager()
+{
+	initGraphViewer();
+}
+
+SystemManager::initGraphViewer()
 {
 	gv = new GraphViewer(WINDOW_WIDTH, WINDOW_HEIGHT, false);
 	gv->defineEdgeColor(EDGE_COLOR_DEFAULT);
@@ -39,6 +28,13 @@ SystemManager::~SystemManager()
 	delete gv;
 }
 
+void SystemManager::initFileNames(string nodes, string edges, string names, string sharing)
+{
+	this->fileNames.nodes = nodes;
+	this->fileNames.edges = edges;
+	this->fileNames.names = names;
+	this->fileNames.sharingLocations = sharing;
+}
 void SystemManager::selectGraph()
 {
 	cout << "Welcome !!\n\n";
@@ -53,55 +49,37 @@ void SystemManager::selectGraph()
 
 	int userChoice = verifyInput(1, 6);
 	graph = Graph();
+
 	if (gv != nullptr)
 	{
 		gv->closeWindow();
 		delete gv;
-
-		gv = new GraphViewer(WINDOW_WIDTH, WINDOW_HEIGHT, false);
+		initGraphViewer();
 		gv->createWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-		gv->defineEdgeColor(EDGE_COLOR_DEFAULT);
-		gv->defineVertexColor(VERTEX_COLOR_DEFAULT);
 	}
 
 	switch (userChoice)
 	{
 	case 1:
-		this->fileNames.nodes = "AHnodes.txt";
-		this->fileNames.edges = "AHedges.txt";
-		this->fileNames.names = "AHnames.txt";
-		this->fileNames.sharingLocations = "AHsharingLocations.txt";
+		initFileNames("AHnodes.txt", "AHedges.txt", "AHnames.txt", "AHsharingLocations.txt");
 		break;
 	case 2:
-		this->fileNames.nodes = "FeupNodes.txt";
-		this->fileNames.edges = "FeupEdges.txt";
-		this->fileNames.names = "FeupNames.txt";
-		this->fileNames.sharingLocations = "FeupSharing.txt";
+		initFileNames("FeupNodes.txt", "FeupEdges.txt", "FeupNames.txt", "FeupSharing.txt");
 		break;
 	case 3:
-		this->fileNames.nodes = "PortoNodes.txt";
-		this->fileNames.edges = "PortoEdges.txt";
-		this->fileNames.names = "PortoNomes.txt";
-		this->fileNames.sharingLocations = "PortoSharing.txt";
+		initFileNames("PortoNodes.txt", "PortoEdges.txt", "PortoNomes.txt", "PortoSharing.txt");
 		break; // ADD OTHERS CASES
 	case 4:
-		this->fileNames.nodes = "//Conetividade//nodesNaoConexo.txt";
-		this->fileNames.edges = "//Conetividade//edgesNaoConexo.txt";
-		this->fileNames.names = "//Conetividade//nomesNaoConexo.txt";
-		this->fileNames.sharingLocations = "//Conetividade//sharingLocationsEmpty.txt";
+		initFileNames("//Conetividade//nodesNaoConexo.txt", "//Conetividade//edgesNaoConexo.txt",
+					  "//Conetividade//nomesNaoConexo.txt", "//Conetividade//sharingLocationsEmpty.txt");
 		break;
 	case 5:
-		this->fileNames.nodes = "nodesConectividade.txt";
-		this->fileNames.edges = "edgesConectividade.txt";
-		this->fileNames.names = "nomesConectividade.txt";
-		this->fileNames.sharingLocations = "sharingLocationsEmpty.txt";
+		initFileNames("nodesConectividade.txt", "edgesConectividade.txt",
+					  "nomesConectividade.txt", "sharingLocationsEmpty.txt");
 		break;
 	case 6:
-		this->fileNames.nodes = "//Conetividade//nodesBiconectividade.txt";
-		this->fileNames.edges = "//Conetividade//edgesBiconectividade.txt";
-		this->fileNames.names = "//Conetividade//nomesBiconectividade.txt";
-		this->fileNames.sharingLocations = "//Conetividade//sharingLocationsEmpty.txt";
+		initFileNames("//Conetividade//nodesBiconectividade.txt", "//Conetividade//nodesBiconectividade.txt",
+					  "//Conetividade//nomesBiconectividade.txt", "//Conetividade//sharingLocationsEmpty.txt");
 		break;
 	default:
 		break;
@@ -119,7 +97,7 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles()
 	loadSharingLocations(sharingLocations);
 	end = clock();
 
-	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	timeSpent = timeDiff(begin, end);
 	cout << "Time to read Sharing Locations file: " << timeSpent << endl
 		 << endl;
 
@@ -129,7 +107,7 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles()
 	loadNodes(idsNodes, sharingLocations);
 	end = clock();
 
-	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	timeSpent = timeDiff(begin, end);
 	cout << "Time to read Nodes file: " << timeSpent << endl
 		 << endl;
 
@@ -137,7 +115,7 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles()
 	vector<EdgeName> edges = loadNames();
 	end = clock();
 
-	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	timeSpent = timeDiff(begin, end);
 	cout << "Time to read Names file: " << timeSpent << endl
 		 << endl;
 
@@ -145,7 +123,7 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles()
 	loadEdges(edges, idsNodes);
 	end = clock();
 
-	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	timeSpent = timeDiff(begin, end);
 	cout << "Time to read Edges file: " << timeSpent << endl
 		 << endl;
 
@@ -299,7 +277,7 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, unordered_map<int, unsign
 			origemID = itOrigin->first;
 
 			auto itDest = find_if(idsNode.begin(), idsNode.end(), [](auto inf) {
-				return inf->second == ori;
+				return inf->second == dest;
 			});
 
 			destiny = graph.findVertex(new Location(itDest->first));
@@ -367,7 +345,7 @@ bool SystemManager::isConnected()
 		{
 			end = clock();
 			cout << "Failed on Node " << vertexes.at(id)->getInfo()->getID() << ". See on GraphViewer" << endl;
-			timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+			timeSpent = timeDiff(begin, end);
 			cout << "\nTime taken to check connectivity file: " << timeSpent << endl
 				 << endl;
 			cout << "\nGraph is not connected\n";
@@ -384,7 +362,7 @@ bool SystemManager::isConnected()
 	}
 
 	end = clock();
-	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	timeSpent = timeDiff(begin, end);
 	cout << "\nTime taken to check connectivity file: " << timeSpent << endl
 		 << endl;
 	cout << "This Graph is connected.See in GraphViewer. ";
@@ -419,7 +397,7 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 	Location *dest = NULL;
 	bool success = graph.dijkstraShortestPath(origin->getInfo(), dest);
 	end = clock();
-	double timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	double timeSpent = timeDiff(begin, end);
 
 	if (success)
 	{
@@ -448,7 +426,7 @@ void SystemManager::showDiscountLocations(Vertex *origin, int id, bool rent)
 	begin = clock();
 	bool success = graph.dijkstraShortestPath(origin->getInfo(), dest);
 	end = clock();
-	double timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	double timeSpent = timeDiff(begin, end);
 
 	if (success)
 	{
@@ -705,7 +683,7 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 
 		if (edge.getID() == -1)
 		{
-			cout << "Path nao e possivel!!" << endl;
+			cout << "Path isn't possible!!" << endl;
 			return;
 		}
 

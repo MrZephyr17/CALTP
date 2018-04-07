@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <iterator>
+#include <algorithm>
 
 Vertex::Vertex(Location *in) : info(in) {}
 
@@ -126,7 +127,7 @@ bool Graph::dijkstraShortestPath(Location *origin, Location *&dest, bool rent)
 {
 	for (Vertex *v : vertexSet)
 	{
-		v->dist = DBL_MAX;
+		v->dist = INF;
 		v->path = NULL;
 	}
 
@@ -152,7 +153,7 @@ bool Graph::dijkstraShortestPath(Location *origin, Location *&dest, bool rent)
 				double oldDist = v2->dist;
 				v2->dist = min->dist + w.weight;
 				v2->path = min;
-				if (oldDist == DBL_MAX)
+				if (oldDist == INF)
 					queue.insert(v2);
 				else
 					queue.decreaseKey(v2);
@@ -169,7 +170,7 @@ bool Graph::dijkstraShortestPath(Location *origin, Vertex *destiny)
 {
 	for (Vertex *v : vertexSet)
 	{
-		v->dist = DBL_MAX;
+		v->dist = INF;
 		v->path = NULL;
 	}
 
@@ -195,7 +196,7 @@ bool Graph::dijkstraShortestPath(Location *origin, Vertex *destiny)
 				double oldDist = v2->dist;
 				v2->dist = min->dist + w.weight;
 				v2->path = min;
-				if (oldDist == DBL_MAX)
+				if (oldDist == INF)
 					queue.insert(v2);
 				else
 					queue.decreaseKey(v2);
@@ -210,7 +211,7 @@ void Graph::bidirectionalSearch(Location *origin, Location *destiny, Graph &invG
 {
 	for (Vertex *v : vertexSet)
 	{
-		v->dist = DBL_MAX;
+		v->dist = INF;
 		v->path = NULL;
 	}
 
@@ -246,7 +247,7 @@ void Graph::bidirectionalSearch(Location *origin, Location *destiny, Graph &invG
 					double oldDist = v2->dist;
 					v2->dist = x1->dist + w.weight;
 					v2->path = x1;
-					if (oldDist == DBL_MAX)
+					if (oldDist == INF)
 						queueSrc.insert(v2);
 					else
 						queueSrc.decreaseKey(v2);
@@ -269,7 +270,7 @@ void Graph::bidirectionalSearch(Location *origin, Location *destiny, Graph &invG
 					double oldDist = v2->dist;
 					v2->dist = x2->dist + w.weight;
 					v2->path = x2;
-					if (oldDist == DBL_MAX)
+					if (oldDist == INF)
 						queueDest.insert(v2);
 					else
 						queueDest.decreaseKey(v2);
@@ -306,7 +307,7 @@ vector<Vertex *> Graph::discountLocations(bool rent, const int numberOfLocations
 {
 	vector<Vertex *> sharingLocations;
 
-	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [&rent](Vertex *vertex) { return strcmp(typeid(*vertex->getInfo()).name(), "class SharingLocation") == 0 && vertex->getInfo()->isAvailable(rent); });
+	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [&rent](Vertex *vertex) { return string(typeid(*vertex->getInfo()).name()) == "class SharingLocation" && vertex->getInfo()->isAvailable(rent); });
 
 	sort(sharingLocations.begin(), sharingLocations.end(), [rent](const Vertex *lhs, const Vertex *rhs) {
 		return rent ? ((SharingLocation *)lhs->getInfo())->getSlots() > ((SharingLocation *)lhs->getInfo())->getSlots() : ((SharingLocation *)lhs->getInfo())->getSlots() < ((SharingLocation *)lhs->getInfo())->getSlots();

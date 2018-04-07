@@ -18,6 +18,20 @@
 #include <unordered_map>
 
 #define DISCOUNT_LOCATIONS 5
+#define EDGE_COLOR_DEFAULT BLACK
+#define VERTEX_COLOR_DEFAULT BLUE
+#define START_NODE_COLOR YELLOW
+#define END_NODE_COLOR WHITE
+#define PATH_COLOR MAGENTA
+#define TAB "      "
+
+const float MAX_LAT = 41.20324;
+const float MIN_LAT = 41.17303;
+const float MAX_LON = -8.555458;
+const float MIN_LON = -8.622682;
+
+#define WINDOW_HEIGHT 2160
+#define WINDOW_WIDTH 3840
 
 typedef struct
 {
@@ -83,6 +97,8 @@ class SystemManager
 	void checkConnectivity();
 	bool isConnected();
 	void isConnectedAux(Vertex *v, int &counter);
+	void initGraphViewer();
+	void initFileNames(string nodes, string edges, string names, string sharing);
 
   private:
 	GraphViewer *gv;
