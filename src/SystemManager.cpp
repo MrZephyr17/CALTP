@@ -108,7 +108,7 @@ void SystemManager::selectGraph()
 	}
 }
 
-vector<pair<int, unsigned long long>> SystemManager::loadFiles()
+unordered_map<int, unsigned long long> SystemManager::loadFiles()
 {
 
 	clock_t begin, end;
@@ -120,40 +120,41 @@ vector<pair<int, unsigned long long>> SystemManager::loadFiles()
 	end = clock();
 
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
-	cout << "Time to read Sharing Locations file: " << timeSpent << endl << endl;
+	cout << "Time to read Sharing Locations file: " << timeSpent << endl
+		 << endl;
 
-
-	vector<pair<int, unsigned long long>> idsNodes;
+	unordered_map<int, unsigned long long> idsNodes;
 
 	begin = clock();
 	loadNodes(idsNodes, sharingLocations);
 	end = clock();
 
-
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
-	cout << "Time to read Nodes file: " << timeSpent << endl << endl;
-
+	cout << "Time to read Nodes file: " << timeSpent << endl
+		 << endl;
 
 	begin = clock();
 	vector<EdgeName> edges = loadNames();
 	end = clock();
 
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
-	cout << "Time to read Names file: " << timeSpent << endl << endl;
+	cout << "Time to read Names file: " << timeSpent << endl
+		 << endl;
 
 	begin = clock();
 	loadEdges(edges, idsNodes);
 	end = clock();
 
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
-	cout << "Time to read Edges file: " << timeSpent << endl << endl;
+	cout << "Time to read Edges file: " << timeSpent << endl
+		 << endl;
 
 	gv->rearrange();
 
 	return idsNodes;
 }
 
-void SystemManager::loadSharingLocations(vector<SharingLoc>& sharingLocations)
+void SystemManager::loadSharingLocations(vector<SharingLoc> &sharingLocations)
 {
 	ifstream file(fileNames.sharingLocations);
 
@@ -178,7 +179,7 @@ void SystemManager::loadSharingLocations(vector<SharingLoc>& sharingLocations)
 	file.close();
 }
 
-void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes, const vector<SharingLoc> &sharingLocations)
+void SystemManager::loadNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations)
 {
 	ifstream read(fileNames.nodes);
 
@@ -198,7 +199,6 @@ void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes, c
 			idInt++;
 			unsigned long long id;
 
-
 			double lat, lon, projx, projy, alt = 1;
 			char ign;
 			string isShrLoc;
@@ -209,7 +209,7 @@ void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes, c
 			gv->addNode(idInt, 2.5 * convertLongitudeToX(lon), -1 * convertLatitudeToY(lat) - 100);
 			gv->setVertexLabel(idInt, to_string(idInt));
 
-			idsNodes.push_back(make_pair(idInt, id));
+			idsNodes.insert(make_pair(idInt, id));
 
 			if (isShrLoc == "true")
 			{
@@ -227,7 +227,6 @@ void SystemManager::loadNodes(vector<pair<int, unsigned long long>> &idsNodes, c
 			{
 				graph.addVertex(new Location(idInt, lat, lon, alt));
 			}
-
 		}
 		read.close();
 	}
@@ -266,7 +265,7 @@ vector<EdgeName> SystemManager::loadNames()
 	return edges;
 }
 
-void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned long long>> &idsNode)
+void SystemManager::loadEdges(vector<EdgeName> &edges, unordered_map<int, unsigned long long> &idsNode)
 {
 	ifstream read(fileNames.edges);
 
@@ -288,51 +287,45 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned
 			idIntEdge++;
 			read >> id >> ign >> ori >> ign >> dest >> ign;
 
-
-			Vertex* origin;
-			Vertex* destiny;
-			bool orig = false, des = false;
+			Vertex *origin;
+			Vertex *destiny;
 			int origemID = 0, destinoID = 0;
-			for (auto x : idsNode)
-			{
-				if (x.second == ori)
-				{
-					origin = graph.findVertex(new Location(x.first));
-					origemID = x.first;
-					orig = true;
-					if (des)
-						break;
-				}
-				else if (x.second == dest)
-				{
-					destiny = graph.findVertex(new Location(x.first));
-					destinoID = x.first;
-					des = true;
-					if (orig)
-						break;
-				}
-			}
+
+			auto itOrigin = find_if(idsNode.begin(), idsNode.end(), [](auto inf) {
+				return inf->second == ori;
+			});
+
+			origin = graph.findVertex(new Location(itOrigin->first));
+			origemID = itOrigin->first;
+
+			auto itDest = find_if(idsNode.begin(), idsNode.end(), [](auto inf) {
+				return inf->second == ori;
+			});
+
+			destiny = graph.findVertex(new Location(itDest->first));
+			destinoID = itDest->first;
+
 			double weight = calcWeight((origin->getInfo()), (destiny->getInfo()));
 
-			for (auto x : edges)
+			auto x = find_if(edges.begin(), edges.end(), [](EdgeName &edge) {
+				return edge.id == id;
+			});
+
+			if (x != edges.end())
 			{
-				if (x.id == id)
+				if (x.isBidirectional)
 				{
-					if (x.isBidirectional)
-					{
-						gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::UNDIRECTED);
-						graph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
-						gv->setEdgeLabel(idIntEdge, x.name);
-						idIntEdge++;
-						graph.addEdge(destiny->getInfo(), origin->getInfo(), weight, idIntEdge, x.name);
-					}
-					else
-					{
-						gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::DIRECTED);
-						graph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
-						gv->setEdgeLabel(idIntEdge, x.name);
-					}
-					break;
+					gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::UNDIRECTED);
+					graph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
+					gv->setEdgeLabel(idIntEdge, x.name);
+					idIntEdge++;
+					graph.addEdge(destiny->getInfo(), origin->getInfo(), weight, idIntEdge, x.name);
+				}
+				else
+				{
+					gv->addEdge(idIntEdge, origemID, destinoID, EdgeType::DIRECTED);
+					graph.addEdge(origin->getInfo(), destiny->getInfo(), weight, idIntEdge, x.name);
+					gv->setEdgeLabel(idIntEdge, x.name);
 				}
 			}
 		}
@@ -362,71 +355,68 @@ bool SystemManager::isConnected()
 	{
 		int counter = 0;
 
-		for (Vertex * v : vertexes)
+		for (Vertex *v : vertexes)
 		{
 			v->getInfo()->setVisited(false);
 		}
 
-		isConnectedAux(vertexes.at(134),counter);
+		isConnectedAux(vertexes.at(id), counter);
 		gv->setVertexColor(id + 1, MAGENTA);
-		
+
 		if (counter != vertexes.size())
 		{
 			end = clock();
 			cout << "Failed on Node " << vertexes.at(id)->getInfo()->getID() << ". See on GraphViewer" << endl;
 			timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
-			cout << "\nTime taken to check connectivity file: " << timeSpent << endl << endl;
-			cout << "\nGraph is not connected\n";			
+			cout << "\nTime taken to check connectivity file: " << timeSpent << endl
+				 << endl;
+			cout << "\nGraph is not connected\n";
 			system("pause");
 
-			for (Vertex * v : vertexes)
-			{
-				gv->setVertexColor(v->getInfo()->getID(), v->getInfo()->getColor());
-			}
+			for (unsigned int i = 0; i <= id; i++)
+				gv->setVertexColor(i + 1, vertexes.at(i)->getInfo()->getColor());
 			return false;
 		}
 	}
-	for (Vertex * v : vertexes)
+	for (Vertex *v : vertexes)
 	{
-		gv->setVertexColor(v->getInfo()->getID(), GREEN);
+		gv->setVertexColor(v->getInfo()->getID(), YELLOW);
 	}
-	
+
 	end = clock();
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
-	cout << "\nTime taken to check connectivity file: " << timeSpent << endl << endl;
+	cout << "\nTime taken to check connectivity file: " << timeSpent << endl
+		 << endl;
 	cout << "This Graph is connected.See in GraphViewer. ";
-	
+
 	system("pause");
 
-	for (Vertex * v : vertexes)
+	for (Vertex *v : vertexes)
 	{
-		gv->setVertexColor(v->getInfo()->getID(),v->getInfo()->getColor());
+		gv->setVertexColor(v->getInfo()->getID(), v->getInfo()->getColor());
 	}
 	return true;
 }
 
-void SystemManager::isConnectedAux(Vertex * v, int &counter)
+void SystemManager::isConnectedAux(Vertex *v, int &counter)
 {
 	counter++;
 	v->getInfo()->setVisited(true);
-	if(v->getInfo()->isAvailable())
-		gv->setVertexColor(v->getInfo()->getID(), BLACK);
-	else
-		gv->setVertexColor(v->getInfo()->getID(), YELLOW);
+	//gv->setVertexColor(v->getInfo()->getID(), YELLOW);
 
 	for (Edge e : v->getAdj())
 	{
 		if (!e.getDest()->getInfo()->getVisited())
-			isConnectedAux(e.getDest(),counter);
+			isConnectedAux(e.getDest(), counter);
 	}
 }
 
-void SystemManager::showClosestLocation(Vertex* origin, int id, bool rent)
+void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 {
 	clock_t begin, end;
 	begin = clock();
 
-	Location* dest = NULL;
+	Location *dest = NULL;
 	bool success = graph.dijkstraShortestPath(origin->getInfo(), dest);
 	end = clock();
 	double timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
@@ -440,7 +430,7 @@ void SystemManager::showClosestLocation(Vertex* origin, int id, bool rent)
 		cout << "Check the map to see the generated path!" << endl;
 		waitConfirm();
 		paintPath(path, false, 1);
-		rent ? ((SharingLocation*)dest)->liftBike() : ((SharingLocation*)dest)->depositBike();
+		rent ? ((SharingLocation *)dest)->liftBike() : ((SharingLocation *)dest)->depositBike();
 	}
 	else
 	{
@@ -449,10 +439,10 @@ void SystemManager::showClosestLocation(Vertex* origin, int id, bool rent)
 	}
 }
 
-void SystemManager::showDiscountLocations(Vertex* origin, int id, bool rent)
+void SystemManager::showDiscountLocations(Vertex *origin, int id, bool rent)
 {
-	vector<Vertex*> v = graph.discountLocations(rent, DISCOUNT_LOCATIONS);
-	Vertex* dest = getDiscountChoice(v);
+	vector<Vertex *> v = graph.discountLocations(rent, DISCOUNT_LOCATIONS);
+	Vertex *dest = getDiscountChoice(v);
 
 	clock_t begin, end;
 	begin = clock();
@@ -466,7 +456,7 @@ void SystemManager::showDiscountLocations(Vertex* origin, int id, bool rent)
 		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
 		cout << "Found requested location in: " << to_string(timeSpent) << " seconds!" << endl;
 		paintPath(path, false, 1);
-		rent ? ((SharingLocation*)dest->getInfo())->liftBike() : ((SharingLocation*)dest->getInfo())->depositBike();
+		rent ? ((SharingLocation *)dest->getInfo())->liftBike() : ((SharingLocation *)dest->getInfo())->depositBike();
 		waitConfirm();
 	}
 	else
@@ -482,7 +472,7 @@ bool SystemManager::Menu()
 
 	selectGraph();
 
-	vector<pair<int, unsigned long long>> idsNodes = loadFiles();
+	unordered_map<int, unsigned long long> idsNodes = loadFiles();
 
 	waitConfirm();
 
@@ -501,7 +491,7 @@ void SystemManager::checkConnectivity()
 	}
 }
 
-bool SystemManager::mainMenu(const vector<pair<int, unsigned long long>> &idsNodes)
+bool SystemManager::mainMenu(const unordered_map<int, unsigned long long> &idsNodes)
 {
 	while (true)
 	{
@@ -555,7 +545,8 @@ bool SystemManager::menuRent()
 
 	while (!isNumber(location))
 	{
-		cout << endl << "Tell me your location: ";
+		cout << endl
+			 << "Tell me your location: ";
 		getline(cin, location);
 	}
 
@@ -564,10 +555,11 @@ bool SystemManager::menuRent()
 	cout << "(2) Other sharing locations (discount)" << endl;
 
 	int userChoice = verifyInput(1, 2);
-	Vertex* loc;
+	Vertex *loc;
 	int id = stoi(location);
 
-	try {
+	try
+	{
 		loc = findLocation(id);
 	}
 	catch (LocationNotFound &e)
@@ -608,7 +600,8 @@ bool SystemManager::menuHasBike()
 
 	while (!isNumber(location))
 	{
-		cout << endl << "Tell me your location: ";
+		cout << endl
+			 << "Tell me your location: ";
 		getline(cin, location);
 	}
 
@@ -618,10 +611,11 @@ bool SystemManager::menuHasBike()
 
 	int userChoice = verifyInput(1, 2);
 
-	Vertex* loc;
+	Vertex *loc;
 	int id = stoi(location);
 
-	try {
+	try
+	{
 		loc = findLocation(id);
 	}
 	catch (LocationNotFound &e)
@@ -650,11 +644,10 @@ bool SystemManager::menuHasBike()
 	return true;
 }
 
-bool SystemManager::menuSave(const vector<pair<int, unsigned long long>> &idsNodes)
+bool SystemManager::menuSave(const unordered_map<int, unsigned long long> &idsNodes)
 {
 
 	Limpar_ecra();
-
 
 	cout << "Enter your preference" << endl;
 	cout << "(1) Don't save" << endl;
@@ -680,26 +673,29 @@ bool SystemManager::menuSave(const vector<pair<int, unsigned long long>> &idsNod
 /*
 * Auxiliary function to find a vertex with a given stringName.
 */
-Vertex* SystemManager::findLocation(const int ID) const {
+Vertex *SystemManager::findLocation(const int ID) const
+{
 	for (auto v : graph.getVertexSet())
 		if (v->getInfo()->getID() == ID)
 			return v;
 
 	throw LocationNotFound(ID);
-
 }
 
-int SystemManager::convertLongitudeToX(float longitude) {
+int SystemManager::convertLongitudeToX(float longitude)
+{
 	return floor(((longitude - MIN_LON) * (WINDOW_HEIGHT)) / (MAX_LON - MIN_LON));
 }
 
-int SystemManager::convertLatitudeToY(float latitude) {
+int SystemManager::convertLatitudeToY(float latitude)
+{
 	return floor(((latitude - MIN_LAT) * (WINDOW_WIDTH)) / (MAX_LAT - MIN_LAT));
 }
 
 void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor, string endNodeColor, string edgeColor)
 {
-	if (path.size() < 1) {
+	if (path.size() < 1)
+	{
 		cout << "Path not found.\nAre you sure there is a connection?\n";
 		return;
 	}
@@ -729,19 +725,17 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 	}
 }
 
-Vertex* SystemManager::getDiscountChoice(const vector<Vertex*> &v) const
+Vertex *SystemManager::getDiscountChoice(const vector<Vertex *> &v) const
 {
 	cout << "You can get 50 euros discount if you choose one of the following locations!" << endl;
 	cout << "Here are they're IDs: " << endl;
 
 	int userChoice;
+	string input;
+	vector<Vertex *> iterator exists = v.end();
 
 	for (int i = 0; i < v.size(); i++)
 		gv->setVertexColor(v[i]->getInfo()->getID(), "PINK");
-
-	auto exists = find_if(v.begin(), v.end(), [userChoice](Vertex* vertex) {
-		return vertex->getInfo()->getID() == userChoice;
-	});
 
 	while (exists == v.end())
 	{
@@ -749,34 +743,37 @@ Vertex* SystemManager::getDiscountChoice(const vector<Vertex*> &v) const
 			cout << "Sharing Location: " << v[i]->getInfo()->getID() << endl;
 
 		cout << "Enter your preference: ";
-		cin >> userChoice;
+		getline(cin, input);
 
-		exists = find_if(v.begin(), v.end(), [userChoice](Vertex* vertex) {
-			return vertex->getInfo()->getID() == userChoice;
-		});
+		if (isNumber(input))
+		{
+			userChoice = stoi(input);
+			exists = find_if(v.begin(), v.end(), [userChoice](Vertex *vertex) {
+				return vertex->getInfo()->getID() == userChoice;
+			});
+		}
 	}
 
 	return findLocation(userChoice);
 }
 
-void SystemManager::saveSharingLocations(const vector<pair<int, unsigned long long>> &idsNodes)
+void SystemManager::saveSharingLocations(const unordered_map<int, unsigned long long> &idsNodes)
 {
-	vector<Vertex*> sharingLocations;
-	vector<Vertex*> vertexSet = graph.getVertexSet();
+	vector<Vertex *> sharingLocations;
+	vector<Vertex *> vertexSet = graph.getVertexSet();
 	ofstream save(fileNames.sharingLocations);
 
-	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex* vertex) {
-		return strcmp(typeid(*vertex->getInfo()).name(), "class SharingLocation") == 0; });
+	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex *vertex) { return strcmp(typeid(*vertex->getInfo()).name(), "class SharingLocation") == 0; });
 
 	int size = sharingLocations.size();
 
 	for (int i = 0; i < size; i++)
 	{
-		auto id = find_if(idsNodes.begin(), idsNodes.end(), [&sharingLocations, &i](pair<int, unsigned long long> p) {
+		auto id = find_if(idsNodes.begin(), idsNodes.end(), [&sharingLocations, &i](auto p) {
 			return p.first == sharingLocations.at(i)->getInfo()->getID();
 		});
 
-		SharingLocation* loc = ((SharingLocation*)sharingLocations.at(i)->getInfo());
+		SharingLocation *loc = ((SharingLocation *)sharingLocations.at(i)->getInfo());
 
 		save << to_string(id->second) << ";" << loc->getMaxCapacity() << ";" << loc->getSlots();
 

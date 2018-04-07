@@ -4,7 +4,7 @@
 using namespace std;
 
 SharingLocation::SharingLocation(int id, double latitude, double longitude, double altitude,
-	int maxCapacity, int slots) : Location(id, latitude, longitude, altitude)
+								 int maxCapacity, int slots) : Location(id, latitude, longitude, altitude)
 {
 	if (maxCapacity <= 0 || slots < 0 || slots > maxCapacity)
 		throw invalid_argument("One of the arguments is invalid, check again!");
@@ -34,9 +34,9 @@ bool SharingLocation::liftBike(int number)
 	return true;
 }
 
-bool SharingLocation::isAvailable() const
+bool SharingLocation::isAvailable(bool rent) const
 {
-	return slots > 0;
+	return rent ? slots > 0 : slots < maxCapacity;
 }
 
 string SharingLocation::getColor() const

@@ -15,6 +15,7 @@
 #include "Location.h"
 #include "GraphViewer.h"
 #include <map>
+#include <unordered_map>
 
 #define DISCOUNT_LOCATIONS 5
 
@@ -25,9 +26,10 @@ typedef struct
 	std::string names;
 	std::string sharingLocations;
 
-}FileNames;
+} FileNames;
 
-struct SharingLoc {
+struct SharingLoc
+{
 	unsigned long long id;
 	int lotation;
 	int slots;
@@ -39,8 +41,9 @@ struct SharingLoc {
 	};
 };
 
-struct EdgeName {
-	
+struct EdgeName
+{
+
 	bool isBidirectional;
 	string name;
 	unsigned long long id;
@@ -54,36 +57,35 @@ struct EdgeName {
 
 class SystemManager
 {
-public:
+  public:
 	SystemManager();
 	~SystemManager();
 
-
-	vector<pair<int, unsigned long long>> loadFiles();
+	unordered_map<int, unsigned long long> loadFiles();
 	void selectGraph();
 	bool Menu();
-	bool mainMenu(const vector<pair<int, unsigned long long>> &idsNodes);
+	bool mainMenu(const unordered_map<int, unsigned long long> &idsNodes);
 	bool menuRent();
 	bool menuHasBike();
-	bool menuSave(const vector<pair<int, unsigned long long>> &idsNodes);
+	bool menuSave(const unordered_map<int, unsigned long long> &idsNodes);
 	void loadSharingLocations(vector<SharingLoc> &sharingLocations);
-	void loadEdges(vector<EdgeName> &edges, vector<pair<int, unsigned long long>> &val);
-	void loadNodes(vector<pair<int, unsigned long long>> &idsNodes, const vector<SharingLoc> &sharingLocations);
+	void loadEdges(vector<EdgeName> &edges, unordered_map<int, unsigned long long> &val);
+	void loadNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations);
 	vector<EdgeName> loadNames();
-	void saveSharingLocations(const vector<pair<int,unsigned long long>> &idsNodes);
-	Vertex* findLocation(int name) const;
+	void saveSharingLocations(const unordered_map<int, unsigned long long> &idsNodes);
+	Vertex *findLocation(int name) const;
 	int convertLongitudeToX(float longitude);
 	int convertLatitudeToY(float latitude);
 	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string edgeColor = "BLACK");
-	Vertex* getDiscountChoice(const vector<Vertex*> &v) const;
-	void showClosestLocation(Vertex* origin, int id, bool rent);
-	void showDiscountLocations(Vertex* origin, int id, bool rent);
+	Vertex *getDiscountChoice(const vector<Vertex *> &v) const;
+	void showClosestLocation(Vertex *origin, int id, bool rent);
+	void showDiscountLocations(Vertex *origin, int id, bool rent);
 	void checkConnectivity();
 	bool isConnected();
-	void isConnectedAux(Vertex * v, int &counter);
+	void isConnectedAux(Vertex *v, int &counter);
 
-private:
-	GraphViewer * gv;
+  private:
+	GraphViewer *gv;
 	Graph graph;
 	FileNames fileNames;
 };

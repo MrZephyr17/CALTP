@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 Location::Location(int id)
 {
 	this->id = id;
@@ -56,7 +55,7 @@ void Location::setID(int newID)
 	this->id = newID;
 }
 
-bool Location::isAvailable() const
+bool Location::isAvailable(bool rent) const
 {
 	return false;
 }

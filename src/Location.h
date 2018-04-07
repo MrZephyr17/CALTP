@@ -11,22 +11,21 @@ typedef struct
 	double altitude;
 } Coordinate;
 
-
 /*
-ACRESCENTAR O QUE É PRECISO À LOCATION,
+ACRESCENTAR O QUE ï¿½ PRECISO ï¿½ LOCATION,
 
-MENOS O QUE O GRAPH TEMPLATE Vertex JÁ POSSUI
+MENOS O QUE O GRAPH TEMPLATE Vertex Jï¿½ POSSUI
 */
 
 class Location
 {
-protected:
+  protected:
 	int id;
-	Coordinate coords;	///< Location's coordinates (x,y,z)
+	Coordinate coords; ///< Location's coordinates (x,y,z)
 	std::string color;
 	bool visited;
 
-public:
+  public:
 	Location(int id);
 	Location(int id, double latitude, double longitude, double altitude);
 	Location();
@@ -45,7 +44,7 @@ public:
 
 	void setID(int newID);
 
-	virtual bool isAvailable() const;
+	virtual bool isAvailable(bool rent) const;
 
 	virtual std::string getColor() const;
 
@@ -54,4 +53,4 @@ public:
 	void setVisited(bool vis);
 };
 
-#endif 
+#endif
