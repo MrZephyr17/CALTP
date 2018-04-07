@@ -405,6 +405,7 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 		gv->setVertexColor(id, YELLOW);
 		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
 		cout << "Found closest location in: " << to_string(timeSpent) << " seconds!" << endl;
+		cout << "Travel you take you approximately " << getTime(getPathLength(path)) << endl;
 		cout << "Check the map to see the generated path!" << endl;
 		waitConfirm();
 		paintPath(path, false, 1);
@@ -420,7 +421,7 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 void SystemManager::showDiscountLocations(Vertex *origin, int id, bool rent)
 {
 	vector<Vertex *> v = graph.discountLocations(rent, DISCOUNT_LOCATIONS);
-	Vertex *dest = getDiscountChoice(v);
+	vector<Vertex> path = getDiscountChoice(origin->getInfo(), v);
 
 	clock_t begin, end;
 	begin = clock();
@@ -433,9 +434,10 @@ void SystemManager::showDiscountLocations(Vertex *origin, int id, bool rent)
 		vector<Vertex> path = graph.getPath(origin->getInfo(), dest->getInfo());
 		paintPath(path, true, 5, START_NODE_COLOR, END_NODE_COLOR, PATH_COLOR);
 		cout << "Found requested location in: " << to_string(timeSpent) << " seconds!" << endl;
+		cout << "Travel you take you approximately " << getTime(getPathLength(path)) << endl;
+		waitConfirm();
 		paintPath(path, false, 1);
 		rent ? ((SharingLocation *)dest->getInfo())->liftBike() : ((SharingLocation *)dest->getInfo())->depositBike();
-		waitConfirm();
 	}
 	else
 	{
@@ -653,9 +655,14 @@ bool SystemManager::menuSave(const unordered_map<int, unsigned long long> &idsNo
 */
 Vertex *SystemManager::findLocation(const int ID) const
 {
-	for (auto v : graph.getVertexSet())
-		if (v->getInfo()->getID() == ID)
-			return v;
+	vector<Vertex> set = graph.getVertexSet();
+
+	auto it = find_if(set.begin(), set.end(), [](Vertex v) {
+		return v.getInfo()->getId() == ID;
+	});
+
+	if (it != set.end())
+		return *it;
 
 	throw LocationNotFound(ID);
 }
@@ -703,9 +710,9 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 	}
 }
 
-Vertex *SystemManager::getDiscountChoice(const vector<Vertex *> &v) const
+Vertex *SystemManager::getDiscountChoice(Location *origin, const vector<Vertex *> &v) const
 {
-	cout << "You can get 50 euros discount if you choose one of the following locations!" << endl;
+	cout << "You can get a discount if you choose one of the following locations!" << endl;
 	cout << "Here are they're IDs: " << endl;
 
 	int userChoice;
@@ -715,12 +722,24 @@ Vertex *SystemManager::getDiscountChoice(const vector<Vertex *> &v) const
 	for (int i = 0; i < v.size(); i++)
 		gv->setVertexColor(v[i]->getInfo()->getID(), "PINK");
 
+	for (auto it : v)
+		graph.dijkstraShortestPath(origin, *it);
+
 	while (exists == v.end())
 	{
-		for (int i = 0; i < v.size(); i++)
-			cout << "Sharing Location: " << v[i]->getInfo()->getID() << endl;
 
-		cout << "Enter your preference: ";
+		for (int i = 0; i < v.size(); i++)
+		{
+			vector<Vertex> path = (origin, v.at(i)->getInfo());
+
+			cout
+				<< "Sharing Location: " << v[i]->getInfo()->getID()
+				<< "Discount: "
+				<< getIncentive(getPathLength(path)) << "%%" << endl;
+		}
+
+		cout
+			<< "Enter your preference: ";
 		getline(cin, input);
 
 		if (isNumber(input))
@@ -760,4 +779,14 @@ void SystemManager::saveSharingLocations(const unordered_map<int, unsigned long 
 	}
 	save.close();
 	waitConfirm();
+}
+
+double SystemManager::getPathLength(const vector<Vertex> &path)
+{
+	double length = 0;
+
+	for (auto it : path)
+		length += it->getDist();
+
+	return length;
 }

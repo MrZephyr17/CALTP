@@ -91,7 +91,7 @@ class SystemManager
 	int convertLongitudeToX(float longitude);
 	int convertLatitudeToY(float latitude);
 	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string edgeColor = "BLACK");
-	Vertex *getDiscountChoice(const vector<Vertex *> &v) const;
+	vector<Vertex> getDiscountChoice(Location *origin, const vector<Vertex *> &v) const;
 	void showClosestLocation(Vertex *origin, int id, bool rent);
 	void showDiscountLocations(Vertex *origin, int id, bool rent);
 	void checkConnectivity();
@@ -99,6 +99,7 @@ class SystemManager
 	void isConnectedAux(Vertex *v, int &counter);
 	void initGraphViewer();
 	void initFileNames(string nodes, string edges, string names, string sharing);
+	double getPathLength(const vector<Vertex> &path);
 
   private:
 	GraphViewer *gv;

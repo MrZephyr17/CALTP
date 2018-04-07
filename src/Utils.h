@@ -2,6 +2,7 @@
 #include "Location.h"
 #include <cmath>
 #include <ctime>
+#include <string>
 
 const double PI = acos(-1);
 
@@ -20,3 +21,7 @@ bool isNumber(std::string input);
 void waitConfirm();
 
 double timeDiff(clock_t begin, clock_t end);
+
+std::string getTime(double seconds);
+
+double getIncentive(double seconds);

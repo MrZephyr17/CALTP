@@ -1,6 +1,7 @@
 #include "Utils.h"
 #include <string>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -111,4 +112,21 @@ void waitConfirm()
 double timeDiff(clock_t begin, clock_t end)
 {
 	return (double)(end - begin) / CLOCKS_PER_SEC;
+}
+
+string getTime(double time)
+{
+	int seconds = (int)time;
+	int hours = seconds / 3600;
+	int minutes = (seconds % 3600) / 60;
+	int sec = seconds % 60;
+	char formatted[6];
+
+	sprintf(formatted, "%02d:%02d:%02d", hours, minutes, sec);
+	return string(formatted);
+}
+
+double getIncentive(double seconds)
+{
+	return 0;
 }

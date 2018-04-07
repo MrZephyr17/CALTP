@@ -83,24 +83,23 @@ Graph::~Graph()
 
 Vertex *Graph::findVertex(Location *in) const
 {
-	for (auto v : vertexSet)
-		if (*v->info == *in)
-			return v;
-	return NULL;
+	auto it = find_if(vertexSet.begin(), vertexSet.end(), [&in](auto v) {
+		return it->info == *in;
+	});
+
+	return it != vertexSet.end() ? *it : NULL;
 }
 
 Edge Graph::findEdge(Location *org, const Location *dest) const
 {
-
 	Vertex *origin = findVertex(org);
+	vector<Edge> adj = origin->getAdj();
 
-	for (auto e : origin->getAdj())
-	{
-		if (e.dest->getInfo() == dest)
-			return e;
-	}
+	auto it = find_if(adj.begin(), adj.end(), [&dest](auto e) {
+		return e->dest->getInfo() == dest;
+	});
 
-	return Edge(-1);
+	return it != adj.end() ? *it : Edge(-1);
 }
 
 bool Graph::addVertex(Location *in)
