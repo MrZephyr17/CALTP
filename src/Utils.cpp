@@ -46,26 +46,18 @@ double velocity(Location *origin, Location *dest)
 		double angle = asin(alt / distance(origin, dest));
 
 		if (angle > PI / 4)
-		{
 			return 5.0 / 6;
-		}
 		else
-		{
 			return (10 / 3.0 * cos(2 * angle) + 5 / 6.0);
-		}
 	}
 	else
 	{
 		double angle = asin(-alt / distance(origin, dest));
 
 		if (angle > PI / 4)
-		{
 			return 55 * 1000 / 3600.0;
-		}
 		else
-		{
 			return 100 / 9.0 * sin(2 * angle) + 25 / 6.0;
-		}
 	}
 }
 
@@ -80,42 +72,33 @@ int verifyInput(int low, int high)
 		cout << "Choose an option (" << low << "-" << high << "): ";
 		getline(cin, input);
 
-		if (isdigit(input[0]))
+		if (input.size() < 2 && isdigit(input[0]))
 		{
-			//Apenas aceita como input numeros entre o limite inferior e superior (inclusive)
-			if (stoi(input) >= low && stoi(input) <= high && input.size() < 2)
+			inputValue = stoi(input);
+			if (inputValue >= low && inputValue <= high)
 				validInput = true;
 			else
 				cout << "Invalid input! Try again..." << endl;
 		}
-		//Qualquer outro input e recusado, e e novamente pedido ao utilizador que introduza um n�mero.
 		else
 			cout << "Invalid input! Try again..." << endl;
 	}
-
-	inputValue = stoi(input);
 
 	return inputValue;
 }
 
 bool isNumber(string input)
 {
-	bool isNumber;
-
 	if (input == "")
 		return false;
 	else
 	{
-		for (int i = 0; i < input.size(); i++)
-			if (isdigit(input[i]))
-				isNumber = true;
-			else
-			{
-				isNumber = false;
-				break;
-			}
+		for (auto &it : input)
+			if (!isdigit(it))
+				return false;
 	}
-	return isNumber;
+
+	return true;
 }
 
 void waitConfirm()
