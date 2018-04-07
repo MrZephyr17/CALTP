@@ -91,7 +91,7 @@ class SystemManager
 	int convertLongitudeToX(float longitude);
 	int convertLatitudeToY(float latitude);
 	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string edgeColor = "BLACK");
-	vector<Vertex> getDiscountChoice(Location *origin, const vector<Vertex *> &v) const;
+	Vertex* getDiscountChoice(const vector<Vertex *> &v) const;
 	void showClosestLocation(Vertex *origin, int id, bool rent);
 	void showDiscountLocations(Vertex *origin, int id, bool rent);
 	void checkConnectivity();

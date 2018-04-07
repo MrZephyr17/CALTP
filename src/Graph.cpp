@@ -81,10 +81,10 @@ Graph::~Graph()
 	vertexSet.clear();
 }
 
-Vertex *Graph::findVertex(Location *in) const
+Vertex* Graph::findVertex(Location *in) const
 {
-	auto it = find_if(vertexSet.begin(), vertexSet.end(), [&in](auto v) {
-		return it->info == *in;
+	auto it = find_if(vertexSet.begin(), vertexSet.end(), [in](auto v) {
+		return *v->getInfo() == *in;
 	});
 
 	return it != vertexSet.end() ? *it : NULL;
@@ -96,7 +96,7 @@ Edge Graph::findEdge(Location *org, const Location *dest) const
 	vector<Edge> adj = origin->getAdj();
 
 	auto it = find_if(adj.begin(), adj.end(), [&dest](auto e) {
-		return e->dest->getInfo() == dest;
+		return e.dest->getInfo() == dest;
 	});
 
 	return it != adj.end() ? *it : Edge(-1);
