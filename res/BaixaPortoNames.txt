@@ -1,0 +1,167 @@
+8366889;Rua de Ramalho Ortigão;False
+8366893;Rua da Conceição;False
+8366896;Rua de José Falcão;False
+8367068;Praça da República;False
+8367070;Rua dos Bragas;False
+8367098;Rua do Alferes Malheiro;False
+8367104;Rua do Bonjardim;False
+8367114;Rua da Firmeza;False
+8367143;Rua de Rodolfo de Araújo;False
+8367147;Rua Doutor Alves da Veiga;False
+8367153;Rua das Carvalheiras;False
+8367160;Rua Dom João IV;False
+13836129;;False
+14326572;Rua Heróis e Mártires de Angola;False
+14327522;Rua Dom João IV;False
+14328446;Rua de Fernandes Tomás;False
+14333888;Rua do Bonjardim;False
+26119759;Rua de Santa Catarina;False
+34607492;Rua de Gonçalo Cristóvão;False
+34607518;Rua do Almada;False
+34607524;Praça da República;False
+38336627;Rua das Carvalheiras;False
+38336628;Rua da Trindade;False
+38336634;Rua de Gonçalo Cristóvão;False
+38336635;Rua de Gonçalo Cristóvão;False
+38336638;Rua de Gonçalo Cristóvão;False
+38336643;Rua da Firmeza;False
+39658536;Pátio do Bolhão;False
+39658629;;False
+60175223;Rua de Ricardo Jorge;False
+60175224;Rua da Picaria;False
+60175590;Rua Doutor António Luís Gomes;False
+60175941;Rua do Clube dos Fenianos;False
+95843585;Rua de Camões;False
+95843586;Viaduto de Gonçalo Cristóvão;True
+112465238;Rua de Alexandre Braga;False
+112465240;Praça Gen. Humberto Delgado;False
+112465243;Rua Formosa;False
+128825640;Rua do Pinheiro;False
+128825641;Rua dos Mártires da Liberdade;False
+128825643;Travessa de São Carlos;False
+128828725;;False
+156208916;;False
+156209004;;False
+156209009;;False
+167487357;Rua de Camões;False
+174689855;Rua de Gonçalo Cristóvão;False
+174689856;Rua de Santa Catarina;False
+178413108;Rua de Santa Catarina;False
+206720845;Rua de Fernandes Tomás;False
+207724051;Rua do Bolhão;False
+207724055;Rua do Bolhão;False
+207724065;Rua Guedes de Azevedo;False
+208580373;Rua Guedes de Azevedo;False
+210328130;Travessa Rua Formosa;False
+210328137;Rua de Sá da Bandeira;False
+210328147;Rua Rodrigues Sampaio;False
+210669782;Rua de Gonçalo Cristóvão;False
+210669783;Rua de Camões;False
+210673563;Rua de Gonçalo Cristóvão;False
+210841125;Rua Guedes de Azevedo;False
+216972581;Avenida dos Aliados;False
+220233689;Rua do Doutor Alfredo Magalhães;False
+220233692;Rua de Gonçalo Cristóvão;False
+226624856;Rua de Rodrigues Sampaio;True
+227888232;;True
+227888233;;True
+227888235;;True
+227888628;;False
+227888631;Rua Guilherme da Costa Carvalho;False
+227888748;;False
+227888749;;False
+227932388;;True
+227932391;;True
+227932394;;True
+227932399;;True
+227980132;;False
+227982906;Rua do Estêvão;False
+227991568;;False
+228894146;;False
+228926086;;False
+228926087;;False
+228926088;;False
+228926091;;False
+229184974;Largo de Mompilher;False
+229194693;Largo de Mompilher;False
+239593895;Rua de Sá da Bandeira;True
+252526950;Rua da Alegria;False
+252526951;Rua da Alegria;False
+252526952;Rua da Firmeza;False
+252526954;Rua de Santa Catarina;False
+252526955;Rua da Firmeza;False
+252527740;Rua Dom João IV;False
+269856842;;False
+274467054;Rua Doutor Alves da Veiga;False
+278570711;;False
+278570718;Travessa das Almas;True
+286004317;;False
+286004375;;False
+286005192;;True
+286006222;;True
+286754358;;False
+286754361;;False
+286779044;;False
+286782663;;False
+286782664;;False
+287648368;;False
+287648784;;False
+287648900;Rua de Camões;True
+287906089;;True
+288961296;;True
+290230302;;True
+290230303;;True
+290230304;;True
+290446564;;False
+290446567;;False
+290580546;;False
+290580548;;False
+290580549;;False
+290586123;;False
+290586125;;False
+294240864;;False
+294240865;;False
+304688481;;False
+304688482;Rua Sá da Bandeira;False
+332179488;;True
+350915445;Rua do Moreira;False
+364828782;;False
+364828783;;False
+364828784;;False
+364828785;;False
+365010794;;False
+365020864;;True
+365020865;;True
+365020866;;False
+365020867;;True
+365021648;;True
+365436693;;True
+365452182;;True
+365461932;;True
+365578411;;True
+365578412;;True
+365578413;;True
+365578414;;True
+365578951;;True
+365609533;;True
+365609534;;True
+365803921;;True
+365803922;;True
+365803923;;True
+365804362;;True
+365804363;;True
+365804364;;True
+385795773;Rua de Santa Catarina;True
+386286205;Largo do Pinheiro;True
+386286206;Largo do Pinheiro;True
+434872534;Avenida dos Aliados;False
+434872538;Rua de Camões;False
+434872539;Rua de Camões;False
+434872540;Rua de Gonçalo Cristóvão;False
+434878400;Rua de Fernandes Tomás;False
+434878401;Rua de Sá da Bandeira;True
+434879921;Rua Formosa;False
+434879926;Rua de Sá da Bandeira;True
+452073003;Rua do Bonjardim;False
+498298756;Praça da República;False
+498298757;Praça da República;False
