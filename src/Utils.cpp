@@ -70,7 +70,7 @@ int verifyInput(int low, int high)
 
 	while (!validInput)
 	{
-		cout << "Choose an option (" << low << "-" << high << "): ";
+		cout << " - Choose an option (" << low << "-" << high << "): ";
 		getline(cin, input);
 
 		if (input.size() < 2 && isdigit(input[0]))
@@ -79,10 +79,10 @@ int verifyInput(int low, int high)
 			if (inputValue >= low && inputValue <= high)
 				validInput = true;
 			else
-				cout << "Invalid input! Try again..." << endl;
+				cout << " - Invalid input! Try again..." << endl << endl;
 		}
 		else
-			cout << "Invalid input! Try again..." << endl;
+			cout << " - Invalid input! Try again..." << endl << endl;
 	}
 
 	return inputValue;
@@ -105,7 +105,7 @@ bool isNumber(string input)
 void waitConfirm()
 {
 	string input;
-	cout << "Press any key to continue..." << endl;
+	cout << endl << " - Press any key to continue...";
 	getline(cin, input);
 }
 

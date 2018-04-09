@@ -15,7 +15,7 @@ class LocationNotFound
 	}
 	std::string message()
 	{
-		return "\n\nLocation Not Found: The location " + to_string(location) + " doesn't exist.\n\n";
+		return "\n - Location Not Found: The location " + to_string(location) + " doesn't exist.\n";
 	}
 };
 

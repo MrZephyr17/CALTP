@@ -90,16 +90,17 @@ class SystemManager
 	Vertex *findLocation(int name) const;
 	int convertLongitudeToX(float longitude);
 	int convertLatitudeToY(float latitude);
-	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string edgeColor = "BLACK");
-	vector<Vertex> getDiscountChoice(const vector<Vertex *> &v) const;
+	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string elseNodeColor = "", string edgeColor = "BLACK");
+	vector<Vertex> getDiscountChoice(const vector<Vertex *> &v, Vertex *origin) const;
 	void showClosestLocation(Vertex *origin, int id, bool rent);
 	void showDiscountLocations(Vertex *origin, int id, bool rent);
 	void checkConnectivity();
 	bool isConnected();
 	void isConnectedAux(Vertex *v, int &counter);
+	void connectedCiclePaint(Vertex *v);
 	void initGraphViewer();
 	void initFileNames(string nodes, string edges, string names, string sharing);
-	double getPathLength(const vector<Vertex> &path);
+	double getPathLength(const vector<Vertex*> &path);
 
   private:
 	GraphViewer *gv;
