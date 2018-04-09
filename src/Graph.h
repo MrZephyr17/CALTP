@@ -97,15 +97,21 @@ class Graph
 	* Returns true if successful, and false if the source or destination vertex does not exist.
 	*/
 	bool addEdge(Location *sourc, Location *dest, double w, int id, std::string name);
+	
+	/*
+	* Gets the Number of vertexes
+	* Returns that number.
+	*/
 	int getNumVertex() const;
 	vector<Vertex *> getVertexSet() const;
 
 	// Fp05 - single source
 	bool dijkstraShortestPath(Location *s, Vertex *destiny);
-	bool dijkstraShortestPath(Location *s, Location *&destiny, bool rent);
+	bool dijkstraShortestPath(Location *s, Vertex *&destiny, bool rent);
 	void bidirectionalSearch(Location *origin, Location *destiny, Graph &invGraph);
 	vector<Vertex> getPath(Location *origin, Location *dest) const;
 	vector<Vertex *> discountLocations(bool rent, const int numberOfLocations);
+	Vertex *findLocation(const int ID) const;
 };
 
 #endif /* GRAPH_H_ */

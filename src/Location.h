@@ -51,6 +51,8 @@ class Location
 	bool getVisited() const;
 
 	void setVisited(bool vis);
+
+	void setColor(std::string color);
 };
 
 #endif

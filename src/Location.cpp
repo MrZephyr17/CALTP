@@ -74,3 +74,9 @@ void Location::setVisited(bool vis)
 {
 	this->visited = vis;
 }
+
+void Location::setColor(string color)
+{
+
+	this->color = color;
+}

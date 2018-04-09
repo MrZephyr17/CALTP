@@ -2,6 +2,8 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <cmath>
+#include <algorithm>
 
 using namespace std;
 
@@ -120,13 +122,26 @@ string getTime(double time)
 	int hours = seconds / 3600;
 	int minutes = (seconds % 3600) / 60;
 	int sec = seconds % 60;
-	char formatted[6];
+	char formatted[9];
 
-	sprintf(formatted, "%02d:%02d:%02d", hours, minutes, sec);
+	sprintf_s(formatted, "%02d:%02d:%02d", hours, minutes, sec);
+
 	return string(formatted);
 }
 
 double getIncentive(double seconds)
 {
-	return 1234;
+	double incentive = sqrt(seconds);
+
+	return min(incentive, MAX_INCENTIVE);
+}
+
+int convertLongitudeToX(double longitude)
+{
+	return (int)floor(((longitude - MIN_LON) * (WINDOW_HEIGHT)) / (MAX_LON - MIN_LON));
+}
+
+int convertLatitudeToY(double latitude)
+{
+	return (int)floor(((latitude - MIN_LAT) * (WINDOW_WIDTH)) / (MAX_LAT - MIN_LAT));
 }

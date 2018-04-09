@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include "Exceptions.h"
 #include <typeinfo>
 #include <iostream>
 #include <string>
@@ -122,7 +123,7 @@ bool Graph::addEdge(Location *sourc, Location *dest, double w, int id, string na
 
 /**************** Single Source Shortest Path algorithms ************/
 
-bool Graph::dijkstraShortestPath(Location *origin, Location *&dest, bool rent)
+bool Graph::dijkstraShortestPath(Location *origin, Vertex *&dest, bool rent)
 {
 	for (Vertex *v : vertexSet)
 	{
@@ -160,7 +161,7 @@ bool Graph::dijkstraShortestPath(Location *origin, Location *&dest, bool rent)
 		}
 	}
 
-	dest = min->getInfo();
+	dest = min;
 
 	return min->getInfo()->isAvailable(rent);
 }
@@ -316,4 +317,16 @@ vector<Vertex *> Graph::discountLocations(bool rent, const int numberOfLocations
 		sharingLocations.resize(numberOfLocations);
 
 	return sharingLocations;
+}
+
+Vertex * Graph::findLocation(const int ID) const
+{
+	auto it = find_if(vertexSet.begin(), vertexSet.end(), [ID](Vertex *v) {
+		return v->getInfo()->getID() == ID;
+	});
+
+	if (it != vertexSet.end())
+		return *it;
+
+	throw LocationNotFound(ID);
 }

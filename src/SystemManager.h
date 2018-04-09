@@ -5,7 +5,7 @@
 #define SYSTEMMANAGER_H
 
 #ifdef _WIN32
-#define Limpar_ecra() system("cls");
+#define clearScreen() system("cls");
 
 #else
 #define Limpar_ecra() system("clear");
@@ -25,13 +25,7 @@
 #define PATH_COLOR MAGENTA
 #define TAB "      "
 
-const double MAX_LAT = 41.20324;
-const double MIN_LAT = 41.17303;
-const double MAX_LON = -8.555458;
-const double MIN_LON = -8.622682;
 
-#define WINDOW_HEIGHT 2160
-#define WINDOW_WIDTH 3840
 
 typedef struct
 {
@@ -87,9 +81,6 @@ class SystemManager
 	void loadNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations);
 	vector<EdgeName> loadNames();
 	void saveSharingLocations(const unordered_map<int, unsigned long long> &idsNodes);
-	Vertex *findLocation(int name) const;
-	int convertLongitudeToX(double longitude);
-	int convertLatitudeToY(double latitude);
 	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string elseNodeColor = "", string edgeColor = "BLACK");
 	vector<Vertex> getDiscountChoice(const vector<Vertex *> v, Location *origin);
 	void showClosestLocation(Vertex *origin, int id, bool rent);
@@ -99,7 +90,7 @@ class SystemManager
 	void connectedCiclePaint(Vertex *v);
 	void initGraphViewer();
 	void initFileNames(string nodes, string edges, string names, string sharing);
-	double getPathLength(const vector<Vertex> &path);
+	void sharingLocationsInfo();
 
   private:
 	GraphViewer *gv;
