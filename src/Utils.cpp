@@ -10,7 +10,7 @@ double calcWeight(Location *origin, Location *dest)
 	double dist = distance(origin, dest);
 	double v = velocity(origin, dest);
 
-	return dist * v;
+	return dist / v;
 }
 
 double degreesToRadians(double degrees)
@@ -128,5 +128,5 @@ string getTime(double time)
 
 double getIncentive(double seconds)
 {
-	return 0;
+	return 1234;
 }

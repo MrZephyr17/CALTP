@@ -292,7 +292,7 @@ vector<Vertex> Graph::getPath(Location *origin, Location *dest) const
 		d = d->path;
 	}
 
-	res_aux.push_back(d->info);
+	res_aux.push_back(*d);
 
 	for (int i = res_aux.size() - 1; i >= 0; i--)
 	{
@@ -312,7 +312,7 @@ vector<Vertex *> Graph::discountLocations(bool rent, const int numberOfLocations
 		return rent ? ((SharingLocation *)lhs->getInfo())->getSlots() > ((SharingLocation *)lhs->getInfo())->getSlots() : ((SharingLocation *)lhs->getInfo())->getSlots() < ((SharingLocation *)lhs->getInfo())->getSlots();
 	});
 
-	if (sharingLocations.size() > numberOfLocations)
+	if ((int)sharingLocations.size() > numberOfLocations)
 		sharingLocations.resize(numberOfLocations);
 
 	return sharingLocations;

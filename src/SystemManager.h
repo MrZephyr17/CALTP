@@ -25,10 +25,10 @@
 #define PATH_COLOR MAGENTA
 #define TAB "      "
 
-const float MAX_LAT = 41.20324;
-const float MIN_LAT = 41.17303;
-const float MAX_LON = -8.555458;
-const float MIN_LON = -8.622682;
+const double MAX_LAT = 41.20324;
+const double MIN_LAT = 41.17303;
+const double MAX_LON = -8.555458;
+const double MIN_LON = -8.622682;
 
 #define WINDOW_HEIGHT 2160
 #define WINDOW_WIDTH 3840
@@ -88,19 +88,18 @@ class SystemManager
 	vector<EdgeName> loadNames();
 	void saveSharingLocations(const unordered_map<int, unsigned long long> &idsNodes);
 	Vertex *findLocation(int name) const;
-	int convertLongitudeToX(float longitude);
-	int convertLatitudeToY(float latitude);
+	int convertLongitudeToX(double longitude);
+	int convertLatitudeToY(double latitude);
 	void paintPath(vector<Vertex> path, bool def, int edgeThickness, string startNodeColor = "", string endNodeColor = "", string elseNodeColor = "", string edgeColor = "BLACK");
-	vector<Vertex> getDiscountChoice(const vector<Vertex *> &v, Vertex *origin) const;
+	vector<Vertex> getDiscountChoice(const vector<Vertex *> v, Location *origin);
 	void showClosestLocation(Vertex *origin, int id, bool rent);
 	void showDiscountLocations(Vertex *origin, int id, bool rent);
-	void checkConnectivity();
-	bool isConnected();
+	bool checkConnectivity();
 	void isConnectedAux(Vertex *v, int &counter);
 	void connectedCiclePaint(Vertex *v);
 	void initGraphViewer();
 	void initFileNames(string nodes, string edges, string names, string sharing);
-	double getPathLength(const vector<Vertex*> &path);
+	double getPathLength(const vector<Vertex> &path);
 
   private:
 	GraphViewer *gv;
