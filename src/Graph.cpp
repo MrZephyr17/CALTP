@@ -74,6 +74,7 @@ vector<Vertex *> Graph::getVertexSet() const
 	return vertexSet;
 }
 
+
 Graph::~Graph()
 {
 	for (auto it = vertexSet.begin(); it != vertexSet.end(); it++)

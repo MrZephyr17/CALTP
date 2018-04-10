@@ -387,6 +387,8 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 
 		cout << endl << TAB << "  - Red Node right next to Green Node is your destiny" << endl;
 
+		cout << endl << TAB;
+		rent ? cout << "  - You have lifted a bike!" << endl : cout << "  - You have deposited a bike!" << endl;
 		waitConfirm();
 		
 		paintPath(path, false, 1);
@@ -515,6 +517,9 @@ void SystemManager::showDiscountLocations(Vertex *origin, int id, bool rent)
 
 	cout << endl << TAB << "  - Red Node right next to Green Node is your destiny" << endl;
 
+	cout << endl << TAB;
+	rent ? cout << "  - You have lifted a bike!" << endl : cout << "  - You have deposited a bike!" << endl;
+
 	waitConfirm();
 
 
@@ -563,6 +568,7 @@ vector<Vertex> SystemManager::getDiscountChoice(const vector<Vertex *> v, Locati
 	{
 		if (paths.find(v[i]->getInfo()->getID()) != paths.end())
 		{
+			cout << typeid(*v[i]->getInfo()).name() << endl;
 			cout << "            - Sharing Location: node number " << v[i]->getInfo()->getID() << endl;
 			cout << "                - Time: " << getTime(distDiscountLoc.at(j)) << endl;
 			cout << "                - Discount: " << getIncentive(distDiscountLoc.at(j)) << " %" << endl;
@@ -748,7 +754,7 @@ void SystemManager::sharingLocationsInfo()
 	vector<Vertex *> vertexSet = graph.getVertexSet();
 	
 	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex *vertex) 
-	{ return strcmp(typeid(*vertex->getInfo()).name(), "class SharingLocation") == 0; });
+	{ return string(typeid(*vertex->getInfo()).name()) ==  "class SharingLocation"; });
 
 	if (!sharingLocations.size())
 	{
@@ -763,33 +769,35 @@ void SystemManager::sharingLocationsInfo()
 
 	for (unsigned int i = 0; i < sharingLocations.size(); i++)
 	{	
-		Vertex * v = sharingLocations.at(i);
+		Vertex* v = sharingLocations.at(i);
+		SharingLocation * s = (SharingLocation*)v->getInfo();
 
 		if (!i)
-			cout << " _____________________________ " << endl;
+			cout << " ________________________________ " << endl;
 		else
 			cout << endl;
 
-		cout << "| Sharing Location " << setw(3) << i + 1 << "        |" << endl;
-		cout << "|  - ID            " << setw(8) << v->getInfo()->getID() << "   |" <<  endl;
-		cout << "|  - Color         " << setw(8) << v->getInfo()->getColor() << "   |" << endl;
-		cout << "|  - Availability  " << setw(8) << v->getInfo()->isAvailable(false) << "   |" << endl;
-		cout << "|  - Altitude      " << setw(8) << v->getInfo()->getAltitudecoord() << "   |" << endl;
-		cout << "|  - Latitude      " << setw(8) << v->getInfo()->getLatitudecoord() << "   |" << endl;
-		cout << "|  - Longitude     " << setw(8) << v->getInfo()->getLongitudecoord() << "   |" << endl;
+		cout << "| Sharing Location    " << setw(3) << i + 1 << "        |" << endl;
+		cout << "|  - ID               " << setw(8) << s->getID() << "   |" <<  endl;
+		cout << "|  - Color            " << setw(8) << s->getColor() << "   |" << endl;
+		cout << "|  - Max capacity     " << setw(8) << s->getMaxCapacity() << "   |" << endl;
+		cout << "|  - Number of slots  " << setw(8) << s->getSlots() << "   |" << endl;
+		cout << "|  - Altitude         " << setw(8) << s->getAltitudecoord() << "   |" << endl;
+		cout << "|  - Latitude         " << setw(8) << s->getLatitudecoord() << "   |" << endl;
+		cout << "|  - Longitude        " << setw(8) << s->getLongitudecoord() << "   |" << endl;
 	
 
 		if (v->getAdj().size() != 0)
 		{
-			cout << "|  - Edges adjacents:         |" << endl;
+			cout << "|  - Adjacent edges:             |" << endl;
 
 			int aux = 1;
-			for (Edge e : v->getAdj())
+			for (Edge &e : v->getAdj())
 			{
-				cout << "|      - Edge" << setw(3) << aux++ << "    ID " << setw(4) << e.getID() << "   |" << endl;
+				cout << "|      - Edge " << setw(3) << aux++ << "      ID " << setw(4) << e.getID() << "   |" << endl;
 			}
 		}
-		cout << "|_____________________________|";
+		cout << "|________________________________|";
 	}
 	waitConfirm();
 }
