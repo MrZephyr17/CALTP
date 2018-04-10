@@ -10,8 +10,8 @@ class SharingLocation : public Location
   public:
 	SharingLocation(int id, double latitude, double longitude, double altitude,
 					int maxCapacity, int slots);
-	bool depositBike(int number = 1);
-	bool liftBike(int number = 1);
+	bool depositBike();
+	bool liftBike();
 	bool isAvailable(bool rent) const;
 	std::string getColor() const;
 	int getSlots() const;

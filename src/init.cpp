@@ -249,10 +249,6 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles()
 
 	begin = clock();
 	loadEdges(edgesNames, idsNodes);
-	end = clock();
-	timeSpent = timeDiff(begin, end);
-	cout << "         Time to read Edges file: " << timeSpent << " seconds" << endl;
-
 	vector<Vertex*> vertexSet = graph.getVertexSet();
 	for (unsigned int i = 0; i < vertexSet.size(); i++)
 	{
@@ -262,6 +258,10 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles()
 			graph.findVertex(new Location(i + 1))->getInfo()->setColor(MAGENTA);
 		}
 	}
+	end = clock();
+	timeSpent = timeDiff(begin, end);
+	cout << "         Time to read Edges file: " << timeSpent << " seconds" << endl;
+
 	
 	gv->rearrange();
 

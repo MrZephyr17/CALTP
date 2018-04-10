@@ -51,16 +51,16 @@ double velocity(Location *origin, Location *dest)
 		if (angle > PI / 4)
 			return 5.0 / 6;
 		else
-			return (10 / 3.0 * cos(2 * angle) + 5 / 6.0);
+			return (5 / 3.0 * cos(2 * angle) + 5 / 6.0);
 	}
 	else
 	{
 		double angle = asin(-alt / distance(origin, dest));
 
 		if (angle > PI / 4)
-			return 55 * 1000 / 3600.0;
+			return 55 * 10 / 36.0;
 		else
-			return 100 / 9.0 * sin(2 * angle) + 25 / 6.0;
+			return (100 / 9.0 * sin(2 * angle) + 5 / 20.0);
 	}
 }
 

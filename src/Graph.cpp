@@ -139,12 +139,10 @@ bool Graph::dijkstraShortestPath(Location *origin, Vertex *&dest, bool rent)
 	queue.insert(vertex);
 
 	Vertex *min = nullptr;
-	string color = "BLUE";
 
-	while (!queue.empty() && (min == nullptr || !min->info->isAvailable(rent)) && (color == "BLUE" || min->getInfo() == origin))
+	while (!queue.empty() && (min == nullptr || !min->info->isAvailable(rent) || min->getInfo() == origin))
 	{
 		min = queue.extractMin();
-		color = min->getInfo()->getColor();
 
 		for (Edge w : min->adj)
 		{

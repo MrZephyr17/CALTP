@@ -38,7 +38,7 @@ void SystemManager::selectGraph()
 	cout << "|                                                                                  |" << endl;
 	cout << "|      6 - Trindade, S.Bento    - 4235 Nodes, 4577 Edges, 30 Sharing Locations     |" << endl;
 	cout << "|__________________________________________________________________________________|" << endl;
-	cout << "|                                                                                  |" << endl;	
+	cout << "|                                                                                  |" << endl;
 	cout << "|  Test files:                                                                     |" << endl;
 	cout << "|                                                                                  |" << endl;
 	cout << "|      7 - Non Connective Graph -    8 Nodes,   11 Edges   0 Sharing Locations     |" << endl;
@@ -368,13 +368,13 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 	if (success)
 	{
 		vector<Vertex> path = graph.getPath(origin->getInfo(), dest->getInfo());
-		
+
 		gv->setVertexColor(id, YELLOW);
-		
+
 		paintPath(path, true, 5, START_NODE_COLOR, RED, GREEN, PATH_COLOR);
 
 		double timeSpent = timeDiff(begin, end);
-		
+
 		cout << endl << " - Found closest location in: " << to_string(timeSpent) << " seconds!" << endl;
 
 		cout << endl << " - Travel will take you approximately " << getTime(dest->getDist()) << endl;
@@ -388,17 +388,19 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 		cout << endl << TAB << "  - Red Node right next to Green Node is your destiny" << endl;
 
 		cout << endl << TAB;
+
+		SharingLocation* shLoc = (SharingLocation*)dest->getInfo();
+
 		rent ? cout << "  - You have lifted a bike!" << endl : cout << "  - You have deposited a bike!" << endl;
+
 		waitConfirm();
-		
+
 		paintPath(path, false, 1);
-		
-		rent ? ((SharingLocation *)dest)->liftBike() : ((SharingLocation *)dest)->depositBike();
 	}
 	else
 	{
 		cout << endl << " - Can't reach any sharing location from your location!" << endl;
-		
+
 		waitConfirm();
 	}
 }
@@ -467,7 +469,7 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 	{
 		for (vector<Vertex>::iterator v = path.begin(); v != path.end(); v++)
 		{
-			if(v->getInfo()->getColor() == RED){}
+			if (v->getInfo()->getColor() == RED) {}
 			else if (v == path.begin())
 				gv->setVertexColor(v->getInfo()->getID(), startNodeColor);
 			else if (v == path.end() - 1)
@@ -538,11 +540,11 @@ vector<Vertex> SystemManager::getDiscountChoice(const vector<Vertex *> v, Locati
 	vector<double> distDiscountLoc;
 	vector<Vertex> chosenPath;
 	int size = v.size();
-	
+
 	//Fazer dijkstra e verificar se há path
 	for (auto it : v)
 	{
-		if(graph.dijkstraShortestPath(origin, it))
+		if (graph.dijkstraShortestPath(origin, it))
 		{
 			gv->setVertexColor(it->getInfo()->getID(), CYAN);
 			distDiscountLoc.push_back(it->getDist());
@@ -554,14 +556,14 @@ vector<Vertex> SystemManager::getDiscountChoice(const vector<Vertex *> v, Locati
 
 	int pathSize = paths.size();
 
-	if (pathSize==0)
-	{	
+	if (pathSize == 0)
+	{
 		return chosenPath;
 	}
 
 	cout << endl << " - You can get a discount if you choose one of the following locations!" << endl;
 	cout << endl << " - Here are their IDs: " << endl;
-	
+
 
 	//Mostrar sharingLocations com path
 	for (int i = 0, j = 0; i < size; i++)
@@ -598,7 +600,7 @@ vector<Vertex> SystemManager::getDiscountChoice(const vector<Vertex *> v, Locati
 					break;
 				}
 			}
-		}		
+		}
 		valid++;
 	}
 
@@ -667,7 +669,7 @@ bool SystemManager::checkConnectivity()
 			timeSpent = timeDiff(begin, end);
 			cout << "\n - Time taken to check connectivity file: " << timeSpent << endl;
 			cout << "\n - Graph is not connected\n";
-			
+
 			waitConfirm();
 
 			for (unsigned int i = 0; i <= id; i++)
@@ -712,7 +714,7 @@ bool SystemManager::checkConnectivity()
 		gv->rearrange();
 		cout << "\n - Press any key to continue to next Vertex (" << id + 2 << ")" << " or 'q' to stop ";
 		getline(cin, quit);
-		if(quit != "q")
+		if (quit != "q")
 			Sleep(500);
 	}
 
@@ -752,9 +754,9 @@ void SystemManager::sharingLocationsInfo()
 {
 	vector<Vertex *> sharingLocations;
 	vector<Vertex *> vertexSet = graph.getVertexSet();
-	
-	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex *vertex) 
-	{ return string(typeid(*vertex->getInfo()).name()) ==  "class SharingLocation"; });
+
+	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex *vertex)
+	{ return string(typeid(*vertex->getInfo()).name()) == "class SharingLocation"; });
 
 	if (!sharingLocations.size())
 	{
@@ -768,7 +770,7 @@ void SystemManager::sharingLocationsInfo()
 	cout << endl;
 
 	for (unsigned int i = 0; i < sharingLocations.size(); i++)
-	{	
+	{
 		Vertex* v = sharingLocations.at(i);
 		SharingLocation * s = (SharingLocation*)v->getInfo();
 
@@ -778,14 +780,14 @@ void SystemManager::sharingLocationsInfo()
 			cout << endl;
 
 		cout << "| Sharing Location    " << setw(3) << i + 1 << "        |" << endl;
-		cout << "|  - ID               " << setw(8) << s->getID() << "   |" <<  endl;
+		cout << "|  - ID               " << setw(8) << s->getID() << "   |" << endl;
 		cout << "|  - Color            " << setw(8) << s->getColor() << "   |" << endl;
 		cout << "|  - Max capacity     " << setw(8) << s->getMaxCapacity() << "   |" << endl;
 		cout << "|  - Number of slots  " << setw(8) << s->getSlots() << "   |" << endl;
 		cout << "|  - Altitude         " << setw(8) << s->getAltitudecoord() << "   |" << endl;
 		cout << "|  - Latitude         " << setw(8) << s->getLatitudecoord() << "   |" << endl;
 		cout << "|  - Longitude        " << setw(8) << s->getLongitudecoord() << "   |" << endl;
-	
+
 
 		if (v->getAdj().size() != 0)
 		{

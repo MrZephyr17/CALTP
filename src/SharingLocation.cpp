@@ -15,28 +15,28 @@ SharingLocation::SharingLocation(int id, double latitude, double longitude, doub
 	this->visited = false;
 }
 
-bool SharingLocation::depositBike(int number)
+bool SharingLocation::depositBike()
 {
-	if (number > slots)
+	if (slots == 0)
 		return false;
 
-	slots -= number;
+	slots--;
 
 	return true;
 }
 
-bool SharingLocation::liftBike(int number)
+bool SharingLocation::liftBike()
 {
-	if (number > maxCapacity - slots)
+	if (maxCapacity - slots == 0)
 		return false;
 
-	slots += number;
+	slots++;
 	return true;
 }
 
 bool SharingLocation::isAvailable(bool rent) const
 {
-	return rent ? slots > 0 : slots < maxCapacity;
+	return rent ? slots < maxCapacity : slots > 0;
 }
 
 string SharingLocation::getColor() const
