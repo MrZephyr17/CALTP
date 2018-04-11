@@ -60,7 +60,7 @@ double velocity(Location *origin, Location *dest)
 		if (angle > PI / 4)
 			return 55 * 10 / 36.0;
 		else
-			return (100 / 9.0 * sin(2 * angle) + 5 / 20.0);
+			return (100 / 9.0 * sin(2 * angle) + 5 / 2.0);
 	}
 }
 

@@ -107,12 +107,14 @@ class SystemManager
 	 * 
 	 * @return unordered_map<int, unsigned long long> 
 	 */
-	unordered_map<int, unsigned long long> loadFiles();
+	unordered_map<int, unsigned long long> loadFiles(int option);
+
 	/**
 	 * @brief 
 	 * 
 	 */
-	void selectGraph();
+	int selectGraph();
+
 	/**
 	 * @brief 
 	 * 
@@ -170,6 +172,9 @@ class SystemManager
 	 * @param sharingLocations 
 	 */
 	void loadNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations);
+
+	void loadSpeficifNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations,int option);
+
 	/**
 	 * @brief 
 	 * 

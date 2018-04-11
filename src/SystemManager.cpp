@@ -17,7 +17,7 @@ SystemManager::~SystemManager()
 	delete gv;
 }
 
-void SystemManager::selectGraph()
+int SystemManager::selectGraph()
 {
 	cout << " __________________________________________________________________________________ " << endl;
 	cout << "|                                                                                  |" << endl;
@@ -127,15 +127,17 @@ void SystemManager::selectGraph()
 	default:
 		break;
 	}
+
+	return userChoice;
 }
 
 bool SystemManager::Menu()
 {
 	clearScreen();
 
-	selectGraph();
+	int option = selectGraph();
 
-	unordered_map<int, unsigned long long> idsNodes = loadFiles();
+	unordered_map<int, unsigned long long> idsNodes = loadFiles(option);
 
 	waitConfirm();
 
@@ -272,6 +274,7 @@ bool SystemManager::menuRent()
 	}
 
 	gv->setVertexColor(id, loc->getInfo()->getColor());
+	gv->rearrange();
 
 	return true;
 }
@@ -327,7 +330,11 @@ bool SystemManager::menuHasBike()
 
 		return true;
 	}
-	gv->setVertexColor(id, YELLOW);
+
+	if (loc->getInfo()->getColor() == "RED")
+		cout << endl << " - Your current position is already a Sharing Location" << endl;
+	else
+		gv->setVertexColor(id, YELLOW);
 
 	gv->rearrange();
 
@@ -352,6 +359,7 @@ bool SystemManager::menuHasBike()
 	}
 
 	gv->setVertexColor(id, loc->getInfo()->getColor());
+	gv->rearrange();
 
 	return true;
 }
@@ -537,17 +545,22 @@ vector<Vertex> SystemManager::getDiscountChoice(const vector<Vertex *> v, Locati
 	string input;
 	auto exists = v.end();
 	map<int, vector<Vertex>> paths;
-	vector<double> distDiscountLoc;
+	vector<pair<double,double>> distDiscountLoc;
 	vector<Vertex> chosenPath;
 	int size = v.size();
 
 	//Fazer dijkstra e verificar se há path
 	for (auto it : v)
 	{
-		if (graph.dijkstraShortestPath(origin, it))
+		clock_t begin, end; 
+		begin = clock();
+		bool success = graph.dijkstraShortestPath(origin, it);
+		end = clock();
+
+		if (success)
 		{
 			gv->setVertexColor(it->getInfo()->getID(), CYAN);
-			distDiscountLoc.push_back(it->getDist());
+			distDiscountLoc.push_back(make_pair(it->getDist(), timeDiff(begin, end)));
 			paths.insert(make_pair(it->getInfo()->getID(), graph.getPath(origin, it->getInfo())));
 		}
 	}
@@ -572,8 +585,9 @@ vector<Vertex> SystemManager::getDiscountChoice(const vector<Vertex *> v, Locati
 		{
 			cout << typeid(*v[i]->getInfo()).name() << endl;
 			cout << "            - Sharing Location: node number " << v[i]->getInfo()->getID() << endl;
-			cout << "                - Time: " << getTime(distDiscountLoc.at(j)) << endl;
-			cout << "                - Discount: " << getIncentive(distDiscountLoc.at(j)) << " %" << endl;
+			cout << "                - Time: " << getTime(distDiscountLoc.at(j).first) << endl;
+			cout << "                - Discount: " << getIncentive(distDiscountLoc.at(j).first) << " %" << endl;
+			cout << "                - Found Location in: " << to_string(distDiscountLoc.at(j).second) << " seconds" << endl;
 			j++;
 		}
 	}
@@ -712,11 +726,17 @@ bool SystemManager::checkConnectivity()
 			}
 		}
 		gv->rearrange();
-		cout << "\n - Press any key to continue to next Vertex (" << id + 2 << ")" << " or 'q' to stop ";
-		getline(cin, quit);
-		if (quit != "q")
-			Sleep(500);
+		if (id < vertexes.size() - 1)
+		{
+			cout << "\n - Press any key to continue to next Vertex (" << id + 2 << ")" << " or 'q' to stop ";
+			getline(cin, quit);
+
+			if (quit != "q")
+				Sleep(500);
+		}
 	}
+
+	waitConfirm();
 
 	return true;
 }

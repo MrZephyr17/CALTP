@@ -206,6 +206,7 @@ bool Graph::dijkstraShortestPath(Location *origin, Vertex *destiny)
 	return min->info == destiny->info;
 }
 
+/*
 void Graph::bidirectionalSearch(Location *origin, Location *destiny, Graph &invGraph)
 {
 	for (Vertex *v : vertexSet)
@@ -278,6 +279,7 @@ void Graph::bidirectionalSearch(Location *origin, Location *destiny, Graph &invG
 		}
 	}
 }
+*/
 
 vector<Vertex> Graph::getPath(Location *origin, Location *dest) const
 {

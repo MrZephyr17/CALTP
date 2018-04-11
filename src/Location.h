@@ -62,10 +62,10 @@ class Location
 	Location();
 
 	/**
- * @brief 
- * 
- * @return int 
- */
+ 	* @brief 
+ 	* 
+ 	* @return int 
+ 	*/
 	int getID() const;
 
 	/**

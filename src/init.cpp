@@ -25,6 +25,7 @@ void SystemManager::initFileNames(string nodes, string edges, string names, stri
 	this->fileNames.names = names;
 	this->fileNames.sharingLocations = sharing;
 }
+
 void SystemManager::loadSharingLocations(vector<SharingLoc> &sharingLocations)
 {
 	ifstream file(fileNames.sharingLocations);
@@ -105,6 +106,130 @@ void SystemManager::loadNodes(unordered_map<int, unsigned long long> &idsNodes, 
 	}
 }
 
+void SystemManager::loadSpeficifNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations, int option)
+{
+	cout << " - File: " << fileNames.nodes << endl;
+
+	if (option == 7)
+	{
+		int id = 1;
+
+		//1
+		gv->addNode(id, 5, 5);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14996, -8.614044, 95));
+		id++;
+		//2
+		gv->addNode(id, 10, 0);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14993, -8.614813, 94));
+		id++;
+		//3
+		gv->addNode(id, 0, 10);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.15299, -8.612018, 113));
+		id++;
+		//4
+		gv->addNode(id, 10, 10);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.1536, -8.611996, 113));
+		id++;
+		//5
+		gv->addNode(id, 15, 7);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14837, -8.61437, 95));
+		id++;
+		//6
+		gv->addNode(id, 0, 15);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14795, -8.612149, 89));
+		id++;
+		//7
+		gv->addNode(id, 12, 15);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14788, -8.611281, 73));
+		id++;
+		//8
+		gv->addNode(id, 8, 20);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14640, -8.611245, 89));
+		id++;
+	}
+	else if (option == 8) // conexo
+	{
+		int id = 1;
+
+		//1
+		gv->addNode(id, 0, 0);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14996, -8.614044, 95));
+		id++;
+		//2
+		gv->addNode(id, 10, 0);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14993, -8.614813, 94));
+		id++;
+		//3
+		gv->addNode(id, 0, 10);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.15299, -8.612018, 113));
+		id++;
+		//4
+		gv->addNode(id, 10, 10);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.1536, -8.611996, 113));
+		id++;
+		//5
+		gv->addNode(id, 15, 7);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14837, -8.61437, 95));
+		id++;
+		//6
+		gv->addNode(id, 0, 15);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14795, -8.612149, 89));
+		id++;
+		//7
+		gv->addNode(id, 10, 15);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14788, -8.611281, 73));
+		id++;
+		//8
+		gv->addNode(id, 15, 13);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14784, -8.610926, 73));
+		id++;
+		//9
+		gv->addNode(id, 5, 20);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.1488, -8.612135, 89));
+		id++;
+		//10
+		gv->addNode(id, 15, 20);
+		gv->setVertexLabel(id, to_string(id));
+		idsNodes.insert(make_pair(id, id));
+		graph.addVertex(new Location(id, 41.14717, -8.612186, 73));
+	}
+
+}
+
 vector<EdgeName> SystemManager::loadNames()
 {
 	ifstream read(fileNames.names);
@@ -145,7 +270,6 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, unordered_map<int, unsign
 	cout << " - File: " << fileNames.edges << endl;
 
 	unsigned long long id = -1, ori, dest;
-	char ign;
 
 	if (!read.is_open())
 	{
@@ -158,7 +282,14 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, unordered_map<int, unsign
 		while (!read.eof())
 		{
 			idIntEdge++;
-			read >> id >> ign >> ori >> ign >> dest >> ign;
+			string strId, strOri, strDest;
+			getline(read, strId, ';');
+			getline(read, strOri, ';');
+			getline(read, strDest);
+
+			id = stoull(strId);
+			ori = stoull(strOri);
+			dest = stoull(strDest.substr(0, strDest.size() - 1));
 
 			Vertex *origin;
 			Vertex *destiny;
@@ -221,7 +352,7 @@ void SystemManager::loadEdges(vector<EdgeName> &edges, unordered_map<int, unsign
 	}
 }
 
-unordered_map<int, unsigned long long> SystemManager::loadFiles()
+unordered_map<int, unsigned long long> SystemManager::loadFiles(int option)
 {
 	clock_t begin, end;
 	double timeSpent;
@@ -236,7 +367,10 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles()
 	cout << "         Time to read Sharing Locations file: " << timeSpent << " seconds" << endl << endl;
 
 	begin = clock();
-	loadNodes(idsNodes, sharingLocations);
+	if (option == 7 || option == 8)
+		loadSpeficifNodes(idsNodes, sharingLocations, option);
+	else
+		loadNodes(idsNodes, sharingLocations);
 	end = clock();
 	timeSpent = timeDiff(begin, end);
 	cout << "         Time to read Nodes file: " << timeSpent << " seconds" << endl << endl;
@@ -262,7 +396,7 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles()
 	timeSpent = timeDiff(begin, end);
 	cout << "         Time to read Edges file: " << timeSpent << " seconds" << endl;
 
-	
+
 	gv->rearrange();
 
 	return idsNodes;
