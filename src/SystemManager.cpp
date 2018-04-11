@@ -672,21 +672,26 @@ bool SystemManager::checkConnectivity()
 		}
 
 		isConnectedAux(vertexes.at(id), counter);
-		gv->setVertexColor(id + 1, MAGENTA);
+		gv->setVertexColor(id + 1, GREEN);
+		gv->rearrange();
+		Sleep(300);
 
 		if (counter != vertexes.size())
 		{
 			end = clock();
-			cout << "\n -	Failed on Node " << vertexes.at(id)->getInfo()->getID() << endl;
-			cout << "\n - See on GraphViewer" << endl;
-			timeSpent = timeDiff(begin, end);
-			cout << "\n - Time taken to check connectivity file: " << timeSpent << endl;
-			cout << "\n - Graph is not connected\n";
+			cout << "\n    - Failed on Node " << vertexes.at(id)->getInfo()->getID() << endl;
+			cout << "\n    - See on GraphViewer" << endl;
+			timeSpent = timeDiff(begin, end) - (id + 1) * 0.3;
+			cout << "\n    - Time taken to check connectivity file: " << timeSpent << endl;
+			cout << "\n    - Graph is not connected\n";
 
 			waitConfirm();
 
 			for (unsigned int i = 0; i <= id; i++)
 				gv->setVertexColor(i + 1, vertexes.at(i)->getInfo()->getColor());
+
+			gv->rearrange();
+
 			return false;
 		}
 	}
@@ -695,6 +700,7 @@ bool SystemManager::checkConnectivity()
 	{
 		gv->setVertexColor(v->getInfo()->getID(), v->getInfo()->getColor());
 	}
+	gv->rearrange();
 
 	end = clock();
 	timeSpent = timeDiff(begin, end);
@@ -712,6 +718,21 @@ bool SystemManager::checkConnectivity()
 			v->getInfo()->setVisited(false);
 		}
 
+		if (id < vertexes.size())
+		{
+			if(id == 0)				
+				cout << "\n - Press any key to continue to see Connectivity on Vertex (" << id + 1 << ")" << " or 'q' to stop ";
+			else	
+				cout << "\n - Press any key to continue to Vertex (" << id + 1 << ")" << " or 'q' to stop ";
+
+			getline(cin, quit);
+
+			if (quit != "q")
+				Sleep(800);
+			else
+				break;
+		}
+
 		connectedCiclePaint(vertexes.at(id));
 
 		Sleep(1000);
@@ -725,14 +746,7 @@ bool SystemManager::checkConnectivity()
 			}
 		}
 		gv->rearrange();
-		if (id < vertexes.size() - 1)
-		{
-			cout << "\n - Press any key to continue to next Vertex (" << id + 2 << ")" << " or 'q' to stop ";
-			getline(cin, quit);
-
-			if (quit != "q")
-				Sleep(500);
-		}
+		
 	}
 
 	waitConfirm();
@@ -762,7 +776,7 @@ void SystemManager::connectedCiclePaint(Vertex *v)
 	{
 		if (!e.getDest()->getInfo()->getVisited())
 		{
-			gv->setEdgeColor(e.getID(), MAGENTA);
+			gv->setEdgeColor(e.getID(), RED);
 			gv->setEdgeThickness(e.getID(), 5);
 			connectedCiclePaint(e.getDest());
 		}
@@ -794,31 +808,31 @@ void SystemManager::sharingLocationsInfo()
 		SharingLocation * s = (SharingLocation*)v->getInfo();
 
 		if (!i)
-			cout << " ________________________________ " << endl;
+			cout << " _________________________________ " << endl;
 		else
 			cout << endl;
 
-		cout << "| Sharing Location    " << setw(3) << i + 1 << "        |" << endl;
-		cout << "|  - ID               " << setw(8) << s->getID() << "   |" << endl;
-		cout << "|  - Color            " << setw(8) << s->getColor() << "   |" << endl;
-		cout << "|  - Max capacity     " << setw(8) << s->getMaxCapacity() << "   |" << endl;
-		cout << "|  - Number of slots  " << setw(8) << s->getSlots() << "   |" << endl;
-		cout << "|  - Altitude         " << setw(8) << s->getAltitudecoord() << "   |" << endl;
-		cout << "|  - Latitude         " << setw(8) << s->getLatitudecoord() << "   |" << endl;
-		cout << "|  - Longitude        " << setw(8) << s->getLongitudecoord() << "   |" << endl;
+		cout << "| Sharing Location    " << setw(4) << i + 1 << "        |" << endl;
+		cout << "|  - ID               " << setw(9) << s->getID() << "   |" << endl;
+		cout << "|  - Color            " << setw(9) << s->getColor() << "   |" << endl;
+		cout << "|  - Max capacity     " << setw(9) << s->getMaxCapacity() << "   |" << endl;
+		cout << "|  - Number of slots  " << setw(9) << s->getSlots() << "   |" << endl;
+		cout << "|  - Altitude         " << setw(9) << s->getAltitudecoord() << "   |" << endl;
+		cout << "|  - Latitude         " << setw(9) << s->getLatitudecoord() << "   |" << endl;
+		cout << "|  - Longitude        " << setw(9) << s->getLongitudecoord() << "   |" << endl;
 
 
 		if (v->getAdj().size() != 0)
 		{
-			cout << "|  - Adjacent edges:             |" << endl;
+			cout << "|  - Adjacent edges:              |" << endl;
 
 			int aux = 1;
 			for (Edge &e : v->getAdj())
 			{
-				cout << "|      - Edge " << setw(3) << aux++ << "      ID " << setw(4) << e.getID() << "   |" << endl;
+				cout << "|      - Edge " << setw(3) << aux++ << "      ID " << setw(5) << e.getID() << "   |" << endl;
 			}
 		}
-		cout << "|________________________________|";
+		cout << "|_________________________________|";
 	}
 	waitConfirm();
 }

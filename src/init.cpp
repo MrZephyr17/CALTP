@@ -110,54 +110,58 @@ void SystemManager::loadSpeficicNodes(unordered_map<int, unsigned long long> &id
 {
 	cout << " - File: " << fileNames.nodes << endl;
 
+	int valx = 600;
+	int valy = 250;
+	int scale = 30;
+
 	if (option == 7)
 	{
 		int id = 1;
 
 		//1
-		gv->addNode(id, 5, 5);
+		gv->addNode(id, 5 * scale + valx, 5 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14996, -8.614044, 95));
 		id++;
 		//2
-		gv->addNode(id, 10, 0);
+		gv->addNode(id, 10 * scale + valx, 0 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14993, -8.614813, 94));
 		id++;
 		//3
-		gv->addNode(id, 0, 10);
+		gv->addNode(id, 0 * scale + valx, 10 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.15299, -8.612018, 113));
 		id++;
 		//4
-		gv->addNode(id, 10, 10);
+		gv->addNode(id, 10 * scale + valx, 10 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.1536, -8.611996, 113));
 		id++;
 		//5
-		gv->addNode(id, 15, 7);
+		gv->addNode(id, 15 * scale + valx, 7 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14837, -8.61437, 95));
 		id++;
 		//6
-		gv->addNode(id, 0, 15);
+		gv->addNode(id, 0 * scale + valx, 15 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14795, -8.612149, 89));
 		id++;
 		//7
-		gv->addNode(id, 12, 15);
+		gv->addNode(id, 12 * scale + valx, 15 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14788, -8.611281, 73));
 		id++;
 		//8
-		gv->addNode(id, 8, 20);
+		gv->addNode(id, 8 * scale + valx, 20 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14640, -8.611245, 89));
@@ -168,61 +172,61 @@ void SystemManager::loadSpeficicNodes(unordered_map<int, unsigned long long> &id
 		int id = 1;
 
 		//1
-		gv->addNode(id, 0, 0);
+		gv->addNode(id, 0*scale + valx, 0 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14996, -8.614044, 95));
 		id++;
 		//2
-		gv->addNode(id, 10, 0);
+		gv->addNode(id, 10 * scale + valx, 0 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14993, -8.614813, 94));
 		id++;
 		//3
-		gv->addNode(id, 0, 10);
+		gv->addNode(id, 0 * scale + valx, 10 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.15299, -8.612018, 113));
 		id++;
 		//4
-		gv->addNode(id, 10, 10);
+		gv->addNode(id, 10 * scale + valx, 10 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.1536, -8.611996, 113));
 		id++;
 		//5
-		gv->addNode(id, 15, 7);
+		gv->addNode(id, 15 * scale + valx, 7 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14837, -8.61437, 95));
 		id++;
 		//6
-		gv->addNode(id, 0, 15);
+		gv->addNode(id, 0 * scale + valx, 15 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14795, -8.612149, 89));
 		id++;
 		//7
-		gv->addNode(id, 10, 15);
+		gv->addNode(id, 10 * scale + valx, 15 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14788, -8.611281, 73));
 		id++;
 		//8
-		gv->addNode(id, 15, 13);
+		gv->addNode(id, 15 * scale + valx, 13 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14784, -8.610926, 73));
 		id++;
 		//9
-		gv->addNode(id, 5, 20);
+		gv->addNode(id, 5 * scale + valx, 20 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.1488, -8.612135, 89));
 		id++;
 		//10
-		gv->addNode(id, 15, 20);
+		gv->addNode(id, 15 * scale + valx, 20 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
 		graph.addVertex(new Location(id, 41.14717, -8.612186, 73));
