@@ -9,7 +9,6 @@
 
 /**
  * @brief Represents a sharing location on the map
- * 
  */
 class SharingLocation : public Location
 {
@@ -19,55 +18,52 @@ private:
 
 public:
 	/**
- * @brief Construct a new Sharing Location object
- * 
- * @param id 
- * @param latitude 
- * @param itude 
- * @param altitude 
- * @param maxCapacity 
- * @param slots 
- */
+	 * @brief Construct a new Sharing Location object
+	 * 
+	 * @param id this location's id
+	 * @param latitude this location's latitude
+	 * @param longitude this location's longitude
+	 * @param altitude this location's altitude
+	 * @param maxCapacity this location's maximum capacity
+	 * @param slots this location's number of slots
+	 */
 	SharingLocation(int id, double latitude, double longitude, double altitude,
 									int maxCapacity, int slots);
 	/**
-	 * @brief 
+	 * @brief Deposits a bike into this sharing location.
 	 * 
-	 * @return true 
-	 * @return false 
+	 * @return true if successful, false otherwise
 	 */
 	bool depositBike();
 	/**
-	 * @brief 
+	 * @brief Lifts a bike from this sharing location.
 	 * 
-	 * @return true 
-	 * @return false 
+	 * @return true if successful, false otherwise
 	 */
 	bool liftBike();
 	/**
-	 * @brief 
+	 * @brief Checks if this locations is available to rent or deposit a bike
 	 * 
-	 * @param rent 
-	 * @return true 
-	 * @return false 
+	 * @param rent true if the objective is to rent, false if it's to deposit
+	 * @return true if is available, false otherwise
 	 */
 	bool isAvailable(bool rent) const;
 	/**
-	 * @brief Get the Color object
+	 * @brief Get the color on the GraphViewer
 	 * 
-	 * @return std::string 
+	 * @return the color 
 	 */
 	std::string getColor() const;
 	/**
-	 * @brief Get the Slots object
+	 * @brief Get the number of slots
 	 * 
-	 * @return int 
+	 * @return the number of slots 
 	 */
 	int getSlots() const;
 	/**
-	 * @brief Get the Max Capacity object
+	 * @brief Get the Max Capacity 
 	 * 
-	 * @return int 
+	 * @return the max capacity 
 	 */
 	int getMaxCapacity() const;
 };

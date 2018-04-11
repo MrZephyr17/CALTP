@@ -106,7 +106,7 @@ void SystemManager::loadNodes(unordered_map<int, unsigned long long> &idsNodes, 
 	}
 }
 
-void SystemManager::loadSpeficifNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations, int option)
+void SystemManager::loadSpeficicNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations, int option)
 {
 	cout << " - File: " << fileNames.nodes << endl;
 
@@ -368,7 +368,7 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles(int option)
 
 	begin = clock();
 	if (option == 7 || option == 8)
-		loadSpeficifNodes(idsNodes, sharingLocations, option);
+		loadSpeficicNodes(idsNodes, sharingLocations, option);
 	else
 		loadNodes(idsNodes, sharingLocations);
 	end = clock();

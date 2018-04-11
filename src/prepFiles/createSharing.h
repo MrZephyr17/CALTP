@@ -14,37 +14,37 @@
 #define MAX_LOT 20 /**< @brief Maximum lotation */
 
 /**
- * @brief Create a Sharing File object
+ * @brief Create a Sharing File
  * 
- * @param file 
- * @param info 
+ * @param file the name of the file
+ * @param info information for the sharing locations
  */
 void createSharingFile(std::string file, const std::vector<std::string> &info);
 
 /**
- * @brief 
+ * @brief Returns a random number in the given interval
  * 
- * @param min 
- * @param max 
- * @return int 
+ * @param min the lower limit
+ * @param max the higher limit
+ * @return the random number
  */
 int randBetween(int min, int max);
 
 /**
- * @brief Create a Sharing Info object
+ * @brief Create information for a given number of sharing locations
  * 
- * @param ids 
- * @param lineNumbers 
- * @return std::vector<std::string> 
+ * @param ids the ids on the nodes file
+ * @param lineNumbers the corresponding line numbers on the nodes file
+ * @return information for the sharing locations
  */
 std::vector<std::string> createSharingInfo(const std::vector<std::string> &ids, const std::set<int> &lineNumbers);
 
 /**
- * @brief 
+ * @brief Generates random line IDs
  * 
- * @param number 
- * @param numLines 
- * @return std::set<int> 
+ * @param number the number of numbers to be generated
+ * @param numLines the upper limit
+ * @return random line ids
  */
 std::set<int> generateRandomLineIDs(unsigned int number, int numLines);
 

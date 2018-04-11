@@ -41,111 +41,107 @@ class Location
 	/**
    * @brief Construct a new Location object
    * 
-   * @param id 
+   * @param id this location's id
    */
 	Location(int id);
 
 	/**
 	 * @brief Construct a new Location object
 	 * 
-	 * @param id 
-	 * @param latitude 
-	 * @param itude 
-	 * @param altitude 
+   	 * @param id this location's id
+	 * @param latitude this location's latitude
+	 * @param longitude this location's longitude
+	 * @param altitude this location's altitude
 	 */
 	Location(int id, double latitude, double longitude, double altitude);
 
 	/**
 	 * @brief Construct a new Location object
-	 * 
 	 */
 	Location();
 
 	/**
- 	* @brief 
+ 	* @brief Returns this location's id
  	* 
- 	* @return int 
+ 	* @return this location's id 
  	*/
 	int getID() const;
 
 	/**
-	 * @brief Get the Latitudecoord object
+	 * @brief Gets this location's latitude
 	 * 
-	 * @return double 
+	 * @return this location's latitude 
 	 */
 	double getLatitudecoord() const;
 
 	/**
-	 * @brief Get the Longitudecoord object
+	 * @brief Gets this location's longitude
 	 * 
-	 * @return double 
+	 * @return this location's longitude 
 	 */
 	double getLongitudecoord() const;
 	/**
-	 * @brief Get the Altitudecoord object
+	 * @brief Gets this location's altitude
 	 * 
-	 * @return double 
+	 * @return this location's altitude 
 	 */
 	double getAltitudecoord() const;
 
 	/**
-	 * @brief Get the Coords object
+	 * @brief Get this location's coordinates
 	 * 
-	 * @return Coordinate 
+	 * @return this location's coordinates 
 	 */
 	Coordinate getCoords() const;
 
 	/**
-	 * @brief 
+	 * @brief Checks if two locations represent the same location
 	 * 
-	 * @param n2 
-	 * @return true 
-	 * @return false 
+	 * @param n2 the location to be compared 
+	 * @return true if they are equal, false otherwise 
 	 */
 	bool operator==(const Location &n2) const;
 
 	/**
-	 * @brief 
+	 * @brief Sets this location's id
 	 * 
-	 * @param newID 
+	 * @param newID this location's new id
 	 */
 	void setID(int newID);
 
 	/**
-	 * @brief 
+	 * @brief Checks if this location is available to rent or deposit a bike
 	 * 
-	 * @param rent 
-	 * @return true 
-	 * @return false 
+	 * @param rent true if the objective is to rent, false if it's to deposit
+	 * @return false if it's not a sharing location, or true according to the latter's information 
 	 */
 	virtual bool isAvailable(bool rent) const;
 
 	/**
-	 * @brief Get the Color object
+	 * @brief Get this location's color on the GraphViewer
 	 * 
-	 * @return std::string 
+	 * @return this location's color 
 	 */
 	virtual std::string getColor() const;
 
 	/**
-	 * @brief Get the Visited object
+	 * @brief Returns if this location has been visited by the DFS algorithm.
 	 * 
-	 * @return true 
-	 * @return false 
+	 * @return true if it has been visited, false otherwise
 	 */
 	bool getVisited() const;
 
 	/**
-	 * @brief Set the Visited object
+	 * @brief Sets the visited attribute.
 	 * 
-	 * @param vis 
+	 * @param vis the new value 
 	 */
 	void setVisited(bool vis);
 
 	/**
-	 * @brief Set the Color object
+	 * @brief Sets this location's color
 	 * 
-	 * @param color 
+	 * @param color the new color 
 	 */
 	void setColor(std::string color);
 };

@@ -415,7 +415,6 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 
 bool SystemManager::menuSave(const unordered_map<int, unsigned long long> &idsNodes)
 {
-
 	clearScreen();
 
 	cout << " _______________________________ " << endl;
