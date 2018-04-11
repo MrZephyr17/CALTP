@@ -109,6 +109,8 @@ class SystemManager
 	/**
 	 * @brief Loads entry files onto the graph and the graphviewer
 	 * 
+	 * @param option graph option
+	 * 
 	 * @return a structure associating nodes id's on the file and on the program 
 	 */
 	unordered_map<int, unsigned long long> loadFiles(int option);
@@ -242,14 +244,14 @@ class SystemManager
 	/**
 	 * @brief Auxilairy function to check if a graph is connected
 	 * 
-	 * @param v 
-	 * @param counter 
+	 * @param v origin vertex
+	 * @param counter counts the number of vertexes that can be reached by v
 	 */
 	void isConnectedAux(Vertex *v, int &counter);
 	/**
-	 * @brief 
+	 * @brief Paints on GraphViewer a connected cicle starting on vertex v
 	 * 
-	 * @param v 
+	 * @param v origin vertex
 	 */
 	void connectedCiclePaint(Vertex *v);
 	/**

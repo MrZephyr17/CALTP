@@ -1,0 +1,26 @@
+var group__utils =
+[
+    [ "MAX_INCENTIVE", "group__utils.html#gafa85d42eb1053d50b19fec6311da7fbd", null ],
+    [ "PI", "group__utils.html#ga598a3330b3c21701223ee0ca14316eca", null ],
+    [ "WINDOW_HEIGHT", "group__utils.html#ga5473cf64fa979b48335079c99532e243", null ],
+    [ "WINDOW_WIDTH", "group__utils.html#ga498d9f026138406895e9a34b504ac6a6", null ],
+    [ "XCONST", "group__utils.html#ga9a8a7bb7abab07d7dfcf04568aa1c351", null ],
+    [ "YB", "group__utils.html#gaf6929540cc7f3e1b8b4f95726f449f1e", null ],
+    [ "YCONST", "group__utils.html#ga09d8358207cf1d8c487d02422010e291", null ],
+    [ "calcWeight", "group__utils.html#gabd41ce1b2e37489184e385d069bc81d1", null ],
+    [ "convertLatitudeToY", "group__utils.html#gaa49bad0676d7e57b94820ac747e9d2c1", null ],
+    [ "convertLongitudeToX", "group__utils.html#ga119022fb787e47b78ea0d5d5c52f010a", null ],
+    [ "degreesToRadians", "group__utils.html#ga8824538eb07749fa64fd2ef98e557be9", null ],
+    [ "distance", "group__utils.html#ga33eb10c0345c98113278baada0589fe4", null ],
+    [ "getIncentive", "group__utils.html#gae77445ce31ee1b82f80b4e4649bdff12", null ],
+    [ "getTime", "group__utils.html#ga2ee08d455dff5c312f206cd93b238f26", null ],
+    [ "isNumber", "group__utils.html#ga05e2d301a9724eeb6ea1ad4160a175b8", null ],
+    [ "timeDiff", "group__utils.html#ga82e7afcd5211f4214d637891978786e1", null ],
+    [ "velocity", "group__utils.html#ga9ae7980f551b35536e84c295e5165c0c", null ],
+    [ "verifyInput", "group__utils.html#ga938832a8c271a50ee9190fb88650995c", null ],
+    [ "waitConfirm", "group__utils.html#ga3f3230a1df1c399af436121dec5e4043", null ],
+    [ "MAX_LAT", "group__utils.html#gaa63b6cd7807c756d972c38009904b2a2", null ],
+    [ "MAX_LON", "group__utils.html#gacdd7c4446da82a472220a9ee9e3097d3", null ],
+    [ "MIN_LAT", "group__utils.html#ga5c2eb10e4518a484256a89ac8ad6652b", null ],
+    [ "MIN_LON", "group__utils.html#ga7c8c2d4a945ad57d244f3726bb2aa538", null ]
+];
