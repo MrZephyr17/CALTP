@@ -156,3 +156,77 @@ void getNames(string &street1, string &street2)
 	cout << "Name of street 2: ";
 	getline(cin, street2);
 }
+
+int editDistance(string pattern, string text)
+{
+	int pSize = pattern.size();
+	int tSize = text.size();
+	int oldValue, newValue;
+	vector<int> D(tSize + 1);
+
+	for (int j = 0; j <= tSize; j++)
+		D.at(j) = j;
+
+	for (int i = 1; i <= pSize; i++)
+	{
+		oldValue = D.at(0);
+		D.at(0) = i;
+
+		for (int j = 1; j <= tSize; j++)
+		{
+			if (pattern.at(i) == text.at(j))
+				newValue = oldValue;
+			else
+				newValue = 1 + min(oldValue, D.at(j), D.at(j - 1));
+
+			oldValue = D.at(j);
+			D.at(j) = newValue;
+		}
+	}
+
+	return D.at(tSize);
+}
+
+vector<int> ComputePrefixFunction(string pattern)
+{
+	int m = pattern.size();
+	vector<int> pi(m);
+	pi.at(1) = 0;
+	int k = 0;
+
+	for (int q = 2; q <= m; q++)
+	{
+		while (k > 0 && pattern.at(k + 1) != pattern.at(q))
+			k = pi.at(k);
+
+		if (pattern.at(k + 1) = pattern.at(q))
+			k++;
+
+		pi.at(q) = k;
+	}
+
+	return pi;
+}
+
+void KMPMatcher(string text, string pattern)
+{
+	int n = pattern.size();
+	int m = text.size();
+	vector<int> pi = ComputePrefixFunction(pattern);
+	int q = 0;
+
+	for (int i = 1; i < n; i++)
+	{
+		while (q > 0 && pattern.at(q + 1) != text.at(i))
+			q = pi.at(q);
+
+		if (pattern.at(q + 1) == text.at(i))
+			q++;
+
+		if (q == m)
+		{
+			cout << "Pattern occurs with shift " << i - m << endl;
+			q = pi.at(q);
+		}
+	}
+}

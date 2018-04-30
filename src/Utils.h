@@ -130,4 +130,7 @@ int convertLongitudeToX(double longitude);
 int convertLatitudeToY(double latitude);
 
 void getNames(std::string &street1, std::string &street2);
+
+int editDistance(string pattern, string text);
+
 /** @} end of utils */
