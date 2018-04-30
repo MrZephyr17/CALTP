@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <string>
+#include <utility>
 #include "MutablePriorityQueue.h"
 #include "Location.h"
 #include "SharingLocation.h"
@@ -114,7 +115,6 @@ class Edge
 	double weight;	// edge weight
 	std::string name; // edge name
   public:
-
 	/**
 	 * @brief Construct a new Edge object with destination, id and weight
 	 * 
@@ -138,7 +138,7 @@ class Edge
 	 * @param name This edge's name
 	 */
 	Edge(Vertex *d, double w, int id, std::string name);
-	
+
 	/**
 	 * @brief Construct a new Edge object with a destination
 	 * 
@@ -168,7 +168,6 @@ class Edge
 	 */
 	Vertex *getDest();
 
-
 	friend class Graph;
 	friend class Vertex;
 };
@@ -183,7 +182,6 @@ class Graph
 	vector<Vertex *> vertexSet; // vertex set
 
   public:
-
 	/**
 	 * @brief Destroy the Graph object
 	 */
@@ -287,6 +285,10 @@ class Graph
 	 * @return Vertex* the location's vertex
 	 */
 	Vertex *findLocation(const int ID) const;
+
+	bool findSLExact(std::string street1, std::string street2, Vertex *location);
+
+	std::vector<std::string> findSLApproximate(std::string street1, std::string street2);
 };
 
 /** @} end of graph */

@@ -74,7 +74,6 @@ vector<Vertex *> Graph::getVertexSet() const
 	return vertexSet;
 }
 
-
 Graph::~Graph()
 {
 	for (auto it = vertexSet.begin(); it != vertexSet.end(); it++)
@@ -83,7 +82,7 @@ Graph::~Graph()
 	vertexSet.clear();
 }
 
-Vertex* Graph::findVertex(Location *in) const
+Vertex *Graph::findVertex(Location *in) const
 {
 	auto it = find_if(vertexSet.begin(), vertexSet.end(), [in](auto v) {
 		return *v->getInfo() == *in;
@@ -245,7 +244,7 @@ vector<Vertex *> Graph::discountLocations(bool rent, const int numberOfLocations
 	return sharingLocations;
 }
 
-Vertex * Graph::findLocation(const int ID) const
+Vertex *Graph::findLocation(const int ID) const
 {
 	auto it = find_if(vertexSet.begin(), vertexSet.end(), [ID](Vertex *v) {
 		return v->getInfo()->getID() == ID;
@@ -255,4 +254,14 @@ Vertex * Graph::findLocation(const int ID) const
 		return *it;
 
 	throw LocationNotFound(ID);
+}
+
+bool findSLExact(string street1, string street2, Vertex *location)
+{
+	return false;
+}
+
+vector<string> findSLApproximate(string street1, string street2)
+{
+	return vector<string>();
 }

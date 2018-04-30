@@ -44,9 +44,11 @@ int SystemManager::selectGraph()
 	cout << "|      7 - Non Connective Graph -    8 Nodes,   11 Edges   0 Sharing Locations     |" << endl;
 	cout << "|                                                                                  |" << endl;
 	cout << "|      8 - Connective Graph     -   10 Nodes,   16 Edges,  0 Sharing Locations     |" << endl;
-	cout << "|__________________________________________________________________________________|" << endl << endl;
+	cout << "|__________________________________________________________________________________|" << endl
+		 << endl;
 
-	cout << " - Choose 0 to Quit." << endl << endl;
+	cout << " - Choose 0 to Quit." << endl
+		 << endl;
 	int userChoice = verifyInput(0, 8);
 
 	if (!userChoice)
@@ -70,59 +72,51 @@ int SystemManager::selectGraph()
 	{
 	case 1:
 		initFileNames("BaixaPortoNodes.txt",
-			"BaixaPortoEdges.txt",
-			"BaixaPortoNames.txt",
-			"BaixaPortoSharingLocations.txt"
-		);
+					  "BaixaPortoEdges.txt",
+					  "BaixaPortoNames.txt",
+					  "BaixaPortoSharingLocations.txt");
 		break;
 	case 2:
 		initFileNames("FeupNodes.txt",
-			"FeupEdges.txt",
-			"FeupNames.txt",
-			"FeupSharing.txt"
-		);
+					  "FeupEdges.txt",
+					  "FeupNames.txt",
+					  "FeupSharing.txt");
 		break;
 	case 3:
 		initFileNames("PortoNodes.txt",
-			"PortoEdges.txt",
-			"PortoNomes.txt",
-			"PortoSharing.txt"
-		);
+					  "PortoEdges.txt",
+					  "PortoNomes.txt",
+					  "PortoSharing.txt");
 		break;
 	case 4:
 		initFileNames("CanideloGaiaNodes.txt",
-			"CanideloGaiaEdges.txt",
-			"CanideloGaiaNames.txt",
-			"CanideloGaiaSharing.txt"
-		);
+					  "CanideloGaiaEdges.txt",
+					  "CanideloGaiaNames.txt",
+					  "CanideloGaiaSharing.txt");
 		break;
 	case 5:
 		initFileNames("FozDouroPortoNodes.txt",
-			"FozDouroPortoEdges.txt",
-			"FozDouroPortoNames.txt",
-			"FozDouroPortoSharing.txt"
-		);
+					  "FozDouroPortoEdges.txt",
+					  "FozDouroPortoNames.txt",
+					  "FozDouroPortoSharing.txt");
 		break;
 	case 6:
 		initFileNames("TrindadeS.BentoPortoNodes.txt",
-			"TrindadeS.BentoPortoEdges.txt",
-			"TrindadeS.BentoPortoNames.txt",
-			"TrindadeS.BentoPortoSharing.txt"
-		);
+					  "TrindadeS.BentoPortoEdges.txt",
+					  "TrindadeS.BentoPortoNames.txt",
+					  "TrindadeS.BentoPortoSharing.txt");
 		break;
 	case 7:
 		initFileNames("nodesNaoConexo.txt",
-			"edgesNaoConexo.txt",
-			"nomesNaoConexo.txt",
-			"sharingLocationsEmpty.txt"
-		);
+					  "edgesNaoConexo.txt",
+					  "nomesNaoConexo.txt",
+					  "sharingLocationsEmpty.txt");
 		break;
 	case 8:
 		initFileNames("nodesConectividade.txt",
-			"edgesConectividade.txt",
-			"nomesConectividade.txt",
-			"sharingLocationsEmpty.txt"
-		);
+					  "edgesConectividade.txt",
+					  "nomesConectividade.txt",
+					  "sharingLocationsEmpty.txt");
 		break;
 	default:
 		break;
@@ -161,16 +155,19 @@ bool SystemManager::mainMenu(const unordered_map<int, unsigned long long> &idsNo
 		cout << "|                               |" << endl;
 		cout << "| 2 - I already have one        |" << endl;
 		cout << "|                               |" << endl;
-		cout << "| 3 - Check Graph Connectivity  |" << endl;
+		cout << "| 3 - Find sharing location     |" << endl;
 		cout << "|                               |" << endl;
-		cout << "| 4 - Visualize SH information  |" << endl;
+		cout << "| 4 - Check Graph Connectivity  |" << endl;
 		cout << "|                               |" << endl;
-		cout << "| 5 - Select new graph          |" << endl;
+		cout << "| 5 - Visualize SH information  |" << endl;
 		cout << "|                               |" << endl;
-		cout << "| 6 - Exit                      |" << endl;
-		cout << "|_______________________________|" << endl << endl;
+		cout << "| 6 - Select new graph          |" << endl;
+		cout << "|                               |" << endl;
+		cout << "| 7 - Exit                      |" << endl;
+		cout << "|_______________________________|" << endl
+			 << endl;
 
-		int userChoice = verifyInput(1, 6);
+		int userChoice = verifyInput(1, 7);
 
 		switch (userChoice)
 		{
@@ -181,14 +178,17 @@ bool SystemManager::mainMenu(const unordered_map<int, unsigned long long> &idsNo
 			menuHasBike();
 			break;
 		case 3:
-			checkConnectivity();
+			menuFindSharingLocation();
 			break;
 		case 4:
-			sharingLocationsInfo();
+			checkConnectivity();
 			break;
 		case 5:
-			return true;
+			sharingLocationsInfo();
+			break;
 		case 6:
+			return true;
+		case 7:
 			menuSave(idsNodes);
 			exit(0);
 		default:
@@ -197,6 +197,76 @@ bool SystemManager::mainMenu(const unordered_map<int, unsigned long long> &idsNo
 	}
 
 	return true;
+}
+
+void menuFindSharingLocation()
+{
+	clearScreen();
+
+	cout << " ______________________________________________ " << endl;
+	cout << "|                               				|" << endl;
+	cout << "|    F I N D  S H A R I N G  L O C A T I O N   |" << endl;
+	cout << "|______________________________________________|" << endl;
+
+	string street1, street2;
+	getNames(street1, street2);
+
+	cout << "Enter your preference: " << endl;
+	cout << "1 - Exact search" << endl;
+	cout << "2 - Approximate search" << endl;
+
+	int userChoice = verifyInput(1, 2);
+
+	switch (userChoice)
+	{
+	case 1:
+		findSLExact();
+		break;
+	case 2:
+		findSLApproximate();
+		break;
+	default:
+		break;
+	}
+}
+
+void findSLExact(string street1, string street2)
+{
+	Vertex *location;
+	bool foundStreets = graph.findSLExact(street1, street2, location);
+
+	if (!foundStreets)
+	{
+		cout << "Unknown location!" << endl;
+		return;
+	}
+	else if (location == nullptr)
+	{
+		cout << "Couldn't find a location in that crossroad!" << endl;
+		return;
+	}
+
+	/*
+		mostrar location no mapa
+	*/
+}
+
+void findSLApproximate(string street1, string street2)
+{
+	vector<string> streets = graph.findSLApproximate(street1, street2);
+
+	if (streets.size() == 0)
+	{
+		cout << "Sorry. Couldn't find any similar street that have Sharing Locations." << endl;
+		return;
+	}
+
+	cout << "Similar streets that have Sharing Locations" << endl;
+
+	for (auto x : streets)
+	{
+		cout << x << endl;
+	}
 }
 
 bool SystemManager::menuRent()
@@ -217,14 +287,15 @@ bool SystemManager::menuRent()
 		if (wrongInput)
 			cout << " - Wrong Input . . ." << endl;
 
-		cout << endl << " - Tell me your location: ";
+		cout << endl
+			 << " - Tell me your location: ";
 
 		getline(cin, location);
 		wrongInput++;
 	}
 
 	int id = stoi(location);
-	Vertex* loc;
+	Vertex *loc;
 
 	try
 	{
@@ -248,16 +319,22 @@ bool SystemManager::menuRent()
 	}
 
 	if (loc->getInfo()->getColor() == "RED")
-		cout << endl << " - Your current position is already a Sharing Location" << endl;
+		cout << endl
+			 << " - Your current position is already a Sharing Location" << endl;
 	else
 		gv->setVertexColor(id, YELLOW);
 
 	gv->rearrange();
 
-	cout << endl << " - You can see you location on Graph Viewer (Red if Sharing Location, Yellow otherwise)" << endl << endl;
-	cout << " - Enter your preference:" << endl << endl;
-	cout << TAB << TAB << "1 -> Closest sharing location (no discount)" << endl << endl;
-	cout << TAB << TAB << "2 -> Other sharing locations (discount)" << endl << endl;
+	cout << endl
+		 << " - You can see you location on Graph Viewer (Red if Sharing Location, Yellow otherwise)" << endl
+		 << endl;
+	cout << " - Enter your preference:" << endl
+		 << endl;
+	cout << TAB << TAB << "1 -> Closest sharing location (no discount)" << endl
+		 << endl;
+	cout << TAB << TAB << "2 -> Other sharing locations (discount)" << endl
+		 << endl;
 
 	int userChoice = verifyInput(1, 2);
 
@@ -297,7 +374,8 @@ bool SystemManager::menuHasBike()
 		if (wrongInput)
 			cout << " - Wrong Input . . ." << endl;
 
-		cout << endl << " - Tell me your location: ";
+		cout << endl
+			 << " - Tell me your location: ";
 
 		getline(cin, location);
 		wrongInput++;
@@ -324,7 +402,9 @@ bool SystemManager::menuHasBike()
 
 	if (loc->getInfo()->getColor() == "RED")
 	{
-		cout << endl << endl << " - Your current position is already a Sharing Location" << endl;
+		cout << endl
+			 << endl
+			 << " - Your current position is already a Sharing Location" << endl;
 
 		waitConfirm();
 
@@ -332,19 +412,25 @@ bool SystemManager::menuHasBike()
 	}
 
 	if (loc->getInfo()->getColor() == "RED")
-		cout << endl << " - Your current position is already a Sharing Location" << endl;
+		cout << endl
+			 << " - Your current position is already a Sharing Location" << endl;
 	else
 		gv->setVertexColor(id, YELLOW);
 
 	gv->rearrange();
 
-	cout << endl << endl << " - You can see you location on Graph Viewer, Yellow Node" << endl << endl;
-	cout << " - Enter your preference:" << endl << endl;
-	cout << TAB << TAB << "1 -> Closest sharing location (no discount)" << endl << endl;
-	cout << TAB << TAB << "2 -> Other sharing locations (discount)" << endl << endl;
+	cout << endl
+		 << endl
+		 << " - You can see you location on Graph Viewer, Yellow Node" << endl
+		 << endl;
+	cout << " - Enter your preference:" << endl
+		 << endl;
+	cout << TAB << TAB << "1 -> Closest sharing location (no discount)" << endl
+		 << endl;
+	cout << TAB << TAB << "2 -> Other sharing locations (discount)" << endl
+		 << endl;
 
 	int userChoice = verifyInput(1, 2);
-
 
 	switch (userChoice)
 	{
@@ -383,21 +469,28 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 
 		double timeSpent = timeDiff(begin, end);
 
-		cout << endl << " - Found closest location in: " << to_string(timeSpent) << " seconds!" << endl;
+		cout << endl
+			 << " - Found closest location in: " << to_string(timeSpent) << " seconds!" << endl;
 
-		cout << endl << " - Travel will take you approximately " << getTime(dest->getDist()) << endl;
+		cout << endl
+			 << " - Travel will take you approximately " << getTime(dest->getDist()) << endl;
 
-		cout << endl << " - Check the map to see the generated path!" << endl;
+		cout << endl
+			 << " - Check the map to see the generated path!" << endl;
 
-		cout << endl << TAB << "  - Yellow Node is the given position" << endl;
+		cout << endl
+			 << TAB << "  - Yellow Node is the given position" << endl;
 
-		cout << endl << TAB << "  - Green Nodes are the path to destiny" << endl;
+		cout << endl
+			 << TAB << "  - Green Nodes are the path to destiny" << endl;
 
-		cout << endl << TAB << "  - Red Node right next to Green Node is your destiny" << endl;
+		cout << endl
+			 << TAB << "  - Red Node right next to Green Node is your destiny" << endl;
 
-		cout << endl << TAB;
+		cout << endl
+			 << TAB;
 
-		SharingLocation* shLoc = (SharingLocation*)dest->getInfo();
+		SharingLocation *shLoc = (SharingLocation *)dest->getInfo();
 
 		rent ? cout << "  - You have lifted a bike!" << endl : cout << "  - You have deposited a bike!" << endl;
 
@@ -407,7 +500,8 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 	}
 	else
 	{
-		cout << endl << " - Can't reach any sharing location from your location!" << endl;
+		cout << endl
+			 << " - Can't reach any sharing location from your location!" << endl;
 
 		waitConfirm();
 	}
@@ -425,7 +519,8 @@ bool SystemManager::menuSave(const unordered_map<int, unsigned long long> &idsNo
 	cout << "| 1 - Don't save                |" << endl;
 	cout << "|                               |" << endl;
 	cout << "| 2 - Save                      |" << endl;
-	cout << "|_______________________________|" << endl << endl;
+	cout << "|_______________________________|" << endl
+		 << endl;
 
 	int userChoice = verifyInput(1, 2);
 
@@ -443,7 +538,9 @@ bool SystemManager::menuSave(const unordered_map<int, unsigned long long> &idsNo
 		break;
 	}
 
-	cout << endl << " - Sharing Locations info saved" << endl << endl;
+	cout << endl
+		 << " - Sharing Locations info saved" << endl
+		 << endl;
 	cout << "Exiting . . ." << endl;
 
 	return true;
@@ -476,7 +573,9 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 	{
 		for (vector<Vertex>::iterator v = path.begin(); v != path.end(); v++)
 		{
-			if (v->getInfo()->getColor() == RED) {}
+			if (v->getInfo()->getColor() == RED)
+			{
+			}
 			else if (v == path.begin())
 				gv->setVertexColor(v->getInfo()->getID(), startNodeColor);
 			else if (v == path.end() - 1)
@@ -484,7 +583,6 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 			else
 				gv->setVertexColor(v->getInfo()->getID(), elseNodeColor);
 		}
-
 	}
 	else
 	{
@@ -502,7 +600,8 @@ void SystemManager::showDiscountLocations(Vertex *origin, int id, bool rent)
 
 	if (!v.size())
 	{
-		cout << endl << " - There is no Sharing Locations on this graph." << endl;
+		cout << endl
+			 << " - There is no Sharing Locations on this graph." << endl;
 		waitConfirm();
 		return;
 	}
@@ -511,27 +610,31 @@ void SystemManager::showDiscountLocations(Vertex *origin, int id, bool rent)
 
 	if (!path.size())
 	{
-		cout << endl << " - There were " << DISCOUNT_LOCATIONS << " Locations, but none of them are reachable from your current location" << endl;
+		cout << endl
+			 << " - There were " << DISCOUNT_LOCATIONS << " Locations, but none of them are reachable from your current location" << endl;
 		waitConfirm();
 		return;
 	}
 
 	paintPath(path, true, 5, START_NODE_COLOR, RED, GREEN, PATH_COLOR);
 
-	cout << endl << " - Check the map to see your travel route!" << endl;
+	cout << endl
+		 << " - Check the map to see your travel route!" << endl;
 
-	cout << endl << TAB << "  - Yellow Node is the given position" << endl;
+	cout << endl
+		 << TAB << "  - Yellow Node is the given position" << endl;
 
-	cout << endl << TAB << "  - Green Nodes are the path to destiny" << endl;
+	cout << endl
+		 << TAB << "  - Green Nodes are the path to destiny" << endl;
 
-	cout << endl << TAB << "  - Red Node right next to Green Node is your destiny" << endl;
+	cout << endl
+		 << TAB << "  - Red Node right next to Green Node is your destiny" << endl;
 
-	cout << endl << TAB;
+	cout << endl
+		 << TAB;
 	rent ? cout << "  - You have lifted a bike!" << endl : cout << "  - You have deposited a bike!" << endl;
 
 	waitConfirm();
-
-
 
 	paintPath(path, false, 1);
 
@@ -544,14 +647,14 @@ vector<Vertex> SystemManager::getDiscountChoice(const vector<Vertex *> v, Locati
 	string input;
 	auto exists = v.end();
 	map<int, vector<Vertex>> paths;
-	vector<pair<double,double>> distDiscountLoc;
+	vector<pair<double, double>> distDiscountLoc;
 	vector<Vertex> chosenPath;
 	int size = v.size();
 
 	//Fazer dijkstra e verificar se há path
 	for (auto it : v)
 	{
-		clock_t begin, end; 
+		clock_t begin, end;
 		begin = clock();
 		bool success = graph.dijkstraShortestPath(origin, it);
 		end = clock();
@@ -573,9 +676,10 @@ vector<Vertex> SystemManager::getDiscountChoice(const vector<Vertex *> v, Locati
 		return chosenPath;
 	}
 
-	cout << endl << " - You can get a discount if you choose one of the following locations!" << endl;
-	cout << endl << " - Here are their IDs: " << endl;
-
+	cout << endl
+		 << " - You can get a discount if you choose one of the following locations!" << endl;
+	cout << endl
+		 << " - Here are their IDs: " << endl;
 
 	//Mostrar sharingLocations com path
 	for (int i = 0, j = 0; i < size; i++)
@@ -705,11 +809,12 @@ bool SystemManager::checkConnectivity()
 	end = clock();
 	timeSpent = timeDiff(begin, end);
 	cout << "\n - Time taken to check connectivity file: " << timeSpent << endl
-		<< endl;
-	cout << " - This Graph is connected" << endl << endl << " - See in GraphViewer . . ." << endl;
+		 << endl;
+	cout << " - This Graph is connected" << endl
+		 << endl
+		 << " - See in GraphViewer . . ." << endl;
 
 	string quit = "";
-
 
 	for (unsigned int id = 0; id < vertexes.size(); id++)
 	{
@@ -720,10 +825,12 @@ bool SystemManager::checkConnectivity()
 
 		if (id < vertexes.size())
 		{
-			if(id == 0)				
-				cout << "\n - Press any key to continue to see Connectivity on Vertex (" << id + 1 << ")" << " or 'q' to stop ";
-			else	
-				cout << "\n - Press any key to continue to Vertex (" << id + 1 << ")" << " or 'q' to stop ";
+			if (id == 0)
+				cout << "\n - Press any key to continue to see Connectivity on Vertex (" << id + 1 << ")"
+					 << " or 'q' to stop ";
+			else
+				cout << "\n - Press any key to continue to Vertex (" << id + 1 << ")"
+					 << " or 'q' to stop ";
 
 			getline(cin, quit);
 
@@ -746,7 +853,6 @@ bool SystemManager::checkConnectivity()
 			}
 		}
 		gv->rearrange();
-		
 	}
 
 	waitConfirm();
@@ -788,12 +894,12 @@ void SystemManager::sharingLocationsInfo()
 	vector<Vertex *> sharingLocations;
 	vector<Vertex *> vertexSet = graph.getVertexSet();
 
-	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex *vertex)
-	{ return string(typeid(*vertex->getInfo()).name()) == "class SharingLocation"; });
+	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [](Vertex *vertex) { return string(typeid(*vertex->getInfo()).name()) == "class SharingLocation"; });
 
 	if (!sharingLocations.size())
 	{
-		cout << endl << " - No Sharing Locations on this graph" << endl;
+		cout << endl
+			 << " - No Sharing Locations on this graph" << endl;
 
 		waitConfirm();
 
@@ -804,8 +910,8 @@ void SystemManager::sharingLocationsInfo()
 
 	for (unsigned int i = 0; i < sharingLocations.size(); i++)
 	{
-		Vertex* v = sharingLocations.at(i);
-		SharingLocation * s = (SharingLocation*)v->getInfo();
+		Vertex *v = sharingLocations.at(i);
+		SharingLocation *s = (SharingLocation *)v->getInfo();
 
 		if (!i)
 			cout << " _________________________________ " << endl;
@@ -820,7 +926,6 @@ void SystemManager::sharingLocationsInfo()
 		cout << "|  - Altitude         " << setw(9) << s->getAltitudecoord() << "   |" << endl;
 		cout << "|  - Latitude         " << setw(9) << s->getLatitudecoord() << "   |" << endl;
 		cout << "|  - Longitude        " << setw(9) << s->getLongitudecoord() << "   |" << endl;
-
 
 		if (v->getAdj().size() != 0)
 		{

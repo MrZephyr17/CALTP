@@ -81,10 +81,12 @@ int verifyInput(int low, int high)
 			if (inputValue >= low && inputValue <= high)
 				validInput = true;
 			else
-				cout << " - Invalid input! Try again..." << endl << endl;
+				cout << " - Invalid input! Try again..." << endl
+					 << endl;
 		}
 		else
-			cout << " - Invalid input! Try again..." << endl << endl;
+			cout << " - Invalid input! Try again..." << endl
+				 << endl;
 	}
 
 	return inputValue;
@@ -107,7 +109,8 @@ bool isNumber(string input)
 void waitConfirm()
 {
 	string input;
-	cout << endl << " - Press any key to continue...";
+	cout << endl
+		 << " - Press any key to continue...";
 	getline(cin, input);
 }
 
@@ -144,4 +147,12 @@ int convertLongitudeToX(double longitude)
 int convertLatitudeToY(double latitude)
 {
 	return (int)floor(((latitude - MIN_LAT) * (WINDOW_WIDTH)) / (MAX_LAT - MIN_LAT));
+}
+
+void getNames(string &street1, string &street2)
+{
+	cout << "Name of street 1: ";
+	getline(cin, street1);
+	cout << "Name of street 2: ";
+	getline(cin, street2);
 }

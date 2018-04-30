@@ -23,13 +23,13 @@
  * Various functions and constants to manage information for this program. 
  */
 
-#define DISCOUNT_LOCATIONS 5		/**< @brief Maximum number of discount locations */
-#define EDGE_COLOR_DEFAULT BLACK	/**< @brief Edge's default color */
-#define VERTEX_COLOR_DEFAULT BLUE	/**< @brief Node's default color */
-#define START_NODE_COLOR YELLOW		/**< @brief Color for the start node */
-#define END_NODE_COLOR WHITE		/**< @brief Color for the destination node */
-#define PATH_COLOR MAGENTA			/**< @brief Color for a path between two locations */
-#define TAB "      "				/**< @brief TAB space */
+#define DISCOUNT_LOCATIONS 5	  /**< @brief Maximum number of discount locations */
+#define EDGE_COLOR_DEFAULT BLACK  /**< @brief Edge's default color */
+#define VERTEX_COLOR_DEFAULT BLUE /**< @brief Node's default color */
+#define START_NODE_COLOR YELLOW   /**< @brief Color for the start node */
+#define END_NODE_COLOR WHITE	  /**< @brief Color for the destination node */
+#define PATH_COLOR MAGENTA		  /**< @brief Color for a path between two locations */
+#define TAB "      "			  /**< @brief TAB space */
 
 /** @name FileNames */
 /**@{
@@ -38,10 +38,10 @@
  */
 typedef struct
 {
-	std::string nodes; 				
-	std::string edges;				
-	std::string names;				
-	std::string sharingLocations;	
+	std::string nodes;
+	std::string edges;
+	std::string names;
+	std::string sharingLocations;
 
 } FileNames;
 
@@ -182,7 +182,7 @@ class SystemManager
 	 * @param sharingLocations a vector containing information on sharing locations
 	 * @param option the user's choice
 	 */
-	void loadSpeficicNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations,int option);
+	void loadSpeficicNodes(unordered_map<int, unsigned long long> &idsNodes, const vector<SharingLoc> &sharingLocations, int option);
 
 	/**
 	 * @brief Loads the names file
@@ -272,6 +272,10 @@ class SystemManager
 	 * @brief Prints information on the sharing locations
 	 */
 	void sharingLocationsInfo();
+
+	void findSLExact(std::street1, std::street2);
+
+	void findSLApproximate(std::street1, std::street2);
 
   private:
 	GraphViewer *gv;
