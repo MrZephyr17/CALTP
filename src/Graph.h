@@ -124,6 +124,8 @@ class Edge
 	 */
 	Edge(int id, Vertex *d, double w);
 
+	Edge();
+
 	/**
 	 * @brief Destroy the Edge object
 	 */

@@ -133,4 +133,6 @@ void getNames(std::string &street1, std::string &street2);
 
 int editDistance(string pattern, string text);
 
+bool KMPMatcher(string text, string pattern);
+
 /** @} end of utils */

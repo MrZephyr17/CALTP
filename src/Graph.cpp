@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include "Utils.h"
 #include "Exceptions.h"
 #include <typeinfo>
 #include <iostream>
@@ -43,6 +44,13 @@ vector<Edge> Vertex::getAdj() const
 }
 
 Edge::Edge(int id, Vertex *d, double w) : id(id), dest(d), weight(w) {}
+
+Edge::Edge()
+{
+	id = 0;
+	dest = nullptr;
+	weight = 0;
+}
 
 Edge::~Edge()
 {
@@ -256,12 +264,37 @@ Vertex *Graph::findLocation(const int ID) const
 	throw LocationNotFound(ID);
 }
 
-bool findSLExact(string street1, string street2, Vertex *location)
+bool Graph::findSLExact(string street1, string street2, Vertex *location)
 {
+	Edge e1, e2;
+	Vertex *v1 = nullptr, *v2 = nullptr;
+
+	for (auto x : vertexSet)
+	{
+		for (auto y : x->getAdj())
+		{
+			if (KMPMatcher(street1, y.name))
+			{
+				e1 = y;
+				v1 = x;
+			}
+			else if (KMPMatcher(street2, y.name))
+			{
+				e2 = y;
+				v2 = x;
+			}
+		}
+	}
+
+	if (v1 && v2)
+	{
+		//verificar se ha alguma sharing location aqui
+		return true;
+	}
 	return false;
 }
 
-vector<string> findSLApproximate(string street1, string street2)
+vector<string> Graph::findSLApproximate(string street1, string street2)
 {
 	return vector<string>();
 }

@@ -191,15 +191,15 @@ vector<int> ComputePrefixFunction(string pattern)
 {
 	int m = pattern.size();
 	vector<int> pi(m);
-	pi.at(1) = 0;
+	pi.at(0) = 0;
 	int k = 0;
 
-	for (int q = 2; q <= m; q++)
+	for (int q = 1; q < m; q++)
 	{
 		while (k > 0 && pattern.at(k + 1) != pattern.at(q))
 			k = pi.at(k);
 
-		if (pattern.at(k + 1) = pattern.at(q))
+		if (pattern.at(k + 1) == pattern.at(q))
 			k++;
 
 		pi.at(q) = k;
@@ -208,7 +208,7 @@ vector<int> ComputePrefixFunction(string pattern)
 	return pi;
 }
 
-void KMPMatcher(string text, string pattern)
+bool KMPMatcher(string text, string pattern)
 {
 	int n = pattern.size();
 	int m = text.size();
@@ -224,9 +224,8 @@ void KMPMatcher(string text, string pattern)
 			q++;
 
 		if (q == m)
-		{
-			cout << "Pattern occurs with shift " << i - m << endl;
-			q = pi.at(q);
-		}
+			return true;
 	}
+
+	return false;
 }
