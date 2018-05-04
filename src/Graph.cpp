@@ -273,7 +273,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 	{
 		for (auto y : x->getAdj())
 		{
-			if (KMPMatcher(street1, y.name))
+			if (!v1 && KMPMatcher(street1, y.name))
 			{
 				e1 = y;
 				v1 = x;
@@ -281,7 +281,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				if (v2)
 					break;
 			}
-			else if (KMPMatcher(street2, y.name))
+			else if (!v2 && KMPMatcher(street2, y.name))
 			{
 				e2 = y;
 				v2 = x;
