@@ -127,7 +127,7 @@ string getTime(double time)
 	int sec = seconds % 60;
 	char formatted[9];
 
-	sprintf_s(formatted, "%02d:%02d:%02d", hours, minutes, sec);
+	sprintf(formatted, "%02d:%02d:%02d", hours, minutes, sec);
 
 	return string(formatted);
 }
@@ -177,7 +177,7 @@ int editDistance(string pattern, string text)
 			if (pattern.at(i) == text.at(j))
 				newValue = oldValue;
 			else
-				newValue = 1 + min(oldValue, D.at(j), D.at(j - 1));
+				newValue = 1 + min({oldValue, D.at(j), D.at(j - 1)});
 
 			oldValue = D.at(j);
 			D.at(j) = newValue;

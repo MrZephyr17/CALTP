@@ -131,8 +131,8 @@ int convertLatitudeToY(double latitude);
 
 void getNames(std::string &street1, std::string &street2);
 
-int editDistance(string pattern, string text);
+int editDistance(std::string pattern, std::string text);
 
-bool KMPMatcher(string text, string pattern);
+bool KMPMatcher(std::string text, std::string pattern);
 
 /** @} end of utils */

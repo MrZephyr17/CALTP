@@ -7,6 +7,8 @@
 #include <iterator>
 #include <algorithm>
 
+using namespace std;
+
 Vertex::Vertex(Location *in) : info(in) {}
 
 Vertex::~Vertex()
@@ -320,7 +322,24 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 	return false;
 }
 
-vector<string> Graph::findSLApproximate(string street1, string street2)
+multimap<int, string> Graph::findSLApproximate(string street1, string street2)
 {
-	return vector<string>();
+	int edit1 = 0, edit2 = 0;
+	int minimum = 0;
+	multimap<int, string> streets;
+	for (auto x : vertexSet)
+	{
+		for (auto y : x->getAdj())
+		{
+			edit1 = editDistance(street1, y.name);
+			edit2 = editDistance(street2, y.name);
+
+			minimum = min(edit1, edit2);
+
+			if (minimum < 5)
+				streets.insert(make_pair(minimum, y.name));
+		}
+	}
+
+	return streets;
 }

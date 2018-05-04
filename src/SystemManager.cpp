@@ -233,7 +233,13 @@ void menuFindSharingLocation()
 void findSLExact(string street1, string street2)
 {
 	Vertex *location = nullptr;
+	clock_t begin, end;
+
+	begin = clock();
 	bool foundStreets = graph.findSLExact(street1, street2, location);
+	end = clock();
+
+	double timeSpent = timeDiff(begin, end);
 
 	if (!foundStreets)
 	{
@@ -249,11 +255,20 @@ void findSLExact(string street1, string street2)
 	gv->setVertexColor(location->getInfo()->getID(), RED);
 	cout << "Location found!" << endl;
 	cout << "It is now on the map with the red color!" << endl;
+	cout << "Took a total of: " << timeSpent << endl;
+
+	waitConfirm();
 }
 
 void findSLApproximate(string street1, string street2)
-{
-	vector<string> streets = graph.findSLApproximate(street1, street2);
+{	
+	clock_t begin, end;
+
+	begin = clock();
+	multimap<int, string> streets = graph.findSLApproximate(street1, street2);
+	end = clock();
+
+	double timeSpent = timeDiff(begin, end);
 
 	if (streets.size() == 0)
 	{
@@ -263,10 +278,14 @@ void findSLApproximate(string street1, string street2)
 
 	cout << "Similar streets that have Sharing Locations" << endl;
 
-	for (auto x : streets)
+	for (auto it = streets.begin(); it != streets.end(); it++)
 	{
-		cout << x << endl;
+		cout << it->second << endl;
 	}
+
+	cout << "Took a total of: " << timeSpent << endl;
+
+	waitConfirm();
 }
 
 bool SystemManager::menuRent()

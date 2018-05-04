@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <string>
+#include <map>
 #include <utility>
 #include "MutablePriorityQueue.h"
 #include "Location.h"
@@ -290,7 +291,7 @@ class Graph
 
 	bool findSLExact(std::string street1, std::string street2, Vertex *location);
 
-	std::vector<std::string> findSLApproximate(std::string street1, std::string street2);
+	std::multimap<int, std::string> findSLApproximate(std::string street1, std::string street2);
 };
 
 /** @} end of graph */

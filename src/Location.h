@@ -3,6 +3,7 @@
 #define LOCATION_h
 
 #include <vector>
+#include <string>
 
 /** @defgroup location location
  * @{
