@@ -199,38 +199,38 @@ bool SystemManager::mainMenu(const unordered_map<int, unsigned long long> &idsNo
 	return true;
 }
 
-void menuFindSharingLocation()
+void SystemManager::menuFindSharingLocation()
 {
 	clearScreen();
 
 	cout << " ______________________________________________ " << endl;
 	cout << "|                               				|" << endl;
 	cout << "|    F I N D  S H A R I N G  L O C A T I O N   |" << endl;
-	cout << "|______________________________________________|" << endl;
+	cout << "|______________________________________________|" << endl << endl;
 
 	string street1, street2;
 	getNames(street1, street2);
 
-	cout << "Enter your preference: " << endl;
+	cout << endl << "Enter your preference: " << endl;
 	cout << "1 - Exact search" << endl;
-	cout << "2 - Approximate search" << endl;
+	cout << "2 - Approximate search" << endl << endl;
 
 	int userChoice = verifyInput(1, 2);
 
 	switch (userChoice)
 	{
 	case 1:
-		findSLExact();
+		findSLExact(street1, street2);
 		break;
 	case 2:
-		findSLApproximate();
+		findSLApproximate(street1, street2);
 		break;
 	default:
 		break;
 	}
 }
 
-void findSLExact(string street1, string street2)
+void SystemManager::findSLExact(string street1, string street2)
 {
 	Vertex *location = nullptr;
 	clock_t begin, end;
@@ -243,29 +243,33 @@ void findSLExact(string street1, string street2)
 
 	if (!foundStreets)
 	{
-		cout << "Unknown location!" << endl;
+		cout << endl << "Unknown location!" << endl;
+		cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
+		waitConfirm();
 		return;
 	}
 	else if (location == nullptr)
 	{
-		cout << "Couldn't find a location in that crossroad!" << endl;
+		cout << endl << "Couldn't find a location in that crossroad!" << endl;
+		cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
+		waitConfirm();
 		return;
 	}
 
 	gv->setVertexColor(location->getInfo()->getID(), RED);
 	cout << "Location found!" << endl;
 	cout << "It is now on the map with the red color!" << endl;
-	cout << "Took a total of: " << timeSpent << endl;
+	cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
 
 	waitConfirm();
 }
 
-void findSLApproximate(string street1, string street2)
+void SystemManager::findSLApproximate(string street1, string street2)
 {	
 	clock_t begin, end;
 
 	begin = clock();
-	multimap<int, string> streets = graph.findSLApproximate(street1, street2);
+	multimap<int,string> streets = graph.findSLApproximate(street1, street2);
 	end = clock();
 
 	double timeSpent = timeDiff(begin, end);
@@ -273,17 +277,19 @@ void findSLApproximate(string street1, string street2)
 	if (streets.size() == 0)
 	{
 		cout << "Sorry. Couldn't find any similar street that have Sharing Locations." << endl;
+		cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
+		waitConfirm();
 		return;
 	}
 
-	cout << "Similar streets that have Sharing Locations" << endl;
+	cout << endl << "Similar streets that have Sharing Locations" << endl << endl;
 
 	for (auto it = streets.begin(); it != streets.end(); it++)
 	{
 		cout << it->second << endl;
 	}
 
-	cout << "Took a total of: " << timeSpent << endl;
+	cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
 
 	waitConfirm();
 }

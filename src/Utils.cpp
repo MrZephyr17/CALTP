@@ -157,34 +157,22 @@ void getNames(string &street1, string &street2)
 	getline(cin, street2);
 }
 
-int editDistance(string pattern, string text)
+int editDistance(string s1, string s2)
 {
-	int pSize = pattern.size();
-	int tSize = text.size();
-	int oldValue, newValue;
-	vector<int> D(tSize + 1);
+	const std::size_t len1 = s1.size(), len2 = s2.size();
+	std::vector<unsigned int> col(len2 + 1), prevCol(len2 + 1);
 
-	for (int j = 0; j <= tSize; j++)
-		D.at(j) = j;
-
-	for (int i = 1; i <= pSize; i++)
-	{
-		oldValue = D.at(0);
-		D.at(0) = i;
-
-		for (int j = 1; j <= tSize; j++)
-		{
-			if (pattern.at(i) == text.at(j))
-				newValue = oldValue;
-			else
-				newValue = 1 + min({oldValue, D.at(j), D.at(j - 1)});
-
-			oldValue = D.at(j);
-			D.at(j) = newValue;
-		}
+	for (unsigned int i = 0; i < prevCol.size(); i++)
+		prevCol[i] = i;
+	for (unsigned int i = 0; i < len1; i++) {
+		col[0] = i + 1;
+		for (unsigned int j = 0; j < len2; j++)
+			// note that std::min({arg1, arg2, arg3}) works only in C++11,
+			// for C++98 use std::min(std::min(arg1, arg2), arg3)
+			col[j + 1] = std::min({ prevCol[1 + j] + 1, col[j] + 1, prevCol[j] + (s1[i] == s2[j] ? 0 : 1) });
+		col.swap(prevCol);
 	}
-
-	return D.at(tSize);
+	return prevCol[len2];
 }
 
 vector<int> ComputePrefixFunction(string pattern)

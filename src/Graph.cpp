@@ -6,6 +6,7 @@
 #include <string>
 #include <iterator>
 #include <algorithm>
+#include <regex>
 
 using namespace std;
 
@@ -270,12 +271,14 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 {
 	Edge e1, e2;
 	Vertex *v1 = nullptr, *v2 = nullptr;
+	regex pattern1 = regex(street1);
+	regex pattern2 = regex(street2);
 
 	for (auto x : vertexSet)
 	{
 		for (auto y : x->getAdj())
 		{
-			if (!v1 && KMPMatcher(street1, y.name))
+			/*if (!v1 && KMPMatcher(street1, y.name))
 			{
 				e1 = y;
 				v1 = x;
@@ -290,12 +293,32 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 
 				if (v1)
 					break;
+			}*/
+
+
+			if (!v1 && regex_match(y.name, pattern1))
+			{
+				e1 = y;
+				v1 = x;
+
+				if (v2)
+					break;
+			}
+
+			if (!v2 && regex_match(y.name, pattern2))
+			{
+				e2 = y;
+				v2 = x;
+
+				if (v1)
+					break;
 			}
 		}
 
 		if (v1 && v2)
 			break;
 	}
+
 
 	if (v1 && v2)
 	{
@@ -327,6 +350,7 @@ multimap<int, string> Graph::findSLApproximate(string street1, string street2)
 	int edit1 = 0, edit2 = 0;
 	int minimum = 0;
 	multimap<int, string> streets;
+
 	for (auto x : vertexSet)
 	{
 		for (auto y : x->getAdj())
@@ -337,7 +361,12 @@ multimap<int, string> Graph::findSLApproximate(string street1, string street2)
 			minimum = min(edit1, edit2);
 
 			if (minimum < 5)
-				streets.insert(make_pair(minimum, y.name));
+			{
+				if(string(typeid(*x->getInfo()).name()) == "class SharingLocation")
+					streets.insert(make_pair(minimum, y.name));
+				else if(string(typeid(*y.dest->getInfo()).name()) == "class SharingLocation")
+					streets.insert(make_pair(minimum, y.name));
+			}
 		}
 	}
 

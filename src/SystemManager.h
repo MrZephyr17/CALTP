@@ -273,9 +273,11 @@ class SystemManager
 	 */
 	void sharingLocationsInfo();
 
-	void findSLExact(std::street1, std::street2);
+	void menuFindSharingLocation();
 
-	void findSLApproximate(std::street1, std::street2);
+	void findSLExact(std::string street1, std::string stringstreet2);
+
+	void findSLApproximate(std::string street1, std::string street2);
 
   private:
 	GraphViewer *gv;
