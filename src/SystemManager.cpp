@@ -232,7 +232,7 @@ void menuFindSharingLocation()
 
 void findSLExact(string street1, string street2)
 {
-	Vertex *location;
+	Vertex *location = nullptr;
 	bool foundStreets = graph.findSLExact(street1, street2, location);
 
 	if (!foundStreets)
@@ -246,9 +246,9 @@ void findSLExact(string street1, string street2)
 		return;
 	}
 
-	/*
-		mostrar location no mapa
-	*/
+	gv->setVertexColor(location->getInfo()->getID(), RED);
+	cout << "Location found!" << endl;
+	cout << "It is now on the map with the red color!" << endl;
 }
 
 void findSLApproximate(string street1, string street2)

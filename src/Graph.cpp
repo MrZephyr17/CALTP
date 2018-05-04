@@ -277,18 +277,44 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 			{
 				e1 = y;
 				v1 = x;
+
+				if (v2)
+					break;
 			}
 			else if (KMPMatcher(street2, y.name))
 			{
 				e2 = y;
 				v2 = x;
+
+				if (v1)
+					break;
 			}
 		}
+
+		if (v1 && v2)
+			break;
 	}
 
 	if (v1 && v2)
 	{
-		//verificar se ha alguma sharing location aqui
+		//verificar se as edges se cruzam e se têm sharing location no cruzamento
+
+		if (e1.dest == e2.dest)
+		{
+			if (string(typeid(*e1.dest->getInfo()).name()) == "class SharingLocation")
+				location = e1.dest;
+		}
+		else if (e1.dest == v2)
+		{
+			if (string(typeid(*v2->getInfo()).name()) == "class SharingLocation")
+				location = v2;
+		}
+		else if (e2.dest == v1)
+		{
+			if (string(typeid(*v1->getInfo()).name()) == "class SharingLocation")
+				location = v1;
+		}
+
 		return true;
 	}
 	return false;
