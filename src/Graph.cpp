@@ -246,7 +246,7 @@ vector<Vertex *> Graph::discountLocations(bool rent, const int numberOfLocations
 	copy_if(vertexSet.begin(), vertexSet.end(), back_inserter(sharingLocations), [&rent](Vertex *vertex) { return string(typeid(*vertex->getInfo()).name()) == "class SharingLocation" && vertex->getInfo()->isAvailable(rent); });
 
 	sort(sharingLocations.begin(), sharingLocations.end(), [rent](const Vertex *lhs, const Vertex *rhs) {
-		return rent ? ((SharingLocation *)lhs->getInfo())->getSlots() > ((SharingLocation *)lhs->getInfo())->getSlots() : ((SharingLocation *)lhs->getInfo())->getSlots() < ((SharingLocation *)lhs->getInfo())->getSlots();
+		return rent ? ((SharingLocation *)lhs->getInfo())->getSlots() > ((SharingLocation *)rhs->getInfo())->getSlots() : ((SharingLocation *)lhs->getInfo())->getSlots() < ((SharingLocation *)rhs->getInfo())->getSlots();
 	});
 
 	if ((int)sharingLocations.size() > numberOfLocations)
@@ -295,7 +295,6 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 					break;
 			}*/
 
-
 			if (!v1 && regex_match(y.name, pattern1))
 			{
 				e1 = y;
@@ -318,7 +317,6 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 		if (v1 && v2)
 			break;
 	}
-
 
 	if (v1 && v2)
 	{
@@ -360,11 +358,11 @@ multimap<int, string> Graph::findSLApproximate(string street1, string street2)
 
 			minimum = min(edit1, edit2);
 
-			if (minimum < 5)
+			if (minimum < MAX_DISTANCE)
 			{
-				if(string(typeid(*x->getInfo()).name()) == "class SharingLocation")
+				if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
 					streets.insert(make_pair(minimum, y.name));
-				else if(string(typeid(*y.dest->getInfo()).name()) == "class SharingLocation")
+				else if (string(typeid(*y.dest->getInfo()).name()) == "class SharingLocation")
 					streets.insert(make_pair(minimum, y.name));
 			}
 		}

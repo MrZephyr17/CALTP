@@ -125,6 +125,9 @@ class Edge
 	 */
 	Edge(int id, Vertex *d, double w);
 
+	/**
+	 * @brief Construct a new Edge object
+	 */
 	Edge();
 
 	/**
@@ -289,8 +292,32 @@ class Graph
 	 */
 	Vertex *findLocation(const int ID) const;
 
+	/**
+	 * @brief Finds if there exists a sharing location in the crossroads between the given streets.
+	 * 
+	 * Using exact search algorithms, finds the given street names on the graph as edges,
+	 * checks if they cross each other, and finally checks if there is a sharing location 
+	 * at the cross point, 'returning' it in location.
+	 * 
+	 * @param street1 The first street
+	 * @param street2 The second street
+	 * @param location The sharing location
+	 * @return true if the streets cross each other, false otherwise
+	 */
 	bool findSLExact(std::string street1, std::string street2, Vertex *location);
 
+	/**
+	 * @brief Checks which streets are similar to the given ones using approximate search, also 
+	 * containing sharing locations.
+	 * 
+	 * Mainly using edit distance algorithm, checks which streets are similar to the given ones, 
+	 * by defining a maximum distance, checks which of those actually have sharing locations
+	 * and return them, ordered by their edit distance.
+	 * 
+	 * @param street1 The first street
+	 * @param street2 The second street
+	 * @return the edit distance associated with the found streets
+	 */
 	std::multimap<int, std::string> findSLApproximate(std::string street1, std::string street2);
 };
 

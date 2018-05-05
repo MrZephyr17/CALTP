@@ -273,10 +273,27 @@ class SystemManager
 	 */
 	void sharingLocationsInfo();
 
+	/**
+	 * @brief Presents options related to sharing location finding with string algorithms
+	 */
 	void menuFindSharingLocation();
 
-	void findSLExact(std::string street1, std::string stringstreet2);
+	/**
+	 * @brief Checks if there exists a sharing location at the crossroads of the given streets,
+	 * presenting it on the graphviewer.
+	 * 
+	 * @param street1 The first street
+	 * @param street2 The second street
+	 */
+	void findSLExact(std::string street1, std::string street2);
 
+	/**
+	 * @brief Checks which street names are similar to the given ones and presents those who
+	 * have sharing locations.
+	 * 
+	 * @param street1 The first street
+	 * @param street2 The second street
+	 */
 	void findSLApproximate(std::string street1, std::string street2);
 
   private:

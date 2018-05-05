@@ -17,6 +17,7 @@
 #define XCONST 2.5         /**< @brief X constant for GraphViewer's nodes*/
 #define YCONST -1.0        /**< @brief Y constant for GraphViewer's nodes*/
 #define YB -100.0          /**< @brief Y constant for GraphViewer's nodes*/
+#define MAX_DISTANCE 5     /**< @brief Max edit distance */
 
 const double MAX_LAT = 41.20324;  /**< @brief Max latitude for current file*/
 const double MIN_LAT = 41.17303;  /**< @brief Min latitude for current file*/
@@ -83,6 +84,7 @@ int verifyInput(int low, int high);
  * @return true if input is a number, false otherwise
  */
 bool isNumber(std::string input);
+
 /**
  * @brief Waits for the user to confirm before advancing with the program.
  */
@@ -129,10 +131,33 @@ int convertLongitudeToX(double longitude);
  */
 int convertLatitudeToY(double latitude);
 
+/**
+ * @brief Gets street names for sharing location finder
+ * 
+ * @param street1 The first street
+ * @param street2 The second street
+ */
 void getNames(std::string &street1, std::string &street2);
 
+/**
+ * @brief Returns the amount of changes requiered to transform text to pattern
+ * 
+ * @param pattern In this context, the user input
+ * @param text In this context, the street name
+ * @return the minimun edit distance
+ */
 int editDistance(std::string pattern, std::string text);
 
+/**
+ * @brief Checks if pattern exists in text using KMP matcher algorithm, with a small nuance.
+ * 
+ * Since we don't care if the pattern exists more than once, once it is found the function returns
+ * immediately.
+ * 
+ * @param text In this context, the street name
+ * @param pattern In this context, the user input
+ * @return true if the pattern exists at least once, false otherwise
+ */
 bool KMPMatcher(std::string text, std::string pattern);
 
 /** @} end of utils */
