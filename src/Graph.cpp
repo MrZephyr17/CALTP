@@ -273,6 +273,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 	Vertex *v1 = nullptr, *v2 = nullptr;
 	regex pattern1 = regex(street1);
 	regex pattern2 = regex(street2);
+	bool cross = false;
 
 	for (auto x : vertexSet)
 	{
@@ -295,30 +296,36 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 					break;
 			}*/
 
-			if (!v1 && regex_match(y.name, pattern1))
+			if (regex_match(y.name, pattern1))
 			{
 				e1 = y;
 				v1 = x;
 
-				if (v2)
+				if (v2 == e1.dest || v2 == v1 || e1.dest == e2.dest)
+				{
+					cross = true;
 					break;
+				}
 			}
 
-			if (!v2 && regex_match(y.name, pattern2))
+			else if (regex_match(y.name, pattern2))
 			{
 				e2 = y;
 				v2 = x;
 
-				if (v1)
+				if (v1 == e2.dest || v2 == v1 || e1.dest == e2.dest)
+				{
+					cross = true;
 					break;
+				}
 			}
 		}
 
-		if (v1 && v2)
+		if (cross)
 			break;
 	}
 
-	if (v1 && v2)
+	if (cross)
 	{
 		//verificar se as edges se cruzam e se têm sharing location no cruzamento
 
@@ -333,6 +340,11 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				location = v2;
 		}
 		else if (e2.dest == v1)
+		{
+			if (string(typeid(*v1->getInfo()).name()) == "class SharingLocation")
+				location = v1;
+		}
+		else if (v1 == v2)
 		{
 			if (string(typeid(*v1->getInfo()).name()) == "class SharingLocation")
 				location = v1;
