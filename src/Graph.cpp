@@ -18,7 +18,9 @@ Vertex::~Vertex()
 
 void Vertex::addEdge(Vertex *d, double w, int id, string name)
 {
-	adj.push_back(Edge(d, w, id, name));
+	Edge* e = new Edge(d, w, id, name);
+	outgoing.push_back(e);
+	d->incoming.push_back(e);
 }
 
 bool Vertex::operator<(Vertex &vertex) const
@@ -41,9 +43,9 @@ Vertex *Vertex::getPath() const
 	return this->path;
 }
 
-vector<Edge> Vertex::getAdj() const
+vector<Edge*> Vertex::getAdj() const
 {
-	return adj;
+	return outgoing;
 }
 
 Edge::Edge(int id, Vertex *d, double w) : id(id), dest(d), weight(w) {}
@@ -102,16 +104,16 @@ Vertex *Graph::findVertex(Location *in) const
 	return it != vertexSet.end() ? *it : NULL;
 }
 
-Edge Graph::findEdge(Location *org, const Location *dest) const
+Edge* Graph::findEdge(Location *org, const Location *dest) const
 {
 	Vertex *origin = findVertex(org);
-	vector<Edge> adj = origin->getAdj();
+	vector<Edge*> adj = origin->getAdj();
 
 	auto it = find_if(adj.begin(), adj.end(), [&dest](auto e) {
 		return e.dest->getInfo() == dest;
 	});
 
-	return it != adj.end() ? *it : Edge(-1);
+	return it != adj.end() ? *it : new Edge(-1);
 }
 
 bool Graph::addVertex(Location *in)
@@ -154,13 +156,13 @@ bool Graph::dijkstraShortestPath(Location *origin, Vertex *&dest, bool rent)
 	{
 		min = queue.extractMin();
 
-		for (Edge w : min->adj)
+		for (Edge* w : min->outgoing)
 		{
-			Vertex *v2 = w.dest;
-			if (v2->dist > min->dist + w.weight)
+			Vertex *v2 = w->dest;
+			if (v2->dist > min->dist + w->weight)
 			{
 				double oldDist = v2->dist;
-				v2->dist = min->dist + w.weight;
+				v2->dist = min->dist + w->weight;
 				v2->path = min;
 				if (oldDist == INF)
 					queue.insert(v2);
@@ -197,13 +199,13 @@ bool Graph::dijkstraShortestPath(Location *origin, Vertex *destiny)
 		min = queue.extractMin();
 		color = min->getInfo()->getColor();
 
-		for (Edge w : min->adj)
+		for (Edge* w : min->outgoing)
 		{
-			Vertex *v2 = w.dest;
-			if (v2->dist > min->dist + w.weight)
+			Vertex *v2 = w->dest;
+			if (v2->dist > min->dist + w->weight)
 			{
 				double oldDist = v2->dist;
-				v2->dist = min->dist + w.weight;
+				v2->dist = min->dist + w->weight;
 				v2->path = min;
 				if (oldDist == INF)
 					queue.insert(v2);
@@ -269,11 +271,9 @@ Vertex *Graph::findLocation(const int ID) const
 
 bool Graph::findSLExact(string street1, string street2, Vertex *location)
 {
-	Edge e1, e2;
-	Vertex *v1 = nullptr, *v2 = nullptr;
+	Vertex* crossPoint = nullptr;
 	regex pattern1 = regex(street1);
 	regex pattern2 = regex(street2);
-	bool cross = false;
 
 	for (auto x : vertexSet)
 	{
@@ -296,62 +296,127 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 					break;
 			}*/
 
-			if (regex_match(y.name, pattern1))
+			if (regex_match(y->name, pattern1))
 			{
-				e1 = y;
-				v1 = x;
+				//Ver restantes edges adjacentes a x, e verificar se têm o nome da outra rua
 
-				if (v2 == e1.dest || v2 == v1 || e1.dest == e2.dest)
+				for (auto z : x->getAdj())
 				{
-					cross = true;
+					if (regex_match(z->name, pattern2))
+					{
+						crossPoint = x;
+						break;
+					}
+				}
+
+				//Ver edges adjacentes a y->dest, verificar se têm o nome da outra rua
+				if (crossPoint)
 					break;
+
+				for (auto z : y->dest->getAdj())
+				{
+					if (regex_match(z->name, pattern2))
+					{
+						crossPoint = y->dest;
+						break;
+					}
+				}
+
+				if (crossPoint)
+					break;
+				//Ver edges incoming a y->dest, verificar se têm o nome da outra rua
+
+				for (auto z : y->dest->incoming)
+				{
+					if (regex_match(z->name, pattern2))
+					{
+						crossPoint = y->dest;
+						break;
+					}
+				}
+				if (crossPoint)
+					break;
+				//Ver edges incoming a x, verificar se têm o nome da outra rua
+				
+				for (auto z : x->incoming)
+				{
+					if (regex_match(z->name, pattern2))
+					{
+						crossPoint = x;
+						break;
+					}
 				}
 			}
 
-			else if (regex_match(y.name, pattern2))
+			else if (regex_match(y->name, pattern2))
 			{
-				e2 = y;
-				v2 = x;
 
-				if (v1 == e2.dest || v2 == v1 || e1.dest == e2.dest)
+				//Ver restantes edges adjacentes a x, e verificar se têm o nome da outra rua
+
+				for (auto z : x->getAdj())
 				{
-					cross = true;
+					if (regex_match(z->name, pattern1))
+					{
+						crossPoint = x;
+						break;
+					}
+				}
+
+				if (crossPoint)
 					break;
+
+				//Ver edges adjacentes a y->dest, verificar se têm o nome da outra rua
+
+				for (auto z : y->dest->getAdj())
+				{
+					if (regex_match(z->name, pattern1))
+					{
+						crossPoint = y->dest;
+						break;
+					}
+				}
+
+				if (crossPoint)
+					break;
+
+				//Ver edges incoming a y->dest, verificar se têm o nome da outra rua
+
+				for (auto z : y->dest->incoming)
+				{
+					if (regex_match(z->name, pattern1))
+					{
+						crossPoint = y->dest;
+						break;
+					}
+				}
+				if (crossPoint)
+					break;
+
+				//Ver edges incoming a x, verificar se têm o nome da outra rua
+
+				for (auto z : x->incoming)
+				{
+					if (regex_match(z->name, pattern1))
+					{
+						crossPoint = x;
+						break;
+					}
 				}
 			}
 		}
 
-		if (cross)
+		if (crossPoint)
 			break;
 	}
 
-	if (cross)
+	if (crossPoint)
 	{
-		//verificar se as edges se cruzam e se têm sharing location no cruzamento
-
-		if (e1.dest == e2.dest)
-		{
-			if (string(typeid(*e1.dest->getInfo()).name()) == "class SharingLocation")
-				location = e1.dest;
-		}
-		else if (e1.dest == v2)
-		{
-			if (string(typeid(*v2->getInfo()).name()) == "class SharingLocation")
-				location = v2;
-		}
-		else if (e2.dest == v1)
-		{
-			if (string(typeid(*v1->getInfo()).name()) == "class SharingLocation")
-				location = v1;
-		}
-		else if (v1 == v2)
-		{
-			if (string(typeid(*v1->getInfo()).name()) == "class SharingLocation")
-				location = v1;
-		}
+		if (string(typeid(crossPoint->getInfo()).name()) == "class SharingLocation")
+			location = crossPoint;
 
 		return true;
 	}
+
 	return false;
 }
 
@@ -365,17 +430,17 @@ multimap<int, string> Graph::findSLApproximate(string street1, string street2)
 	{
 		for (auto y : x->getAdj())
 		{
-			edit1 = editDistance(street1, y.name);
-			edit2 = editDistance(street2, y.name);
+			edit1 = editDistance(street1, y->name);
+			edit2 = editDistance(street2, y->name);
 
 			minimum = min(edit1, edit2);
 
 			if (minimum < MAX_DISTANCE)
-			{
+			{ 
 				if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
-					streets.insert(make_pair(minimum, y.name));
-				else if (string(typeid(*y.dest->getInfo()).name()) == "class SharingLocation")
-					streets.insert(make_pair(minimum, y.name));
+					streets.insert(make_pair(minimum, y->name));
+				else if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
+					streets.insert(make_pair(minimum, y->name));
 			}
 		}
 	}

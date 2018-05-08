@@ -24,7 +24,7 @@ class Edge;
 class Graph;
 class Vertex;
 
-#define INF std::numeric_limits<double>::max() /**< @brief double's max value */
+constexpr auto INF = std::numeric_limits<double>::max(); /**< @brief double's max value */
 
 /************************* Vertex  **************************/
 
@@ -34,7 +34,8 @@ class Vertex;
 class Vertex
 {
 	Location *info;   // contents
-	vector<Edge> adj; // outgoing edges
+	vector<Edge*> outgoing;  // adj
+	vector<Edge*> incoming;
 	bool visited;	 // auxiliary field
 	double dist = 0;
 	Vertex *path = NULL;
@@ -98,7 +99,7 @@ class Vertex
 	 * 
 	 * @return the adjacent edges
 	 */
-	vector<Edge> getAdj() const;
+	vector<Edge*> getAdj() const;
 
 	friend class Graph;
 	friend class MutablePriorityQueue<Vertex>;
@@ -208,7 +209,7 @@ class Graph
 	 * @param dest The destination location
 	 * @return the edge connecting the locations, with ID(-1) if non existant 
 	 */
-	Edge findEdge(Location *org, const Location *dest) const;
+	Edge* findEdge(Location *org, const Location *dest) const;
 
 	/**
 	 * @brief Adds a vertex with a given content or info (in) to a graph (this).
