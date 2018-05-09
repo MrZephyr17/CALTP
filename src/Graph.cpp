@@ -18,7 +18,7 @@ Vertex::~Vertex()
 
 void Vertex::addEdge(Vertex *d, double w, int id, string name)
 {
-	Edge* e = new Edge(d, w, id, name);
+	Edge *e = new Edge(d, w, id, name);
 	outgoing.push_back(e);
 	d->incoming.push_back(e);
 }
@@ -43,7 +43,7 @@ Vertex *Vertex::getPath() const
 	return this->path;
 }
 
-vector<Edge*> Vertex::getAdj() const
+vector<Edge *> Vertex::getAdj() const
 {
 	return outgoing;
 }
@@ -104,10 +104,10 @@ Vertex *Graph::findVertex(Location *in) const
 	return it != vertexSet.end() ? *it : NULL;
 }
 
-Edge* Graph::findEdge(Location *org, const Location *dest) const
+Edge *Graph::findEdge(Location *org, const Location *dest) const
 {
 	Vertex *origin = findVertex(org);
-	vector<Edge*> adj = origin->getAdj();
+	vector<Edge *> adj = origin->getAdj();
 
 	auto it = find_if(adj.begin(), adj.end(), [&dest](auto e) {
 		return e.dest->getInfo() == dest;
@@ -156,7 +156,7 @@ bool Graph::dijkstraShortestPath(Location *origin, Vertex *&dest, bool rent)
 	{
 		min = queue.extractMin();
 
-		for (Edge* w : min->outgoing)
+		for (Edge *w : min->outgoing)
 		{
 			Vertex *v2 = w->dest;
 			if (v2->dist > min->dist + w->weight)
@@ -199,7 +199,7 @@ bool Graph::dijkstraShortestPath(Location *origin, Vertex *destiny)
 		min = queue.extractMin();
 		color = min->getInfo()->getColor();
 
-		for (Edge* w : min->outgoing)
+		for (Edge *w : min->outgoing)
 		{
 			Vertex *v2 = w->dest;
 			if (v2->dist > min->dist + w->weight)
@@ -271,7 +271,7 @@ Vertex *Graph::findLocation(const int ID) const
 
 bool Graph::findSLExact(string street1, string street2, Vertex *location)
 {
-	Vertex* crossPoint = nullptr;
+	Vertex *crossPoint = nullptr;
 	regex pattern1 = regex(street1);
 	regex pattern2 = regex(street2);
 
@@ -279,7 +279,8 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 	{
 		for (auto y : x->getAdj())
 		{
-			/*if (!v1 && KMPMatcher(street1, y.name))
+			/*
+			if (!v1 && KMPMatcher(street1, y.name))
 			{
 				e1 = y;
 				v1 = x;
@@ -294,7 +295,8 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 
 				if (v1)
 					break;
-			}*/
+			}
+			*/
 
 			if (regex_match(y->name, pattern1))
 			{
@@ -302,17 +304,17 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 
 				for (auto z : x->getAdj())
 				{
-					if (regex_match(z->name, pattern2))
+					if (z != y && regex_match(z->name, pattern2))
 					{
 						crossPoint = x;
 						break;
 					}
 				}
 
-				//Ver edges adjacentes a y->dest, verificar se têm o nome da outra rua
 				if (crossPoint)
 					break;
 
+				//Ver edges adjacentes a y->dest, verificar se têm o nome da outra rua
 				for (auto z : y->dest->getAdj())
 				{
 					if (regex_match(z->name, pattern2))
@@ -328,7 +330,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 
 				for (auto z : y->dest->incoming)
 				{
-					if (regex_match(z->name, pattern2))
+					if (z != y && regex_match(z->name, pattern2))
 					{
 						crossPoint = y->dest;
 						break;
@@ -337,7 +339,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				if (crossPoint)
 					break;
 				//Ver edges incoming a x, verificar se têm o nome da outra rua
-				
+
 				for (auto z : x->incoming)
 				{
 					if (regex_match(z->name, pattern2))
@@ -355,7 +357,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 
 				for (auto z : x->getAdj())
 				{
-					if (regex_match(z->name, pattern1))
+					if (z != y && regex_match(z->name, pattern1))
 					{
 						crossPoint = x;
 						break;
@@ -396,7 +398,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 
 				for (auto z : x->incoming)
 				{
-					if (regex_match(z->name, pattern1))
+					if (z != y && regex_match(z->name, pattern1))
 					{
 						crossPoint = x;
 						break;
@@ -436,7 +438,7 @@ multimap<int, string> Graph::findSLApproximate(string street1, string street2)
 			minimum = min(edit1, edit2);
 
 			if (minimum < MAX_DISTANCE)
-			{ 
+			{
 				if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
 					streets.insert(make_pair(minimum, y->name));
 				else if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
