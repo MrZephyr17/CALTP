@@ -248,17 +248,10 @@ void SystemManager::findSLExact(string street1, string street2)
 		waitConfirm();
 		return;
 	}
-	else if (location == nullptr)
-	{
-		cout << endl << "Couldn't find a location in that crossroad!" << endl;
-		cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
-		waitConfirm();
-		return;
-	}
 
-	gv->setVertexColor(location->getInfo()->getID(), RED);
+	gv->setVertexColor(location->getInfo()->getID(), GREEN);
 	cout << "Location found!" << endl;
-	cout << "It is now on the map with the red color!" << endl;
+	cout << "It is now on the map with the green color!" << endl;
 	cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
 
 	waitConfirm();
@@ -582,16 +575,16 @@ void SystemManager::paintPath(vector<Vertex> path, bool def, int edgeThickness, 
 	}
 	for (unsigned int i = 0; i < size - 1; i++)
 	{
-		Edge edge = graph.findEdge(path[i].getInfo(), path[i + 1].getInfo());
+		Edge* edge = graph.findEdge(path[i].getInfo(), path[i + 1].getInfo());
 
-		if (edge.getID() == -1)
+		if (edge->getID() == -1)
 		{
 			cout << "Path isn't possible!!" << endl;
 			return;
 		}
 
-		gv->setEdgeColor(edge.getID(), edgeColor);
-		gv->setEdgeThickness(edge.getID(), edgeThickness);
+		gv->setEdgeColor(edge->getID(), edgeColor);
+		gv->setEdgeThickness(edge->getID(), edgeThickness);
 	}
 
 	if (def)
@@ -871,10 +864,10 @@ bool SystemManager::checkConnectivity()
 		for (Vertex *v : vertexes)
 		{
 			gv->setVertexColor(v->getInfo()->getID(), v->getInfo()->getColor());
-			for (Edge e : v->getAdj())
+			for (Edge* e : v->getAdj())
 			{
-				gv->setEdgeColor(e.getID(), BLACK);
-				gv->setEdgeThickness(e.getID(), 1);
+				gv->setEdgeColor(e->getID(), BLACK);
+				gv->setEdgeThickness(e->getID(), 1);
 			}
 		}
 		gv->rearrange();
@@ -890,10 +883,10 @@ void SystemManager::isConnectedAux(Vertex *v, int &counter)
 	counter++;
 	v->getInfo()->setVisited(true);
 
-	for (Edge e : v->getAdj())
+	for (Edge* e : v->getAdj())
 	{
-		if (!e.getDest()->getInfo()->getVisited())
-			isConnectedAux(e.getDest(), counter);
+		if (!e->getDest()->getInfo()->getVisited())
+			isConnectedAux(e->getDest(), counter);
 	}
 }
 
@@ -903,13 +896,13 @@ void SystemManager::connectedCiclePaint(Vertex *v)
 	Sleep(500);
 	gv->setVertexColor(v->getInfo()->getID(), GREEN);
 	gv->rearrange();
-	for (Edge e : v->getAdj())
+	for (Edge* e : v->getAdj())
 	{
-		if (!e.getDest()->getInfo()->getVisited())
+		if (!e->getDest()->getInfo()->getVisited())
 		{
-			gv->setEdgeColor(e.getID(), RED);
-			gv->setEdgeThickness(e.getID(), 5);
-			connectedCiclePaint(e.getDest());
+			gv->setEdgeColor(e->getID(), RED);
+			gv->setEdgeThickness(e->getID(), 5);
+			connectedCiclePaint(e->getDest());
 		}
 	}
 }
@@ -957,9 +950,9 @@ void SystemManager::sharingLocationsInfo()
 			cout << "|  - Adjacent edges:              |" << endl;
 
 			int aux = 1;
-			for (Edge &e : v->getAdj())
+			for (Edge* &e : v->getAdj())
 			{
-				cout << "|      - Edge " << setw(3) << aux++ << "      ID " << setw(5) << e.getID() << "   |" << endl;
+				cout << "|      - Edge " << setw(3) << aux++ << "      ID " << setw(5) << e->getID() << "   |" << endl;
 			}
 		}
 		cout << "|_________________________________|";

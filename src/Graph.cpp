@@ -110,7 +110,7 @@ Edge *Graph::findEdge(Location *org, const Location *dest) const
 	vector<Edge *> adj = origin->getAdj();
 
 	auto it = find_if(adj.begin(), adj.end(), [&dest](auto e) {
-		return e.dest->getInfo() == dest;
+		return e->dest->getInfo() == dest;
 	});
 
 	return it != adj.end() ? *it : new Edge(-1);
@@ -269,9 +269,8 @@ Vertex *Graph::findLocation(const int ID) const
 	throw LocationNotFound(ID);
 }
 
-bool Graph::findSLExact(string street1, string street2, Vertex *location)
+bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 {
-	Vertex *crossPoint = nullptr;
 	regex pattern1 = regex(street1);
 	regex pattern2 = regex(street2);
 
@@ -306,12 +305,15 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				{
 					if (z != y && regex_match(z->name, pattern2))
 					{
-						crossPoint = x;
-						break;
+						if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
+						{
+							location = x;
+							break;
+						}
 					}
 				}
 
-				if (crossPoint)
+				if (location)
 					break;
 
 				//Ver edges adjacentes a y->dest, verificar se têm o nome da outra rua
@@ -319,12 +321,16 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				{
 					if (regex_match(z->name, pattern2))
 					{
-						crossPoint = y->dest;
-						break;
+						if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
+						{
+							location = y->dest;
+							break;
+						}
+
 					}
 				}
 
-				if (crossPoint)
+				if (location)
 					break;
 				//Ver edges incoming a y->dest, verificar se têm o nome da outra rua
 
@@ -332,11 +338,15 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				{
 					if (z != y && regex_match(z->name, pattern2))
 					{
-						crossPoint = y->dest;
-						break;
+						if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
+						{
+							location = y->dest;
+							break;
+						}
+
 					}
 				}
-				if (crossPoint)
+				if (location)
 					break;
 				//Ver edges incoming a x, verificar se têm o nome da outra rua
 
@@ -344,10 +354,16 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				{
 					if (regex_match(z->name, pattern2))
 					{
-						crossPoint = x;
-						break;
+						if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
+						{
+							location = x;
+							break;
+						}
 					}
 				}
+
+				if (location)
+					break;
 			}
 
 			else if (regex_match(y->name, pattern2))
@@ -359,12 +375,15 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				{
 					if (z != y && regex_match(z->name, pattern1))
 					{
-						crossPoint = x;
-						break;
+						if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
+						{
+							location = x;
+							break;
+						}
 					}
 				}
 
-				if (crossPoint)
+				if (location)
 					break;
 
 				//Ver edges adjacentes a y->dest, verificar se têm o nome da outra rua
@@ -373,12 +392,15 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				{
 					if (regex_match(z->name, pattern1))
 					{
-						crossPoint = y->dest;
-						break;
+						if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
+						{
+							location = y->dest;
+							break;
+						}
 					}
 				}
 
-				if (crossPoint)
+				if (location)
 					break;
 
 				//Ver edges incoming a y->dest, verificar se têm o nome da outra rua
@@ -387,39 +409,37 @@ bool Graph::findSLExact(string street1, string street2, Vertex *location)
 				{
 					if (regex_match(z->name, pattern1))
 					{
-						crossPoint = y->dest;
-						break;
+						if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
+						{
+							location = y->dest;
+							break;
+						}
 					}
 				}
-				if (crossPoint)
+				if (location)
 					break;
 
 				//Ver edges incoming a x, verificar se têm o nome da outra rua
 
 				for (auto z : x->incoming)
 				{
-					if (z != y && regex_match(z->name, pattern1))
+					if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
 					{
-						crossPoint = x;
+						location = x;
 						break;
 					}
 				}
+
+				if (location)
+					break;
 			}
 		}
 
-		if (crossPoint)
+		if (location)
 			break;
 	}
 
-	if (crossPoint)
-	{
-		if (string(typeid(crossPoint->getInfo()).name()) == "class SharingLocation")
-			location = crossPoint;
-
-		return true;
-	}
-
-	return false;
+	return location != nullptr ? true : false;
 }
 
 multimap<int, string> Graph::findSLApproximate(string street1, string street2)

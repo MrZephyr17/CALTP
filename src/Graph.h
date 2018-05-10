@@ -305,7 +305,7 @@ class Graph
 	 * @param location The sharing location
 	 * @return true if the streets cross each other, false otherwise
 	 */
-	bool findSLExact(std::string street1, std::string street2, Vertex *location);
+	bool findSLExact(std::string street1, std::string street2, Vertex *&location);
 
 	/**
 	 * @brief Checks which streets are similar to the given ones using approximate search, also 
