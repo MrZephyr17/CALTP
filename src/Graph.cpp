@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include "Utils.h"
+#include "stringMatching.h"
 #include "Exceptions.h"
 #include <typeinfo>
 #include <iostream>
@@ -326,7 +327,6 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 							location = y->dest;
 							break;
 						}
-
 					}
 				}
 
@@ -343,7 +343,6 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 							location = y->dest;
 							break;
 						}
-
 					}
 				}
 				if (location)
