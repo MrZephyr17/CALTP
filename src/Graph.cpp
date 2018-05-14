@@ -272,32 +272,10 @@ Vertex *Graph::findLocation(const int ID) const
 
 bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 {
-	regex pattern1 = regex(street1);
-	regex pattern2 = regex(street2);
-
 	for (auto x : vertexSet)
 	{
 		for (auto y : x->getAdj())
 		{
-			/*
-			if (!v1 && KMPMatcher(street1, y.name))
-			{
-				e1 = y;
-				v1 = x;
-
-				if (v2)
-					break;
-			}
-			else if (!v2 && KMPMatcher(street2, y.name))
-			{
-				e2 = y;
-				v2 = x;
-
-				if (v1)
-					break;
-			}
-			*/
-
 			if (KMPMatcher(y->name, street1))
 			{
 				//Ver restantes edges adjacentes a x, e verificar se têm o nome da outra rua

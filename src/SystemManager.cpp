@@ -211,6 +211,13 @@ void SystemManager::menuFindSharingLocation()
 	string street1, street2;
 	getNames(street1, street2);
 
+	if (street1 == "" || street2 == "")
+	{
+		cout << "Invalid input!" << endl;
+		waitConfirm();
+		return;
+	}
+
 	cout << endl << "Enter your preference: " << endl;
 	cout << "1 - Exact search" << endl;
 	cout << "2 - Approximate search" << endl << endl;
