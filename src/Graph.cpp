@@ -298,13 +298,13 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 			}
 			*/
 
-			if (regex_match(y->name, pattern1))
+			if (KMPMatcher(y->name, street1))
 			{
 				//Ver restantes edges adjacentes a x, e verificar se têm o nome da outra rua
 
 				for (auto z : x->getAdj())
 				{
-					if (z != y && regex_match(z->name, pattern2))
+					if (z != y && KMPMatcher(z->name, street2))
 					{
 						if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
 						{
@@ -320,7 +320,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 				//Ver edges adjacentes a y->dest, verificar se têm o nome da outra rua
 				for (auto z : y->dest->getAdj())
 				{
-					if (regex_match(z->name, pattern2))
+					if (KMPMatcher(z->name, street2))
 					{
 						if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
 						{
@@ -336,7 +336,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 
 				for (auto z : y->dest->incoming)
 				{
-					if (z != y && regex_match(z->name, pattern2))
+					if (z != y && KMPMatcher(z->name, street2))
 					{
 						if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
 						{
@@ -351,7 +351,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 
 				for (auto z : x->incoming)
 				{
-					if (regex_match(z->name, pattern2))
+					if (KMPMatcher(z->name, street2))
 					{
 						if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
 						{
@@ -365,14 +365,13 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 					break;
 			}
 
-			else if (regex_match(y->name, pattern2))
+			else if (KMPMatcher(y->name, street2))
 			{
-
 				//Ver restantes edges adjacentes a x, e verificar se têm o nome da outra rua
 
 				for (auto z : x->getAdj())
 				{
-					if (z != y && regex_match(z->name, pattern1))
+					if (z != y && KMPMatcher(z->name, street1))
 					{
 						if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
 						{
@@ -389,7 +388,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 
 				for (auto z : y->dest->getAdj())
 				{
-					if (regex_match(z->name, pattern1))
+					if (KMPMatcher(z->name, street1))
 					{
 						if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
 						{
@@ -406,7 +405,7 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 
 				for (auto z : y->dest->incoming)
 				{
-					if (regex_match(z->name, pattern1))
+					if (KMPMatcher(z->name, street1))
 					{
 						if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
 						{
@@ -422,10 +421,13 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 
 				for (auto z : x->incoming)
 				{
-					if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
+					if (KMPMatcher(z->name, street1))
 					{
-						location = x;
-						break;
+						if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
+						{
+							location = x;
+							break;
+						}
 					}
 				}
 

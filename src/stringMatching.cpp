@@ -56,8 +56,8 @@ vector<int> ComputePrefixFunction(string pattern)
 
 bool KMPMatcher(string text, string pattern)
 {
-    int n = pattern.size();
-    int m = text.size();
+    int m = pattern.size();
+    int n = text.size();
     vector<int> pi = ComputePrefixFunction(pattern);
     int q = 0;
 
