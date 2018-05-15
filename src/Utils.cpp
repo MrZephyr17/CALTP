@@ -167,3 +167,13 @@ bool exists(const std::multimap<int, std::string>& streets, const std::string & 
 	return false;
 }
 
+EditDistanceHelper::EditDistanceHelper(std::string street, int editDistance)
+{
+	this->street = street;
+	this->editDistance = editDistance;
+}
+
+bool EditDistanceHelper::operator<(const EditDistanceHelper & rhs) const
+{
+	return editDistance < rhs.editDistance;
+}

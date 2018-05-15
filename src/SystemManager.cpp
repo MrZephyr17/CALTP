@@ -273,7 +273,7 @@ void SystemManager::findSLApproximate(string street1, string street2)
 	clock_t begin, end;
 
 	begin = clock();
-	multimap<int,string> streets = graph.findSLApproximate(street1, street2);
+	set<EditDistanceHelper> streets = graph.findSLApproximate(street1, street2);
 	end = clock();
 
 	double timeSpent = timeDiff(begin, end);
@@ -289,7 +289,7 @@ void SystemManager::findSLApproximate(string street1, string street2)
 	cout << endl << " - Similar streets that have Sharing Locations" << endl << endl;
 
 	for (auto it = streets.begin(); it != streets.end(); it++)
-		cout << "    - " << it->second << endl;
+		cout << "    - " << it->street << endl;
 	
 
 	cout << endl << " - Took a total of: " << timeSpent << " seconds." << endl;

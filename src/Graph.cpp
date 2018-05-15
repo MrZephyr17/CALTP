@@ -421,11 +421,11 @@ bool Graph::findSLExact(string street1, string street2, Vertex *&location)
 	return location != nullptr ? true : false;
 }
 
-multimap<int, string> Graph::findSLApproximate(string street1, string street2)
+set<EditDistanceHelper> Graph::findSLApproximate(string street1, string street2)
 {
 	int edit1 = 0, edit2 = 0;
 	int minimum = 0;
-	multimap<int, string> streets;
+	set<EditDistanceHelper> streets;
 
 	for (auto x : vertexSet)
 	{
@@ -438,11 +438,11 @@ multimap<int, string> Graph::findSLApproximate(string street1, string street2)
 
 			if (minimum < MAX_DISTANCE && y->name != "")
 			{
-				if (!exists(streets, y->name) && string(typeid(*x->getInfo()).name()) == "class SharingLocation")
-					streets.insert(make_pair(minimum, y->name));
+				if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
+					streets.insert(EditDistanceHelper(y->name, minimum));
 				
-				else if (!exists(streets, y->name) && string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
-					streets.insert(make_pair(minimum, y->name));
+				else if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
+					streets.insert(EditDistanceHelper(y->name, minimum));
 			}
 		}
 	}

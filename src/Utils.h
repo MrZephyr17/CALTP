@@ -25,6 +25,25 @@ const double MIN_LAT = 41.17303;  /**< @brief Min latitude for current file*/
 const double MAX_LON = -8.555458; /**< @brief Max longitude for current file*/
 const double MIN_LON = -8.622682; /**< @brief Min longitude for current file*/
 
+/** @name EditDistanceHelper */
+/**@{
+*
+* Struct to ease the approximate search algorithm, holding found streets along with their edit distance towards
+* a given name.
+*/
+
+struct EditDistanceHelper
+{
+	std::string street;
+	int editDistance;
+	EditDistanceHelper(std::string street, int editDistance);
+	bool operator<(const EditDistanceHelper& rhs) const;
+};
+
+/** @} end of EditDistanceHelper*/
+
+
+
 /**
  * @brief Receives two nodes and calculates the weight for the edge that connects them.
  * 

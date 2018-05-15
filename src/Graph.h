@@ -10,9 +10,11 @@
 #include <string>
 #include <map>
 #include <utility>
+#include <set>
 #include "MutablePriorityQueue.h"
 #include "Location.h"
 #include "SharingLocation.h"
+#include "Utils.h"
 
 /** @defgroup graph graph
  * @{
@@ -319,7 +321,7 @@ class Graph
 	 * @param street2 The second street
 	 * @return the edit distance associated with the found streets
 	 */
-	std::multimap<int, std::string> findSLApproximate(std::string street1, std::string street2);
+	std::set<EditDistanceHelper> findSLApproximate(std::string street1, std::string street2);
 };
 
 /** @} end of graph */
