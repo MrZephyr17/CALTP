@@ -1,67 +1,67 @@
-8366889;Rua de Ramalho Ortigão;False
-8366893;Rua da Conceição;False
-8366896;Rua de José Falcão;False
-8367068;Praça da República;False
+8366889;Rua de Ramalho Ortigao;False
+8366893;Rua da Conceicao;False
+8366896;Rua de José Falcao;False
+8367068;Praca da Republica;False
 8367070;Rua dos Bragas;False
 8367098;Rua do Alferes Malheiro;False
 8367104;Rua do Bonjardim;False
 8367114;Rua da Firmeza;False
-8367143;Rua de Rodolfo de Araújo;False
+8367143;Rua de Rodolfo de Araujo;False
 8367147;Rua Doutor Alves da Veiga;False
 8367153;Rua das Carvalheiras;False
-8367160;Rua Dom João IV;False
+8367160;Rua Dom Joao IV;False
 13836129;;False
-14326572;Rua Heróis e Mártires de Angola;False
-14327522;Rua Dom João IV;False
-14328446;Rua de Fernandes Tomás;False
+14326572;Rua Herois e Martires de Angola;False
+14327522;Rua Dom Joao IV;False
+14328446;Rua de Fernandes Tomas;False
 14333888;Rua do Bonjardim;False
 26119759;Rua de Santa Catarina;False
-34607492;Rua de Gonçalo Cristóvão;False
+34607492;Rua de Goncalo Cristovao;False
 34607518;Rua do Almada;False
-34607524;Praça da República;False
+34607524;Praca da Republica;False
 38336627;Rua das Carvalheiras;False
 38336628;Rua da Trindade;False
-38336634;Rua de Gonçalo Cristóvão;False
-38336635;Rua de Gonçalo Cristóvão;False
-38336638;Rua de Gonçalo Cristóvão;False
+38336634;Rua de Goncalo Cristovao;False
+38336635;Rua de Goncalo Cristovao;False
+38336638;Rua de Goncalo Cristovao;False
 38336643;Rua da Firmeza;False
-39658536;Pátio do Bolhão;False
+39658536;Patio do Bolhao;False
 39658629;;False
 60175223;Rua de Ricardo Jorge;False
 60175224;Rua da Picaria;False
-60175590;Rua Doutor António Luís Gomes;False
+60175590;Rua Doutor Antonio Luis Gomes;False
 60175941;Rua do Clube dos Fenianos;False
-95843585;Rua de Camões;False
-95843586;Viaduto de Gonçalo Cristóvão;True
+95843585;Rua de Camoes;False
+95843586;Viaduto de Goncalo Cristovao;True
 112465238;Rua de Alexandre Braga;False
-112465240;Praça Gen. Humberto Delgado;False
+112465240;Praca Gen. Humberto Delgado;False
 112465243;Rua Formosa;False
 128825640;Rua do Pinheiro;False
-128825641;Rua dos Mártires da Liberdade;False
-128825643;Travessa de São Carlos;False
+128825641;Rua dos Martires da Liberdade;False
+128825643;Travessa de Sao Carlos;False
 128828725;;False
 156208916;;False
 156209004;;False
 156209009;;False
-167487357;Rua de Camões;False
-174689855;Rua de Gonçalo Cristóvão;False
+167487357;Rua de Camoes;False
+174689855;Rua de Goncalo Cristovao;False
 174689856;Rua de Santa Catarina;False
 178413108;Rua de Santa Catarina;False
-206720845;Rua de Fernandes Tomás;False
-207724051;Rua do Bolhão;False
-207724055;Rua do Bolhão;False
+206720845;Rua de Fernandes Tomas;False
+207724051;Rua do Bolhao;False
+207724055;Rua do Bolhao;False
 207724065;Rua Guedes de Azevedo;False
 208580373;Rua Guedes de Azevedo;False
 210328130;Travessa Rua Formosa;False
-210328137;Rua de Sá da Bandeira;False
+210328137;Rua de Sa da Bandeira;False
 210328147;Rua Rodrigues Sampaio;False
-210669782;Rua de Gonçalo Cristóvão;False
-210669783;Rua de Camões;False
-210673563;Rua de Gonçalo Cristóvão;False
+210669782;Rua de Goncalo Cristovao;False
+210669783;Rua de Camoes;False
+210673563;Rua de Goncalo Cristovao;False
 210841125;Rua Guedes de Azevedo;False
 216972581;Avenida dos Aliados;False
-220233689;Rua do Doutor Alfredo Magalhães;False
-220233692;Rua de Gonçalo Cristóvão;False
+220233689;Rua do Doutor Alfredo Magalhaes;False
+220233692;Rua de Goncalo Cristovao;False
 226624856;Rua de Rodrigues Sampaio;True
 227888232;;True
 227888233;;True
@@ -75,7 +75,7 @@
 227932394;;True
 227932399;;True
 227980132;;False
-227982906;Rua do Estêvão;False
+227982906;Rua do Estevao;False
 227991568;;False
 228894146;;False
 228926086;;False
@@ -84,13 +84,13 @@
 228926091;;False
 229184974;Largo de Mompilher;False
 229194693;Largo de Mompilher;False
-239593895;Rua de Sá da Bandeira;True
+239593895;Rua de Sa da Bandeira;True
 252526950;Rua da Alegria;False
 252526951;Rua da Alegria;False
 252526952;Rua da Firmeza;False
 252526954;Rua de Santa Catarina;False
 252526955;Rua da Firmeza;False
-252527740;Rua Dom João IV;False
+252527740;Rua Dom Joao IV;False
 269856842;;False
 274467054;Rua Doutor Alves da Veiga;False
 278570711;;False
@@ -106,7 +106,7 @@
 286782664;;False
 287648368;;False
 287648784;;False
-287648900;Rua de Camões;True
+287648900;Rua de Camoes;True
 287906089;;True
 288961296;;True
 290230302;;True
@@ -122,7 +122,7 @@
 294240864;;False
 294240865;;False
 304688481;;False
-304688482;Rua Sá da Bandeira;False
+304688482;Rua Sa da Bandeira;False
 332179488;;True
 350915445;Rua do Moreira;False
 364828782;;False
@@ -155,13 +155,13 @@
 386286205;Largo do Pinheiro;True
 386286206;Largo do Pinheiro;True
 434872534;Avenida dos Aliados;False
-434872538;Rua de Camões;False
-434872539;Rua de Camões;False
-434872540;Rua de Gonçalo Cristóvão;False
-434878400;Rua de Fernandes Tomás;False
-434878401;Rua de Sá da Bandeira;True
+434872538;Rua de Camoes;False
+434872539;Rua de Camoes;False
+434872540;Rua de Goncalo Cristovao;False
+434878400;Rua de Fernandes Tomas;False
+434878401;Rua de Sa da Bandeira;True
 434879921;Rua Formosa;False
-434879926;Rua de Sá da Bandeira;True
+434879926;Rua de Sa da Bandeira;True
 452073003;Rua do Bonjardim;False
-498298756;Praça da República;False
-498298757;Praça da República;False
+498298756;Praca da Republica;False
+498298757;Praca da Republica;False

@@ -1,27 +1,27 @@
 77607870;;False
 77607871;;False
-98835842;Avenida Agustina Bessa-Luís;False
-98836070;Rua da Bélgica;True
-98836119;Rua da Bélgica;False
+98835842;Avenida Agustina Bessa-Luis;False
+98836070;Rua da Belgica;True
+98836119;Rua da Belgica;False
 99256756;Avenida da Beira Mar;False
-99272497;Rua da Graça;False
-99272499;Rua das Fábricas;False
+99272497;Rua da Graca;False
+99272499;Rua das Fabricas;False
 99272500;Rua da Quinta do Castro;False
-99272502;Rua de Luís Brandão;False
+99272502;Rua de Luis Brandao;False
 99272503;Rua da Estamparia de Lavadores;True
 99272504;Rua Nova das Chouselas;True
 99272505;Travessa do Monte;True
-99272506;Praceta Nova do Picão;True
+99272506;Praceta Nova do Picao;True
 99272509;Rua de Belmonte;True
 99272511;Rua Quinta das Heras;True
 99272512;;True
 99272513;Rua das Fontes;True
-99272519;Rua de Pinhal de Chãs;True
+99272519;Rua de Pinhal de Chas;True
 99272520;Rua da Cova da Bela;True
-99272523;Rua de José Maria Alves;True
-99272525;Rua das Galés;True
+99272523;Rua de Jose Maria Alves;True
+99272525;Rua das Gales;True
 99272526;;True
-99272527;Rua de Olivença;True
+99272527;Rua de Olivenca;True
 99272528;Rua do Vale do Mendo;True
 99272529;Rua do Viso;False
 99272532;Travessa da Cova da Bela;False
@@ -31,7 +31,7 @@
 99272536;Rua da Estamparia de Lavadores;False
 99272537;Rua do Boque;False
 99272539;Rua da Chouselas;False
-99272540;Rua António Ferreira Braga Júnior;False
+99272540;Rua Antonio Ferreira Braga Junior;False
 99272542;Vereda Manuel Marques Gomes;False
 99272544;Rua do Nora;False
 99272545;;False
@@ -41,11 +41,11 @@
 99272549;Rua do Viso;False
 99272550;Rua do Padre Brito;False
 99272552;;False
-99272553;Rua do Atlântico;False
+99272553;Rua do Atlantico;False
 99272554;Rua do Flower;False
 99272555;Rua dos Cedros;False
 99272557;;False
-99272558;Rua do Picão;False
+99272558;Rua do Picao;False
 99272559;Travessa de Salgueiros;False
 99272560;Rua da Escola de Lavadores;False
 99272561;Rua das Motas;False
@@ -53,12 +53,12 @@
 99272563;;False
 99272565;;False
 99272566;Travessa Particular de Salgueiros;False
-99272567;Rua Arca de Noé;False
+99272567;Rua Arca de Noe;False
 99272569;;False
 99272574;Rua das Copinhas;False
 99272576;Rua de Sub Ribas;False
 99272580;Travessa do Calisto;False
-99272585;Rua Linda do Picão;False
+99272585;Rua Linda do Picao;False
 99272591;Rua Nova de Alvites;False
 99272592;Rua do Pinheiral;False
 99272593;Travessa da Serna;False
@@ -69,14 +69,14 @@
 99272599;Rua do Calisto;False
 99272600;Travessa do Nora;False
 99272601;Rua do Calisto;False
-99272603;Rua da Árrabida;False
+99272603;Rua da arrabida;False
 99272604;Rua da Sargenta;False
 99272605;Rua das Motas;False
 99272606;Rua Nova de Castelo Branco;False
 99272607;;False
 99272609;Rua do Corgo;False
 99272610;Rua Nova de Salgueiros;False
-99272612;Rua Nova do Picão;False
+99272612;Rua Nova do Picao;False
 99272613;Travessa do Ralo;False
 99272615;Rua da Pedra Torta;True
 100639084;;True
@@ -89,7 +89,7 @@
 100639096;Travessa de Castelo Branco;True
 100639098;Caminho do Pinheiro;True
 100639099;Recanto de Sub Ribas;True
-100639100;Rua Arca de Noé;True
+100639100;Rua Arca de Noe;True
 100639102;Caminho da Ribeira do Talho;True
 100639104;Travessa da Pedra Torta;True
 100639106;Rua do Ralo;True
@@ -101,7 +101,7 @@
 100639137;Rua das Copinhas;True
 100639138;;True
 100639141;;True
-100639142;Vereda da Arca de Noé;True
+100639142;Vereda da Arca de Noe;True
 100639144;;True
 100639149;;True
 100639152;Caminho dos Vales;True
@@ -113,7 +113,7 @@
 100639164;;True
 100639166;Travessa da Estamparia de Lavadores;True
 100639170;Vereda Manuel Marques Gomes;True
-100639172;Rua de Pinhal de Chãs;True
+100639172;Rua de Pinhal de Chas;True
 100639176;;True
 100639177;;True
 100639183;;True
@@ -121,7 +121,7 @@
 100639188;;True
 100639198;Travessa do Alvites;True
 100639201;Rua da Cova da Raposa;True
-100639205;Rua do Picão;True
+100639205;Rua do Picao;True
 100639206;;True
 100639208;;True
 100639211;Caminho do Pinheiro;True
@@ -136,9 +136,9 @@
 100639238;;True
 100639240;Travessa de Sub Ribas;True
 100639243;Rua do Lavadouro do Alvites;True
-100639244;Rua da Graça;True
+100639244;Rua da Graca;True
 100639246;;True
-100639256;Calçada da Catrina;True
+100639256;Calcada da Catrina;True
 100639262;Rua da Cova da Bela;True
 100639263;Rua Nova de Sub Ribas;True
 100639264;;True
@@ -182,9 +182,9 @@
 198387477;Travessa da Catrina;True
 198387478;;True
 198387479;;True
-198387482;Travessa Braga Júnior;True
-256633171;Travessa Nova do Picão;True
-258383190;Vereda da Bélgica;True
+198387482;Travessa Braga Junior;True
+256633171;Travessa Nova do Picao;True
+258383190;Vereda da Belgica;True
 258383191;;True
 258383192;;True
 258383193;;False
@@ -193,21 +193,21 @@
 408358956;Rua de Jorge Dias;False
 408358957;Rua de Jorge Dias;False
 408471586;Rua de Jorge Dias;False
-408471587;Rua da Associação Recriativa da Alumiara;False
+408471587;Rua da Associacao Recriativa da Alumiara;False
 457587418;Rua da Fonte da Rama;False
-490662615;Rua das Fábricas;False
-490662616;Travessa José Maria Alves;False
-490662617;Rua das Fábricas;False
-490662618;Rua Centro de Saúde;False
+490662615;Rua das Fabricas;False
+490662616;Travessa Jose Maria Alves;False
+490662617;Rua das Fabricas;False
+490662618;Rua Centro de Saude;False
 490955084;Rua Adosinda de Jesus Anes;False
-490955085;Rua António Henriques Correia da Silva;False
+490955085;Rua Antonio Henriques Correia da Silva;False
 490955086;Rua da Seca do Bacalhau;False
 490955087;Rua da Seca do Bacalhau;False
-490955097;Travessa do Picão;False
-490955098;Rua Nova do Picão;False
+490955097;Travessa do Picao;False
+490955098;Rua Nova do Picao;False
 490957314;Travessa das Fontes;False
-490967814;Travessa da Bélgica;False
-490967815;Travessa da Bélgica;False
+490967814;Travessa da Belgica;False
+490967815;Travessa da Belgica;False
 490967819;Travessa das Cancelinhas;False
 490967820;Recanto de Alumiara;False
 491755663;Caminho de Rego da Fonte;False
@@ -216,21 +216,21 @@
 491755670;Rampa de Sub Ribas;False
 491755672;Rua Circular de Sub Ribas;False
 491755674;Travessa Particular de Sub Ribas;False
-491755675;Travessa Arca de Noé;False
+491755675;Travessa Arca de Noe;False
 491755677;Travessa da Rua Nova do Paniceiro;False
 491755678;Rua de Salgueiros;False
-491755680;Rua da Fontaínha;False
-491755682;Rua da Graça;False
+491755680;Rua da Fontainha;False
+491755682;Rua da Graca;False
 491755683;Rua da Serna;False
-491755685;Rua de Luís Brandão;False
-491755688;Travessa de Luís Brandão;False
-491755690;Rua de José Maria Alves;False
+491755685;Rua de Luis Brandao;False
+491755688;Travessa de Luis Brandao;False
+491755690;Rua de Jose Maria Alves;False
 491761033;Rua do Barroco;False
 491761034;Rua Alto das Chouselas;False
 491761035;Vereda das Chouselas;False
-491761045;Rua do Pinhal das Araújas;False
+491761045;Rua do Pinhal das Araujas;False
 491761052;Rua da Igreja;False
-491777271;Calçada da Escola do Viso;False
+491777271;Calcada da Escola do Viso;False
 491777273;Recanto da Escola do Viso;False
 491777274;Travessa da Escola do Viso;False
 491777276;Rua do Campo do Monte;False
@@ -242,8 +242,8 @@
 491777289;Travessa do Viso;False
 491777290;Travessa do Corgo;False
 491777291;Praceta do Corgo;False
-491777293;Calçada da Liberdade;False
+491777293;Calcada da Liberdade;False
 491786095;Avenida da Beira Mar;False
 506982130;Rua Thom;False
 548195699;Rua do Paniceiro;False
-548405273;Rua da Bélgica;True
+548405273;Rua da Belgica;True

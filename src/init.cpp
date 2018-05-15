@@ -187,19 +187,22 @@ void SystemManager::loadSpeficicNodes(unordered_map<int, unsigned long long> &id
 		gv->addNode(id, 0 * scale + valx, 10 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
-		graph.addVertex(new Location(id, 41.15299, -8.612018, 113));
+		gv->setVertexColor(id, RED);
+		graph.addVertex(new SharingLocation(id, 41.15299, -8.612018, 113,8,3));
 		id++;
 		//4
 		gv->addNode(id, 10 * scale + valx, 10 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
-		graph.addVertex(new Location(id, 41.1536, -8.611996, 113));
+		gv->setVertexColor(id, RED);
+		graph.addVertex(new SharingLocation(id, 41.1536, -8.611996, 113,10,5));
 		id++;
 		//5
 		gv->addNode(id, 15 * scale + valx, 7 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
-		graph.addVertex(new Location(id, 41.14837, -8.61437, 95));
+		gv->setVertexColor(id, RED);
+		graph.addVertex(new SharingLocation(id, 41.14837, -8.61437, 95,5,2));
 		id++;
 		//6
 		gv->addNode(id, 0 * scale + valx, 15 * scale + valy);
@@ -211,19 +214,21 @@ void SystemManager::loadSpeficicNodes(unordered_map<int, unsigned long long> &id
 		gv->addNode(id, 10 * scale + valx, 15 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
+		gv->setVertexColor(id, RED);
 		graph.addVertex(new Location(id, 41.14788, -8.611281, 73));
 		id++;
 		//8
 		gv->addNode(id, 15 * scale + valx, 13 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
-		graph.addVertex(new Location(id, 41.14784, -8.610926, 73));
+		gv->setVertexColor(id, RED);
+		graph.addVertex(new SharingLocation(id, 41.14784, -8.610926, 73,15,8));
 		id++;
 		//9
 		gv->addNode(id, 5 * scale + valx, 20 * scale + valy);
 		gv->setVertexLabel(id, to_string(id));
 		idsNodes.insert(make_pair(id, id));
-		graph.addVertex(new Location(id, 41.1488, -8.612135, 89));
+		graph.addVertex(new SharingLocation(id, 41.1488, -8.612135, 89,9,8));
 		id++;
 		//10
 		gv->addNode(id, 15 * scale + valx, 20 * scale + valy);
@@ -384,7 +389,7 @@ unordered_map<int, unsigned long long> SystemManager::loadFiles(int option)
 	end = clock();
 	timeSpent = timeDiff(begin, end);
 	cout << "         Time to read Names file: " << timeSpent << " seconds" << endl << endl;
-
+	 
 	begin = clock();
 	loadEdges(edgesNames, idsNodes);
 	vector<Vertex*> vertexSet = graph.getVertexSet();

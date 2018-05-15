@@ -1,26 +1,26 @@
 4306658;;False
 4306660;;False
-26248559;Rua Doutor António Bernardino de Almeida;False
-29035149;Estrada Exterior da Circunvalação;False
-29035151;Estrada Interior da Circunvalação;False
+26248559;Rua Doutor Antonio Bernardino de Almeida;False
+29035149;Estrada Exterior da Circunvalacao;False
+29035151;Estrada Interior da Circunvalacao;False
 35145153;Rua Alfredo Allen;False
 35145521;Rua do Doutor Roberto Frias;True
 35145522;Rua Alfredo Allen;False
-35997762;Estrada da Circunvalação;False
+35997762;Estrada da Circunvalacao;False
 35997763;Rua do Bairro da Areosa;False
-36001071;Alameda Professor Hernâni Monteiro;False
+36001071;Alameda Professor Hernani Monteiro;False
 36905352;Rua da Arroteia;False
 36965446;Travessa da Asprela;False
-36979228;Rua Doutor Plácido da Costa;False
+36979228;Rua Doutor Placido da Costa;False
 36996353;Rua do Mestre Guilherme Camarinha;False
 36996745;Caminho da Asprela;False
 36996746;Rua Particular da Arroteia;False
-36996747;Rua Bouça da Cavadinha;True
+36996747;Rua Bouca da Cavadinha;True
 37120131;Travessa Doutor Barros;True
-37120135;Rua Amândio Galhano;True
+37120135;Rua Amandio Galhano;True
 37141967;Rua Dom Frei Vicente da Soledade e Castro;True
 37141968;Rua do Doutor Manuel Pereira da Silva;True
-37194468;Travessa da Bouça da Cavadinha;True
+37194468;Travessa da Bouca da Cavadinha;True
 37338732;;True
 37338733;;True
 37352974;;True
@@ -31,16 +31,16 @@
 38001349;;False
 41380172;;True
 41380173;;True
-51228960;Rua de Dionísio dos Santos Silva;True
+51228960;Rua de Dionisio dos Santos Silva;True
 63848181;;False
 106115722;;False
 108480588;Rua da Arroteia;True
-160379534;Urgência Adultos;True
-160379536;Urgência Adultos;True
-160379537;Urgência Neonatologia;True
-160379543;Entrada Urgências;False
-160379545;Urgência Pediatria;True
-160379547;Urgência Pediatria;True
+160379534;Urgencia Adultos;True
+160379536;Urgencia Adultos;True
+160379537;Urgencia Neonatologia;True
+160379543;Entrada Urgencias;False
+160379545;Urgencia Pediatria;True
+160379547;Urgencia Pediatria;True
 205638142;Acesso consultas externas;False
 205638144;;False
 205638145;;False
@@ -52,24 +52,24 @@
 208263088;;True
 208265320;;True
 208272059;;True
-209633322;Alameda Professor Hernâni Monteiro;True
-209633323;Estrada Interior da Circunvalação;False
-220234010;Estrada Interior da Circunvalação;False
+209633322;Alameda Professor Hernani Monteiro;True
+209633323;Estrada Interior da Circunvalacao;False
+220234010;Estrada Interior da Circunvalacao;False
 220234011;Autoestrada de Entre-Douro-e-Minho;False
 220234012;Autoestrada de Entre-Douro-e-Minho;False
 286085489;Rua Doutor Roberto Frias;False
-286085490;Alameda Professor Hernâni Monteiro;False
+286085490;Alameda Professor Hernani Monteiro;False
 308678923;;False
 308678934;;False
-308678936;Estrada da Circunvalação;False
+308678936;Estrada da Circunvalacao;False
 316459169;Rua Doutor Roberto Frias;False
-349643787;Alameda Professor Hernâni Monteiro;False
-349643887;Rua Doutor Plácido da Costa;False
-349643889;Rua Doutor Plácido da Costa;False
+349643787;Alameda Professor Hernani Monteiro;False
+349643887;Rua Doutor Placido da Costa;False
+349643889;Rua Doutor Placido da Costa;False
 349643891;Rua do Mestre Guilherme Camarinha;False
 349643894;Rua do Mestre Guilherme Camarinha;False
-351525659;Entrada Urgências;False
-351525660;Entrada Urgências;False
+351525659;Entrada Urgencias;False
+351525660;Entrada Urgencias;False
 351525693;;False
 351525701;;False
 351525704;;False
@@ -113,10 +113,10 @@
 421305607;;False
 429123178;;False
 429123179;;False
-434878389;Alameda Professor Hernâni Monteiro;True
-434878392;Estrada Interior da Circunvalação;False
-434879919;Estrada Exterior da Circunvalação;False
-440117025;Rua Doutor António Bernardino de Almeida;True
+434878389;Alameda Professor Hernani Monteiro;True
+434878392;Estrada Interior da Circunvalacao;False
+434879919;Estrada Exterior da Circunvalacao;False
+440117025;Rua Doutor Antonio Bernardino de Almeida;True
 440117112;;True
 440117113;;True
 440117114;;True
@@ -176,7 +176,7 @@
 440117187;;False
 440117188;;True
 440117191;;False
-440117193;Rua de Dionísio dos Santos Silva;False
+440117193;Rua de Dionisio dos Santos Silva;False
 440117194;;False
 440117195;;False
 440117197;;False
@@ -194,12 +194,12 @@
 440117211;;False
 440117212;;False
 440117213;;False
-440117214;Rua de Dionísio dos Santos Silva;False
+440117214;Rua de Dionisio dos Santos Silva;False
 440117215;;False
 440117216;;False
 440117217;;False
 440117218;;False
-440389519;Rua Doutor António Bernardino de Almeida;False
+440389519;Rua Doutor Antonio Bernardino de Almeida;False
 440681022;;False
 440681025;;False
 444069160;Rua do Bairro da Brisa;False
@@ -213,7 +213,7 @@
 448858674;Rua Alfredo Allen;False
 456118771;;False
 461925687;Rua do Doutor Manuel Pereira da Silva;False
-468686243;Estrada Interior da Circunvalação;False
+468686243;Estrada Interior da Circunvalacao;False
 473462766;;False
 536615643;;False
 536618473;;False

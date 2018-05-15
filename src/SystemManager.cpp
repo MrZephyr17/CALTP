@@ -110,13 +110,13 @@ int SystemManager::selectGraph()
 		initFileNames("nodesNaoConexo.txt",
 					  "edgesNaoConexo.txt",
 					  "nomesNaoConexo.txt",
-					  "sharingLocationsEmpty.txt");
+					  "sharingLocationsTest.txt");
 		break;
 	case 8:
 		initFileNames("nodesConectividade.txt",
 					  "edgesConectividade.txt",
 					  "nomesConectividade.txt",
-					  "sharingLocationsEmpty.txt");
+					  "sharingLocationsTest.txt");
 		break;
 	default:
 		break;
@@ -204,7 +204,7 @@ void SystemManager::menuFindSharingLocation()
 	clearScreen();
 
 	cout << " ______________________________________________ " << endl;
-	cout << "|                               				|" << endl;
+	cout << "|                                              |" << endl;
 	cout << "|    F I N D  S H A R I N G  L O C A T I O N   |" << endl;
 	cout << "|______________________________________________|" << endl << endl;
 
@@ -213,14 +213,14 @@ void SystemManager::menuFindSharingLocation()
 
 	if (street1 == "" || street2 == "")
 	{
-		cout << "Invalid input!" << endl;
+		cout << "\nInvalid input!" << endl;
 		waitConfirm();
 		return;
 	}
 
-	cout << endl << "Enter your preference: " << endl;
-	cout << "1 - Exact search" << endl;
-	cout << "2 - Approximate search" << endl << endl;
+	cout << endl << " Enter your preference: " << endl;
+	cout << "  1 - Exact search" << endl;
+	cout << "  2 - Approximate search" << endl << endl;
 
 	int userChoice = verifyInput(1, 2);
 
@@ -250,18 +250,22 @@ void SystemManager::findSLExact(string street1, string street2)
 
 	if (!foundStreets)
 	{
-		cout << endl << "Unknown location!" << endl;
-		cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
+		cout << endl << " - Unknown location!" << endl;
+		cout << endl << " - Took a total of: " << timeSpent << " seconds." << endl;
 		waitConfirm();
 		return;
 	}
 
 	gv->setVertexColor(location->getInfo()->getID(), GREEN);
-	cout << "Location found!" << endl;
-	cout << "It is now on the map with the green color!" << endl;
-	cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
+	gv->rearrange();
+	cout << " - Location found!" << endl;
+	cout << " - It is now on the map with the green color!" << endl;
+	cout << endl << " - Took a total of: " << timeSpent << " seconds." << endl;
 
 	waitConfirm();
+
+	gv->setVertexColor(location->getInfo()->getID(), location->getInfo()->getColor());
+	gv->rearrange();
 }
 
 void SystemManager::findSLApproximate(string street1, string street2)
@@ -276,20 +280,23 @@ void SystemManager::findSLApproximate(string street1, string street2)
 
 	if (streets.size() == 0)
 	{
-		cout << "Sorry. Couldn't find any similar street that have Sharing Locations." << endl;
-		cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
+		cout << " - Sorry. Couldn't find any similar street that have Sharing Locations." << endl;
+		cout << endl << " - Took a total of: " << timeSpent << " seconds." << endl;
 		waitConfirm();
 		return;
 	}
 
-	cout << endl << "Similar streets that have Sharing Locations" << endl << endl;
+	cout << endl << " - Similar streets that have Sharing Locations" << endl << endl;
 
 	for (auto it = streets.begin(); it != streets.end(); it++)
 	{
-		cout << it->second << endl;
+		if(it != streets.begin() && it->second != streets.begin()->second)
+			cout << "    - " << it->second << endl;
+		else
+			cout << "    - " << it->second << endl;
 	}
 
-	cout << endl << "Took a total of: " << timeSpent << " seconds." << endl;
+	cout << endl << " - Took a total of: " << timeSpent << " seconds." << endl;
 
 	waitConfirm();
 }
@@ -520,6 +527,8 @@ void SystemManager::showClosestLocation(Vertex *origin, int id, bool rent)
 		rent ? cout << "  - You have lifted a bike!" << endl : cout << "  - You have deposited a bike!" << endl;
 
 		waitConfirm();
+
+		rent ? ((SharingLocation *)path.back().getInfo())->liftBike() : ((SharingLocation *)path.back().getInfo())->depositBike();
 
 		paintPath(path, false, 1);
 	}
