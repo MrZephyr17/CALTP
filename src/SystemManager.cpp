@@ -289,12 +289,8 @@ void SystemManager::findSLApproximate(string street1, string street2)
 	cout << endl << " - Similar streets that have Sharing Locations" << endl << endl;
 
 	for (auto it = streets.begin(); it != streets.end(); it++)
-	{
-		if(it != streets.begin() && it->second != streets.begin()->second)
-			cout << "    - " << it->second << endl;
-		else
-			cout << "    - " << it->second << endl;
-	}
+		cout << "    - " << it->second << endl;
+	
 
 	cout << endl << " - Took a total of: " << timeSpent << " seconds." << endl;
 

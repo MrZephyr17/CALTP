@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cmath>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 
@@ -155,5 +156,14 @@ void getNames(string &street1, string &street2)
 	getline(cin, street1);
 	cout << "Name of street 2: ";
 	getline(cin, street2);
+}
+
+bool exists(const std::multimap<int, std::string>& streets, const std::string & name)
+{
+	for (auto it = streets.begin(); it != streets.end(); it++)
+		if (it->second == name)
+			return true;
+
+	return false;
 }
 

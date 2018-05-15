@@ -2,6 +2,7 @@
 #include <cmath>
 #include <ctime>
 #include <string>
+#include <map>
 #include "Location.h"
 
 /** @defgroup utils utils
@@ -138,5 +139,13 @@ int convertLatitudeToY(double latitude);
  * @param street2 The second street
  */
 void getNames(std::string &street1, std::string &street2);
+
+/**
+* @brief Checks if name already exists on streets
+*
+* @param streets Contains a collection of street names along with their edit distance towards a given pattern
+* @param name The name of the street
+*/
+bool exists(const std::multimap<int, std::string> &streets, const std::string &name);
 
 /** @} end of utils */

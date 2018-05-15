@@ -438,10 +438,10 @@ multimap<int, string> Graph::findSLApproximate(string street1, string street2)
 
 			if (minimum < MAX_DISTANCE && y->name != "")
 			{
-				if (string(typeid(*x->getInfo()).name()) == "class SharingLocation")
+				if (!exists(streets, y->name) && string(typeid(*x->getInfo()).name()) == "class SharingLocation")
 					streets.insert(make_pair(minimum, y->name));
 				
-				else if (string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
+				else if (!exists(streets, y->name) && string(typeid(*y->dest->getInfo()).name()) == "class SharingLocation")
 					streets.insert(make_pair(minimum, y->name));
 			}
 		}
